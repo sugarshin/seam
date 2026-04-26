@@ -1,0 +1,77 @@
+import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { colors, font, radii, space } from '../theme';
+
+export type ChipTone = 'default' | 'inverse' | 'muted' | 'warning';
+
+type Props = {
+  label: string;
+  tone?: ChipTone;
+  selected?: boolean;
+  onPress?: () => void;
+  onRemove?: () => void;
+  style?: StyleProp<ViewStyle>;
+};
+
+export const Chip = ({ label, tone = 'default', selected = false, onPress, onRemove, style }: Props) => {
+  const palette = tonePalette[selected ? 'inverse' : tone];
+  const content = (
+    <View style={[base, { backgroundColor: palette.bg, borderColor: palette.border }, style]}>
+      <Text style={[labelStyle, { color: palette.fg }]} numberOfLines={1}>
+        {label}
+      </Text>
+      {onRemove && (
+        <Pressable
+          accessibilityRole="button"
+          onPress={onRemove}
+          hitSlop={8}
+          style={({ pressed }) => [removeBtn, pressed && { opacity: 0.6 }]}
+        >
+          <Text style={[removeMark, { color: palette.fg }]}>×</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+  if (onPress) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        style={({ pressed }) => [pressed && { opacity: 0.7 }]}
+      >
+        {content}
+      </Pressable>
+    );
+  }
+  return content;
+};
+
+const base: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: space.md,
+  paddingVertical: space.xs + 2,
+  borderRadius: radii.lg,
+  borderWidth: 1,
+  alignSelf: 'flex-start',
+};
+
+const labelStyle = {
+  fontSize: font.size.xs,
+  fontWeight: font.weight.medium,
+} as const;
+
+const removeBtn: ViewStyle = {
+  marginLeft: space.xs,
+};
+
+const removeMark = {
+  fontSize: font.size.md,
+  fontWeight: font.weight.bold,
+} as const;
+
+const tonePalette: Record<ChipTone, { bg: string; fg: string; border: string }> = {
+  default: { bg: colors.surface, fg: colors.text, border: colors.border },
+  inverse: { bg: colors.bgInverse, fg: colors.textInverse, border: colors.bgInverse },
+  muted: { bg: colors.bg, fg: colors.textMuted, border: colors.border },
+  warning: { bg: colors.bg, fg: colors.warning, border: colors.warning },
+};
