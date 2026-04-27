@@ -37,7 +37,7 @@
     },
     {
       "description": "Pin all expo / @expo packages to the SDK 54 line — bump only via Expo SDK major upgrades.",
-      "matchPackagePrefixes": ["expo", "@expo/"],
+      "matchPackageNames": ["expo{/,}**", "@expo/{/,}**"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
