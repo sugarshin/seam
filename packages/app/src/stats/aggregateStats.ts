@@ -37,20 +37,20 @@ export type StatsSnapshot = {
     sold: number;
     skipped: number;
   };
-  byCategory: Array<{ category: GarmentCategory; count: number; label: string }>;
-  byBrand: Array<{ brand: string; count: number }>;
-  byColor: Array<{ color: string; count: number }>;
-  monthlyPurchase: Array<{ month: string; count: number; amount: number }>;
+  byCategory: { category: GarmentCategory; count: number; label: string }[];
+  byBrand: { brand: string; count: number }[];
+  byColor: { color: string; count: number }[];
+  monthlyPurchase: { month: string; count: number; amount: number }[];
   avgPurchasePrice: number;
   recentBuyDecisions: number;
   recentSkipDecisions: number;
   recentWatchDecisions: number;
   decisionRatio: Record<DecisionKind, number>;
-  unworn: Array<{ id: string; name: string; daysSincePurchase: number }>;
-  sellCandidates: Array<{ id: string; name: string }>;
+  unworn: { id: string; name: string; daysSincePurchase: number }[];
+  sellCandidates: { id: string; name: string }[];
   duplicateClusters: DuplicateCluster[];
-  highCpwItems: Array<{ id: string; name: string; cpw: number; wearCount: number }>;
-  failureReasonRanking: Array<{ reason: FailureReason; label: string; count: number }>;
+  highCpwItems: { id: string; name: string; cpw: number; wearCount: number }[];
+  failureReasonRanking: { reason: FailureReason; label: string; count: number }[];
 };
 
 const inLastNDays = (iso: string, now: Date, days: number): boolean => {
@@ -144,7 +144,7 @@ export const aggregateStats = async (): Promise<StatsSnapshot> => {
 
   // CPW ranking (high CPW = bad value). Excludes items with 0 wears since
   // their CPW is undefined; "未着用" already covers that bucket above.
-  const cpwItems: Array<{ id: string; name: string; cpw: number; wearCount: number }> = [];
+  const cpwItems: { id: string; name: string; cpw: number; wearCount: number }[] = [];
   for (const it of owned) {
     const wears = wearCounts[it.id] ?? 0;
     if (wears === 0) continue;
@@ -155,7 +155,7 @@ export const aggregateStats = async (): Promise<StatsSnapshot> => {
   cpwItems.sort((a, b) => b.cpw - a.cpw);
   const highCpwItems = cpwItems.slice(0, TOP_N_RANKINGS);
 
-  const failureReasonRanking = (Object.entries(reasonCounts) as Array<[FailureReason, number]>)
+  const failureReasonRanking = (Object.entries(reasonCounts) as [FailureReason, number][])
     .filter(([, n]) => n > 0)
     .map(([reason, count]) => ({
       reason,

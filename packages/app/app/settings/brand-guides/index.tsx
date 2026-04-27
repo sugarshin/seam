@@ -1,12 +1,5 @@
 import { useCallback, useState } from 'react';
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { Stack, router, useFocusEffect } from 'expo-router';
 import {
   CATEGORY_LABEL,
@@ -20,9 +13,10 @@ import { TextField } from '../../../src/components/TextField';
 import { brandGuideRepository } from '../../../src/repositories';
 import { colors, font, radii, space } from '../../../src/theme';
 
-const CATEGORY_OPTIONS: ReadonlyArray<PickerOption<GarmentCategory>> = GARMENT_CATEGORIES.map(
-  (c) => ({ value: c, label: CATEGORY_LABEL[c] }),
-);
+const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEGORIES.map((c) => ({
+  value: c,
+  label: CATEGORY_LABEL[c],
+}));
 
 export default function BrandGuidesScreen() {
   const [guides, setGuides] = useState<BrandGuide[]>([]);
@@ -170,17 +164,12 @@ export default function BrandGuidesScreen() {
                 <Pressable
                   accessibilityRole="button"
                   onPress={() => router.push(`/settings/brand-guides/${g.id}`)}
-                  style={({ pressed }) => [
-                    { flex: 1 },
-                    pressed && { opacity: 0.6 },
-                  ]}
+                  style={({ pressed }) => [{ flex: 1 }, pressed && { opacity: 0.6 }]}
                 >
                   <Text style={guideTitle}>
                     {g.brand} · {g.title}
                   </Text>
-                  {g.category && (
-                    <Text style={guideSub}>{CATEGORY_LABEL[g.category]}</Text>
-                  )}
+                  {g.category && <Text style={guideSub}>{CATEGORY_LABEL[g.category]}</Text>}
                   {g.notes && (
                     <Text style={guideNotes} numberOfLines={2}>
                       {g.notes}

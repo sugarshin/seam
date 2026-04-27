@@ -2,8 +2,7 @@ import { and, desc, eq, inArray, like, or, sql } from 'drizzle-orm';
 import { db, schema } from '../db/client';
 import { newId } from '../utils/ids';
 import { nowIso } from '../utils/dates';
-import type { GarmentItem } from '@seam/shared';
-import type { ItemStatus } from '@seam/shared';
+import type { GarmentItem, ItemStatus } from '@seam/shared';
 import { CANDIDATE_STATUSES } from '@seam/shared';
 
 export type ItemRow = typeof schema.items.$inferSelect;
@@ -95,11 +94,7 @@ export const itemRepository = {
       );
     }
     const where = conditions.length > 0 ? and(...conditions) : undefined;
-    const rows = await db
-      .select()
-      .from(schema.items)
-      .where(where)
-      .orderBy(orderByFor(sort));
+    const rows = await db.select().from(schema.items).where(where).orderBy(orderByFor(sort));
     return rows.map(toGarmentItem);
   },
 

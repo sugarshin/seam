@@ -6,11 +6,9 @@
   "scripts": {
     "start": "expo start",
     "ios": "expo run:ios",
-    "android": "expo run:android",
-    "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:check": "drizzle-kit check",
     "prebuild": "node scripts/prebuild.mjs",
@@ -19,13 +17,11 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.29.2",
-    "@expo/metro-runtime": "~6.1.2",
     "@hookform/resolvers": "^3.9.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@seam/domain": "workspace:*",
     "@seam/shared": "workspace:*",
-    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.0",
     "expo": "~54.0.33",
     "expo-application": "~7.0.8",
@@ -42,21 +38,21 @@
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
     "react-hook-form": "^7.54.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-reanimated": "~4.1.7",
     "react-native-safe-area-context": "5.6.2",
     "react-native-screens": "~4.16.0",
-    "zod": "^3.23.8",
-    "zustand": "^5.0.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
     "@types/react": "19.1.17",
     "babel-plugin-inline-import": "3.0.0",
     "drizzle-kit": "0.31.10",
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "^55.0.0",
     "typescript": "5.9.3",
     "vitest": "2.1.9"
   }

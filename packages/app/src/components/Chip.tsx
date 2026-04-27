@@ -12,7 +12,14 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export const Chip = ({ label, tone = 'default', selected = false, onPress, onRemove, style }: Props) => {
+export const Chip = ({
+  label,
+  tone = 'default',
+  selected = false,
+  onPress,
+  onRemove,
+  style,
+}: Props) => {
   const palette = tonePalette[selected ? 'inverse' : tone];
   const content = (
     <View style={[base, { backgroundColor: palette.bg, borderColor: palette.border }, style]}>

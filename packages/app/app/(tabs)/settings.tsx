@@ -83,28 +83,27 @@ export default function SettingsScreen() {
     }
   };
 
-  const runImport = useCallback(async (uri: string, mode: ImportMode): Promise<void> => {
-    setBusy(true);
-    try {
-      const result: ImportResult = await importFromJsonFile(uri, { mode });
-      const totals = Object.entries(result.insertedCounts)
-        .filter(([, n]) => n > 0)
-        .map(([t, n]) => `${t}: ${n}`)
-        .join('\n');
-      const summary = totals.length > 0 ? totals : '挿入された行はありません。';
-      const errors =
-        result.errors.length > 0 ? `\n\nエラー:\n${result.errors.join('\n')}` : '';
-      Alert.alert('インポート完了', `${summary}${errors}`);
-      await refreshExportState();
-    } catch (err) {
-      Alert.alert(
-        'インポート失敗',
-        err instanceof Error ? err.message : String(err),
-      );
-    } finally {
-      setBusy(false);
-    }
-  }, [refreshExportState]);
+  const runImport = useCallback(
+    async (uri: string, mode: ImportMode): Promise<void> => {
+      setBusy(true);
+      try {
+        const result: ImportResult = await importFromJsonFile(uri, { mode });
+        const totals = Object.entries(result.insertedCounts)
+          .filter(([, n]) => n > 0)
+          .map(([t, n]) => `${t}: ${n}`)
+          .join('\n');
+        const summary = totals.length > 0 ? totals : '挿入された行はありません。';
+        const errors = result.errors.length > 0 ? `\n\nエラー:\n${result.errors.join('\n')}` : '';
+        Alert.alert('インポート完了', `${summary}${errors}`);
+        await refreshExportState();
+      } catch (err) {
+        Alert.alert('インポート失敗', err instanceof Error ? err.message : String(err));
+      } finally {
+        setBusy(false);
+      }
+    },
+    [refreshExportState],
+  );
 
   const onImport = useCallback(async (): Promise<void> => {
     const picked = await DocumentPicker.getDocumentAsync({
@@ -116,39 +115,31 @@ export default function SettingsScreen() {
     if (!asset) return;
     const uri = asset.uri;
 
-    Alert.alert(
-      'インポート方法',
-      '既存のデータをどうしますか？',
-      [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: 'マージ (重複は無視)',
-          onPress: () => {
-            void runImport(uri, 'merge');
-          },
+    Alert.alert('インポート方法', '既存のデータをどうしますか？', [
+      { text: 'キャンセル', style: 'cancel' },
+      {
+        text: 'マージ (重複は無視)',
+        onPress: () => {
+          void runImport(uri, 'merge');
         },
-        {
-          text: '上書き (全削除→復元)',
-          style: 'destructive',
-          onPress: () => {
-            Alert.alert(
-              '本当に上書きしますか？',
-              '既存のデータはすべて削除されます。',
-              [
-                { text: 'キャンセル', style: 'cancel' },
-                {
-                  text: '上書き実行',
-                  style: 'destructive',
-                  onPress: () => {
-                    void runImport(uri, 'replace');
-                  },
-                },
-              ],
-            );
-          },
+      },
+      {
+        text: '上書き (全削除→復元)',
+        style: 'destructive',
+        onPress: () => {
+          Alert.alert('本当に上書きしますか？', '既存のデータはすべて削除されます。', [
+            { text: 'キャンセル', style: 'cancel' },
+            {
+              text: '上書き実行',
+              style: 'destructive',
+              onPress: () => {
+                void runImport(uri, 'replace');
+              },
+            },
+          ]);
         },
-      ],
-    );
+      },
+    ]);
   }, [runImport]);
 
   return (
@@ -169,10 +160,7 @@ export default function SettingsScreen() {
           accessibilityLabel="JSON エクスポート"
           disabled={busy}
           onPress={onExport}
-          style={({ pressed }) => [
-            styles.btn,
-            (pressed || busy) && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.btn, (pressed || busy) && { opacity: 0.6 }]}
         >
           <Text style={styles.btnLabel}>{busy ? '処理中…' : 'JSON エクスポート'}</Text>
         </Pressable>
@@ -183,10 +171,7 @@ export default function SettingsScreen() {
           accessibilityLabel="CSV エクスポート"
           disabled={busy}
           onPress={onExportCsv}
-          style={({ pressed }) => [
-            styles.btnSecondary,
-            (pressed || busy) && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.btnSecondary, (pressed || busy) && { opacity: 0.6 }]}
         >
           <Text style={styles.btnSecondaryLabel}>CSV エクスポート (アイテム)</Text>
         </Pressable>
@@ -198,10 +183,7 @@ export default function SettingsScreen() {
           onPress={() => {
             void onImport();
           }}
-          style={({ pressed }) => [
-            styles.btnSecondary,
-            (pressed || busy) && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.btnSecondary, (pressed || busy) && { opacity: 0.6 }]}
         >
           <Text style={styles.btnSecondaryLabel}>JSON インポート</Text>
         </Pressable>
@@ -216,10 +198,7 @@ export default function SettingsScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/settings/measurement-rules')}
-          style={({ pressed }) => [
-            styles.btn,
-            pressed && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.btn, pressed && { opacity: 0.6 }]}
         >
           <Text style={styles.btnLabel}>個人 NG / Warning ルール</Text>
         </Pressable>
@@ -233,10 +212,7 @@ export default function SettingsScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/settings/brand-guides')}
-          style={({ pressed }) => [
-            styles.btn,
-            pressed && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.btn, pressed && { opacity: 0.6 }]}
         >
           <Text style={styles.btnLabel}>ブランド別 見るべきポイント</Text>
         </Pressable>
@@ -252,10 +228,7 @@ export default function SettingsScreen() {
           accessibilityLabel="データを全削除"
           disabled={busy}
           onPress={() => router.push('/settings/data-reset')}
-          style={({ pressed }) => [
-            styles.btnDestructive,
-            (pressed || busy) && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.btnDestructive, (pressed || busy) && { opacity: 0.6 }]}
         >
           <Text style={styles.btnDestructiveLabel}>データを全削除…</Text>
         </Pressable>
@@ -266,9 +239,7 @@ export default function SettingsScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>アプリ情報</Text>
-        <Text style={styles.kv}>
-          version: {Application.nativeApplicationVersion ?? '0.0.1'}
-        </Text>
+        <Text style={styles.kv}>version: {Application.nativeApplicationVersion ?? '0.0.1'}</Text>
       </View>
     </ScrollView>
   );

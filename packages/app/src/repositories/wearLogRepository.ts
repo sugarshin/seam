@@ -69,9 +69,7 @@ export const wearLogRepository = {
    * Total wear-log count across the wardrobe. Used by the Stats screen.
    */
   async countAll(): Promise<number> {
-    const rows = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(schema.wearLogs);
+    const rows = await db.select({ count: sql<number>`count(*)` }).from(schema.wearLogs);
     return Number(rows[0]?.count ?? 0);
   },
 

@@ -19,7 +19,7 @@ export type PickerOption<T extends string> = {
 type Props<T extends string> = {
   label?: string;
   value: T | undefined;
-  options: ReadonlyArray<PickerOption<T>>;
+  options: readonly PickerOption<T>[];
   onChange: (value: T) => void;
   placeholder?: string;
   error?: string;

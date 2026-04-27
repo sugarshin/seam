@@ -1,12 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import {
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readdirSync,
-  rmSync,
-  statSync,
-} from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -32,9 +25,7 @@ function findLatestArchive() {
     }
   }
   if (candidates.length === 0) {
-    throw new Error(
-      `No ${APP_NAME} .xcarchive found. Run Product > Archive in Xcode first.`,
-    );
+    throw new Error(`No ${APP_NAME} .xcarchive found. Run Product > Archive in Xcode first.`);
   }
   candidates.sort((a, b) => b.mtime - a.mtime);
   return candidates[0].path;
@@ -67,15 +58,11 @@ if (existsSync(ipaPath)) {
   console.log(`[packageIpa] removed existing ${ipaPath}`);
 }
 
-const zip = spawnSync(
-  'ditto',
-  ['-c', '-k', '--keepParent', '--norsrc', 'Payload', ipaPath],
-  {
-    cwd: work,
-    stdio: 'inherit',
-    env: { ...process.env, COPYFILE_DISABLE: '1' },
-  },
-);
+const zip = spawnSync('ditto', ['-c', '-k', '--keepParent', '--norsrc', 'Payload', ipaPath], {
+  cwd: work,
+  stdio: 'inherit',
+  env: { ...process.env, COPYFILE_DISABLE: '1' },
+});
 if (zip.status !== 0) {
   throw new Error(`ditto exited with status ${zip.status}`);
 }

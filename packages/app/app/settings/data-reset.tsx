@@ -22,19 +22,15 @@ export default function DataResetScreen() {
               setBusy(true);
               try {
                 await resetAllData();
-                Alert.alert(
-                  '削除しました',
-                  'アプリを完全に再起動することをおすすめします。',
-                  [
-                    {
-                      text: 'OK',
-                      onPress: () => {
-                        if (router.canGoBack()) router.back();
-                        else router.replace('/(tabs)/settings');
-                      },
+                Alert.alert('削除しました', 'アプリを完全に再起動することをおすすめします。', [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      if (router.canGoBack()) router.back();
+                      else router.replace('/(tabs)/settings');
                     },
-                  ],
-                );
+                  },
+                ]);
               } catch (err) {
                 Alert.alert('削除失敗', err instanceof Error ? err.message : String(err));
               } finally {
@@ -66,11 +62,7 @@ export default function DataResetScreen() {
           <Text style={listItem}>• 通知リマインダー</Text>
         </View>
 
-        <Button
-          label={busy ? '削除中…' : 'すべて削除する'}
-          onPress={onConfirm}
-          loading={busy}
-        />
+        <Button label={busy ? '削除中…' : 'すべて削除する'} onPress={onConfirm} loading={busy} />
         <Button
           label="キャンセル"
           onPress={() => {

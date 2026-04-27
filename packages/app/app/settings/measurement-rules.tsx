@@ -1,12 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { Stack, useFocusEffect } from 'expo-router';
 import {
   CATEGORY_LABEL,
@@ -26,27 +19,26 @@ import { colors, font, radii, space } from '../../src/theme';
 type Operator = MeasurementRule['operator'];
 type Severity = MeasurementRule['severity'];
 
-const OPERATOR_OPTIONS: ReadonlyArray<PickerOption<Operator>> = [
+const OPERATOR_OPTIONS: readonly PickerOption<Operator>[] = [
   { value: 'lt', label: '<' },
   { value: 'lte', label: '≤' },
   { value: 'gt', label: '>' },
   { value: 'gte', label: '≥' },
 ];
 
-const SEVERITY_OPTIONS: ReadonlyArray<PickerOption<Severity>> = [
+const SEVERITY_OPTIONS: readonly PickerOption<Severity>[] = [
   { value: 'warning', label: 'Warning' },
   { value: 'ng', label: 'NG' },
 ];
 
-const CATEGORY_OPTIONS: ReadonlyArray<PickerOption<GarmentCategory>> = GARMENT_CATEGORIES.map(
-  (c) => ({ value: c, label: CATEGORY_LABEL[c] }),
-);
+const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEGORIES.map((c) => ({
+  value: c,
+  label: CATEGORY_LABEL[c],
+}));
 
-const opLabel = (op: Operator): string =>
-  OPERATOR_OPTIONS.find((o) => o.value === op)?.label ?? op;
+const opLabel = (op: Operator): string => OPERATOR_OPTIONS.find((o) => o.value === op)?.label ?? op;
 
-const sevLabel = (s: Severity): string =>
-  SEVERITY_OPTIONS.find((o) => o.value === s)?.label ?? s;
+const sevLabel = (s: Severity): string => SEVERITY_OPTIONS.find((o) => o.value === s)?.label ?? s;
 
 export default function MeasurementRulesScreen() {
   const [rules, setRules] = useState<MeasurementRule[]>([]);
@@ -76,7 +68,7 @@ export default function MeasurementRulesScreen() {
     }, [load]),
   );
 
-  const measurementKeyOptions = useMemo<ReadonlyArray<PickerOption<MeasurementKey>>>(() => {
+  const measurementKeyOptions = useMemo<readonly PickerOption<MeasurementKey>[]>(() => {
     if (!category) return [];
     return measurementKeysFor(category).map((k) => ({
       value: k,
@@ -128,23 +120,27 @@ export default function MeasurementRulesScreen() {
 
   const onDelete = useCallback(
     (rule: MeasurementRule) => {
-      Alert.alert('削除しますか？', `${MEASUREMENT_KEY_LABEL[rule.measurementKey]} のルールを削除します。`, [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: () => {
-            void (async () => {
-              try {
-                await measurementRuleRepository.delete(rule.id);
-                await load();
-              } catch (err) {
-                Alert.alert('削除失敗', err instanceof Error ? err.message : String(err));
-              }
-            })();
+      Alert.alert(
+        '削除しますか？',
+        `${MEASUREMENT_KEY_LABEL[rule.measurementKey]} のルールを削除します。`,
+        [
+          { text: 'キャンセル', style: 'cancel' },
+          {
+            text: '削除',
+            style: 'destructive',
+            onPress: () => {
+              void (async () => {
+                try {
+                  await measurementRuleRepository.delete(rule.id);
+                  await load();
+                } catch (err) {
+                  Alert.alert('削除失敗', err instanceof Error ? err.message : String(err));
+                }
+              })();
+            },
           },
-        },
-      ]);
+        ],
+      );
     },
     [load],
   );

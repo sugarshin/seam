@@ -77,9 +77,7 @@ export const failureLogRepository = {
   },
 
   async countAll(): Promise<number> {
-    const rows = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(schema.failureLogs);
+    const rows = await db.select({ count: sql<number>`count(*)` }).from(schema.failureLogs);
     return Number(rows[0]?.count ?? 0);
   },
 

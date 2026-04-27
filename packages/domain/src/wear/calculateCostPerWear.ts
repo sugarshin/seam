@@ -11,10 +11,7 @@
  *     and a clamped `wearCount` of 0 still yields null.
  *   - Non-finite numbers (NaN, ±Infinity) are treated as missing → null.
  */
-export const calculateCostPerWear = (
-  totalPrice?: number,
-  wearCount?: number,
-): number | null => {
+export const calculateCostPerWear = (totalPrice?: number, wearCount?: number): number | null => {
   if (typeof totalPrice !== 'number' || !Number.isFinite(totalPrice)) return null;
   if (typeof wearCount !== 'number' || !Number.isFinite(wearCount)) return null;
 

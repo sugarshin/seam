@@ -8,10 +8,13 @@
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "dev": "turbo run dev --parallel",
     "clean": "turbo run clean && rm -rf node_modules .turbo"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.13",
     "turbo": "2.9.6",
     "typescript": "5.9.3"
   },

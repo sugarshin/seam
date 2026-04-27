@@ -59,11 +59,7 @@ describe('compareMeasurements', () => {
   });
 
   it('returns 0% for reference value of 0', () => {
-    const diffs = compareMeasurements(
-      [m('c', 'inseam', 5)],
-      [m('r', 'inseam', 0)],
-      'pants',
-    );
+    const diffs = compareMeasurements([m('c', 'inseam', 5)], [m('r', 'inseam', 0)], 'pants');
     expect(diffs).toHaveLength(1);
     expect(diffs[0]?.diffPct).toBe(0);
   });

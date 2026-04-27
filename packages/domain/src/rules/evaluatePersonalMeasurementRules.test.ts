@@ -93,17 +93,20 @@ describe('evaluatePersonalMeasurementRules', () => {
       operator: 'gt',
       value: 28,
     });
-    const violations = evaluatePersonalMeasurementRules(
-      [m('i', 'jpSize', 9, 'us')],
-      [r],
-      'shoes',
-    );
+    const violations = evaluatePersonalMeasurementRules([m('i', 'jpSize', 9, 'us')], [r], 'shoes');
     expect(violations).toEqual([]);
   });
 
   it('returns multiple violations independently', () => {
     const r1 = rule({ id: 'r1', operator: 'lt', value: 50 });
-    const r2 = rule({ id: 'r2', measurementKey: 'chestWidth', operator: 'gt', value: 60, severity: 'warning', message: 'too wide' });
+    const r2 = rule({
+      id: 'r2',
+      measurementKey: 'chestWidth',
+      operator: 'gt',
+      value: 60,
+      severity: 'warning',
+      message: 'too wide',
+    });
     const violations = evaluatePersonalMeasurementRules(
       [m('i', 'shoulderWidth', 45), m('i', 'chestWidth', 65)],
       [r1, r2],

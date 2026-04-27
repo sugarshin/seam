@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import {
   CATEGORY_LABEL,
@@ -30,11 +23,7 @@ import { Picker, type PickerOption } from '../../src/components/Picker';
 import { ScoreBadge } from '../../src/components/ScoreBadge';
 import { ScoreBreakdown } from '../../src/components/ScoreBreakdown';
 import { SeverityBadge } from '../../src/components/SeverityBadge';
-import {
-  fitAnchorRepository,
-  itemRepository,
-  measurementRepository,
-} from '../../src/repositories';
+import { fitAnchorRepository, itemRepository, measurementRepository } from '../../src/repositories';
 import {
   computeCandidateScore,
   recordDecision,
@@ -60,7 +49,8 @@ type OwnedLite = {
 
 export default function CompareScreen() {
   const params = useLocalSearchParams<{ candidateId?: string }>();
-  const initialCandidateId = typeof params.candidateId === 'string' ? params.candidateId : undefined;
+  const initialCandidateId =
+    typeof params.candidateId === 'string' ? params.candidateId : undefined;
 
   const [candidates, setCandidates] = useState<GarmentItem[]>([]);
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>(
@@ -118,9 +108,7 @@ export default function CompareScreen() {
       setAnchors(anchorEnriched.filter((x): x is AnchorLite => x !== null));
 
       const ownedAll = await itemRepository.listOwned();
-      const ownedSameCat = ownedAll.filter(
-        (o) => o.category === item.category && o.id !== item.id,
-      );
+      const ownedSameCat = ownedAll.filter((o) => o.category === item.category && o.id !== item.id);
       const ownedEnriched = await Promise.all(
         ownedSameCat.map(async (o) => ({
           item: o,
@@ -152,7 +140,7 @@ export default function CompareScreen() {
     return suggestSimilarItems(candidate.item, ownedItems, { limit: 5 });
   }, [candidate, ownedSameCategory]);
 
-  const candidateOptions: ReadonlyArray<PickerOption<string>> = useMemo(
+  const candidateOptions: readonly PickerOption<string>[] = useMemo(
     () => candidates.map((c) => ({ value: c.id, label: c.name })),
     [candidates],
   );
@@ -312,16 +300,11 @@ export default function CompareScreen() {
                     <Pressable
                       accessibilityRole="button"
                       onPress={() => setExpandedOwnedId(expanded ? null : o.item.id)}
-                      style={({ pressed }) => [
-                        ownedHeader,
-                        pressed && { opacity: 0.7 },
-                      ]}
+                      style={({ pressed }) => [ownedHeader, pressed && { opacity: 0.7 }]}
                     >
                       <View style={{ flex: 1 }}>
                         <Text style={ownedName}>{o.item.name}</Text>
-                        {o.item.brand && (
-                          <Text style={ownedSubtitle}>{o.item.brand}</Text>
-                        )}
+                        {o.item.brand && <Text style={ownedSubtitle}>{o.item.brand}</Text>}
                       </View>
                       <Text style={chevron}>{expanded ? '▾' : '▸'}</Text>
                     </Pressable>
@@ -370,11 +353,7 @@ export default function CompareScreen() {
               onPress={() => setDecisionDraft('watch')}
               variant="secondary"
             />
-            <Button
-              label="Skip にする"
-              onPress={() => setDecisionDraft('skip')}
-              variant="ghost"
-            />
+            <Button label="Skip にする" onPress={() => setDecisionDraft('skip')} variant="ghost" />
           </View>
         </>
       )}

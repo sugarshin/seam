@@ -9,11 +9,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  ALL_LEAD_TIMES,
-  leadTimeLabel,
-  type ReminderLeadTime,
-} from '../notifications';
+import { ALL_LEAD_TIMES, leadTimeLabel, type ReminderLeadTime } from '../notifications';
 import { Button } from './Button';
 import { colors, font, radii, space } from '../theme';
 
@@ -48,9 +44,7 @@ export const ReminderSettingsModal = ({
   onSubmit,
 }: Props) => {
   const [enabled, setEnabled] = useState<boolean>(initial.enabled);
-  const [selected, setSelected] = useState<Set<ReminderLeadTime>>(
-    () => new Set(initial.leadTimes),
-  );
+  const [selected, setSelected] = useState<Set<ReminderLeadTime>>(() => new Set(initial.leadTimes));
 
   useEffect(() => {
     if (visible) {
@@ -84,11 +78,7 @@ export const ReminderSettingsModal = ({
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={overlay}
       >
-        <Pressable
-          style={backdrop}
-          onPress={onCancel}
-          accessibilityLabel="閉じる"
-        />
+        <Pressable style={backdrop} onPress={onCancel} accessibilityLabel="閉じる" />
         <View style={card} accessibilityViewIsModal>
           <Text style={title}>終了通知設定</Text>
           <Text style={muted}>終了日時: {formatEnd(auctionEndsAt)}</Text>
@@ -102,9 +92,7 @@ export const ReminderSettingsModal = ({
             />
           </View>
 
-          <Text style={[muted, { marginTop: space.md }]}>
-            終了の何分前に通知を受け取りますか？
-          </Text>
+          <Text style={[muted, { marginTop: space.md }]}>終了の何分前に通知を受け取りますか？</Text>
           <View style={chipWrap}>
             {ALL_LEAD_TIMES.map((lt) => {
               const isOn = selected.has(lt);

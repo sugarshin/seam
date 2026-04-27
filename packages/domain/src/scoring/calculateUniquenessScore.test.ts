@@ -52,12 +52,18 @@ describe('calculateUniquenessScore', () => {
   });
 
   it('returns 40 for 5-6 same-category items', () => {
-    expect(calculateUniquenessScore(candidate, make(5, { category: 'pants', brand: 'Lee' }))).toBe(40);
-    expect(calculateUniquenessScore(candidate, make(6, { category: 'pants', brand: 'Lee' }))).toBe(40);
+    expect(calculateUniquenessScore(candidate, make(5, { category: 'pants', brand: 'Lee' }))).toBe(
+      40,
+    );
+    expect(calculateUniquenessScore(candidate, make(6, { category: 'pants', brand: 'Lee' }))).toBe(
+      40,
+    );
   });
 
   it('returns 20 for 7+ same-category items', () => {
-    expect(calculateUniquenessScore(candidate, make(7, { category: 'pants', brand: 'Lee' }))).toBe(20);
+    expect(calculateUniquenessScore(candidate, make(7, { category: 'pants', brand: 'Lee' }))).toBe(
+      20,
+    );
   });
 
   it('subtracts 5 per same-brand item', () => {

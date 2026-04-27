@@ -12,10 +12,7 @@ if (!existsSync(entitlementsPath)) {
 }
 
 const before = await readFile(entitlementsPath, 'utf8');
-const after = before.replace(
-  /\s*<key>aps-environment<\/key>\s*<string>[^<]*<\/string>/g,
-  '',
-);
+const after = before.replace(/\s*<key>aps-environment<\/key>\s*<string>[^<]*<\/string>/g, '');
 
 if (before === after) {
   console.log('[stripPushEntitlement] aps-environment not present, nothing to do');

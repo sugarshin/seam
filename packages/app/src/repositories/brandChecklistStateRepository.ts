@@ -23,10 +23,7 @@ type ToggleInput = {
 };
 
 export const brandChecklistStateRepository = {
-  async listForItemAndGuide(
-    itemId: string,
-    brandGuideId: string,
-  ): Promise<BrandChecklistState[]> {
+  async listForItemAndGuide(itemId: string, brandGuideId: string): Promise<BrandChecklistState[]> {
     const rows = await db
       .select()
       .from(schema.brandChecklistStates)

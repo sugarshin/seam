@@ -48,7 +48,6 @@ export const PhotoPicker = ({ photos, onChange, max = 8 }: Props) => {
       if (result.canceled) return;
       const saved: SavedPhoto[] = [];
       for (const asset of result.assets) {
-        // eslint-disable-next-line no-await-in-loop -- intentional sequential save
         const s = await savePhoto(asset.uri);
         saved.push(s);
       }

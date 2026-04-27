@@ -9,11 +9,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  MEASUREMENT_KEY_LABEL,
-  type GarmentCategory,
-  type MeasurementKey,
-} from '@seam/shared';
+import { MEASUREMENT_KEY_LABEL, type GarmentCategory, type MeasurementKey } from '@seam/shared';
 import {
   extractMeasurementsFromText,
   type ExtractedMeasurement,
@@ -86,12 +82,7 @@ export const MeasurementExtractionReviewModal = ({
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onCancel}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onCancel}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={overlay}
@@ -115,16 +106,10 @@ export const MeasurementExtractionReviewModal = ({
                 <View style={summaryRow}>
                   <Text style={summaryLabel}>信頼度</Text>
                   <View
-                    style={[
-                      confidenceBadge,
-                      { borderColor: CONFIDENCE_TONE[result.confidence] },
-                    ]}
+                    style={[confidenceBadge, { borderColor: CONFIDENCE_TONE[result.confidence] }]}
                   >
                     <Text
-                      style={[
-                        confidenceBadgeText,
-                        { color: CONFIDENCE_TONE[result.confidence] },
-                      ]}
+                      style={[confidenceBadgeText, { color: CONFIDENCE_TONE[result.confidence] }]}
                     >
                       {CONFIDENCE_LABEL[result.confidence]}
                     </Text>
@@ -143,10 +128,7 @@ export const MeasurementExtractionReviewModal = ({
                           accessibilityRole="checkbox"
                           accessibilityState={{ checked }}
                           onPress={() => toggleAdopt(m.key)}
-                          style={({ pressed }) => [
-                            measurementRow,
-                            pressed && { opacity: 0.6 },
-                          ]}
+                          style={({ pressed }) => [measurementRow, pressed && { opacity: 0.6 }]}
                         >
                           <View style={[checkbox, checked && checkboxChecked]}>
                             {checked && <Text style={checkmark}>✓</Text>}
@@ -164,7 +146,8 @@ export const MeasurementExtractionReviewModal = ({
                 {result.unmatchedKeys.length > 0 && (
                   <View style={{ marginTop: space.sm }}>
                     <Text style={muted}>
-                      範囲外として除外: {result.unmatchedKeys
+                      範囲外として除外:{' '}
+                      {result.unmatchedKeys
                         .map((k) => MEASUREMENT_KEY_LABEL[k as MeasurementKey] ?? k)
                         .join(', ')}
                     </Text>

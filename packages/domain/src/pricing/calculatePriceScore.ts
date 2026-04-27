@@ -5,8 +5,7 @@ export type PriceScoreInput = {
   maxBidPrice?: number;
 };
 
-const isFiniteNumber = (n: unknown): n is number =>
-  typeof n === 'number' && Number.isFinite(n);
+const isFiniteNumber = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n);
 
 /**
  * Returns a 0-100 score that grades how favorable totalPrice is against the
@@ -25,9 +24,7 @@ const isFiniteNumber = (n: unknown): n is number =>
 export const calculatePriceScore = (input: PriceScoreInput): number => {
   const total = isFiniteNumber(input.totalPrice) ? input.totalPrice : undefined;
   const easy = isFiniteNumber(input.easyBuyPrice) ? input.easyBuyPrice : undefined;
-  const acceptable = isFiniteNumber(input.acceptablePrice)
-    ? input.acceptablePrice
-    : undefined;
+  const acceptable = isFiniteNumber(input.acceptablePrice) ? input.acceptablePrice : undefined;
   const max = isFiniteNumber(input.maxBidPrice) ? input.maxBidPrice : undefined;
 
   // Without a totalPrice we cannot compare anything → neutral.

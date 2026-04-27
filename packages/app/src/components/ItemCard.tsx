@@ -16,8 +16,7 @@ export const ItemCard = ({ item, thumbnailRelativePath, wearCount, onPress }: Pr
   const subtitleParts = [item.brand, item.sizeLabel, CATEGORY_LABEL[item.category]].filter(
     (p): p is string => Boolean(p),
   );
-  const isUnworn =
-    item.status === 'owned' && wearCount !== undefined && wearCount === 0;
+  const isUnworn = item.status === 'owned' && wearCount !== undefined && wearCount === 0;
   const content = (
     <View style={card}>
       <View style={thumbBox}>
@@ -61,11 +60,7 @@ export const ItemCard = ({ item, thumbnailRelativePath, wearCount, onPress }: Pr
     </View>
   );
   if (onPress) {
-    const labelParts = [
-      item.name,
-      ...subtitleParts,
-      ITEM_STATUS_LABEL[item.status],
-    ];
+    const labelParts = [item.name, ...subtitleParts, ITEM_STATUS_LABEL[item.status]];
     return (
       <Pressable
         accessibilityRole="button"

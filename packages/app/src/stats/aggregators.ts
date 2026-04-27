@@ -106,7 +106,7 @@ export const topNCounts = <T>(
   items: readonly T[],
   pick: (item: T) => string | undefined | null,
   n: number,
-): Array<{ key: string; count: number }> => {
+): { key: string; count: number }[] => {
   const counts = new Map<string, number>();
   for (const it of items) {
     const raw = pick(it);
@@ -131,7 +131,7 @@ export const monthlyPurchaseBuckets = (
   items: readonly GarmentItem[],
   now: Date,
   months: number,
-): Array<{ month: string; count: number; amount: number }> => {
+): { month: string; count: number; amount: number }[] => {
   const buckets = new Map<string, { count: number; amount: number }>();
   for (const m of lastNMonths(now, months)) {
     buckets.set(m, { count: 0, amount: 0 });

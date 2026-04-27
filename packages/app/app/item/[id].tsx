@@ -62,8 +62,7 @@ type LoadedItem = {
   saleInfo: SaleInfo | null;
 };
 
-const formatYen = (n?: number): string =>
-  n !== undefined ? `¥${n.toLocaleString()}` : '—';
+const formatYen = (n?: number): string => (n !== undefined ? `¥${n.toLocaleString()}` : '—');
 
 const formatDate = (iso?: string | null): string => {
   if (!iso) return '—';
@@ -165,7 +164,6 @@ export default function ItemDetailScreen() {
         // delete photos not present
         for (const e of existing) {
           if (!formIds.has(e.id)) {
-            // eslint-disable-next-line no-await-in-loop -- sequential is fine
             await photoRepository.delete(e.id);
           }
         }
@@ -175,7 +173,7 @@ export default function ItemDetailScreen() {
           const p = input.photos[i];
           if (!p) continue;
           if (existingIds.has(p.id)) continue;
-          // eslint-disable-next-line no-await-in-loop
+
           await photoRepository.create(itemId, p.relativePath, p.thumbnailRelativePath, i);
         }
         setEditing(false);
@@ -458,11 +456,7 @@ export default function ItemDetailScreen() {
           title: loaded.item.name,
           headerShown: true,
           headerRight: () => (
-            <Text
-              accessibilityRole="button"
-              onPress={() => setEditing(true)}
-              style={editLink}
-            >
+            <Text accessibilityRole="button" onPress={() => setEditing(true)} style={editLink}>
               編集
             </Text>
           ),
@@ -573,12 +567,7 @@ export default function ItemDetailScreen() {
             <Kv k="着用回数" v={`${loaded.wearCount} 回`} />
             <Kv k="最終着用" v={formatDate(loaded.lastWornAt)} />
             <Kv k="Cost / Wear" v={formatCostPerWear(cpw)} />
-            {isSold && (
-              <Kv
-                k="Net / Wear"
-                v={formatCostPerWear(netCpw)}
-              />
-            )}
+            {isSold && <Kv k="Net / Wear" v={formatCostPerWear(netCpw)} />}
             {loaded.wearCount === 0 && isOwned && (
               <Text style={[muted, { marginTop: space.sm }]}>未着用です</Text>
             )}
@@ -643,16 +632,12 @@ export default function ItemDetailScreen() {
               <View style={{ marginTop: space.sm }}>
                 <Kv k="売却日" v={formatDate(loaded.saleInfo.soldAt)} />
                 <Kv k="売却価格" v={formatYen(loaded.saleInfo.soldPrice)} />
-                {loaded.saleInfo.soldSource && (
-                  <Kv k="販売元" v={loaded.saleInfo.soldSource} />
-                )}
+                {loaded.saleInfo.soldSource && <Kv k="販売元" v={loaded.saleInfo.soldSource} />}
                 {loaded.saleInfo.notes && <Kv k="メモ" v={loaded.saleInfo.notes} />}
               </View>
             )}
             <View style={{ marginTop: space.md, gap: space.sm }}>
-              {isOwned && (
-                <Button label="Sold にする" onPress={() => setSaleModalOpen(true)} />
-              )}
+              {isOwned && <Button label="Sold にする" onPress={() => setSaleModalOpen(true)} />}
               {isSold && (
                 <>
                   <Button

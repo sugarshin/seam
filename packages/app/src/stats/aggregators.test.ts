@@ -174,9 +174,7 @@ describe('monthlyPurchaseBuckets', () => {
 
   it('ignores items outside the window', () => {
     const now = new Date(2026, 3, 26);
-    const items = [
-      baseItem({ id: 'old', purchaseDate: '2024-01-01', totalPrice: 9999 }),
-    ];
+    const items = [baseItem({ id: 'old', purchaseDate: '2024-01-01', totalPrice: 9999 })];
     const buckets = monthlyPurchaseBuckets(items, now, 3);
     expect(buckets.every((b) => b.amount === 0)).toBe(true);
   });
