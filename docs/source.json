@@ -19,12 +19,20 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.1.1",
+      "version": "0.2.0",
       "versionDate": "2026-04-27",
-      "versionDescription": "- Version bump to 0.1.1\n- Merge pull request #20 from sugarshin/renovate/react-monorepo\n- Merge pull request #19 from sugarshin/renovate/github-actions-digests\n- Pin dependency @types/react to 19.1.17\n- Pin dependencies\n- fix(renovate): migrate deprecated matchPackagePrefixes to matchPackageNames\n- Merge pull request #18 from sugarshin/ci/add-build\n- ci: add expo export step to catch Metro/codegen failures\n- Merge pull request #17 from sugarshin/fix/package-versions\n- Fix package versions\n- Merge pull request #15 from sugarshin/renovate/react-native-gesture-handler-2.x\n- Update renovate config\n- Update dependency react-native-gesture-handler to ~2.31.0\n- Merge pull request #14 from sugarshin/renovate/react-native-0.x\n- Update dependency react-native to v0.85.2\n- Merge pull request #13 from sugarshin/renovate/drizzle-orm-0.x\n- Update dependency drizzle-orm to ^0.45.0\n- Merge pull request #9 from sugarshin/renovate/ruby-3.3.x\n- Merge pull request #6 from sugarshin/renovate/pnpm-10.33.x\n- Merge pull request #5 from sugarshin/renovate/patch-all-patch-update-dependencies\n- Update dependency react-native to v0.81.6\n- Merge pull request #4 from sugarshin/renovate/react-monorepo\n- chore(release): update source.json for v0.1.0\n- Pin dependencies\n- Update All minor update devDependencies (#12)\n- Merge pull request #3 from sugarshin/renovate/pin-dependencies\n- Pin dependencies\n- Update dependency ruby to v3.3.11\n- Update pnpm to v10.33.2",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.1/Seam-v0.1.1.ipa",
-      "size": 8922704,
+      "versionDescription": "- Version bump 0.2.0\n- Merge pull request #27 from sugarshin/renovate/migrate-config\n- Merge pull request #25 from sugarshin/renovate/linters\n- Migrate config renovate.json\n- Pin dependencies\n- Merge pull request #26 from sugarshin/renovate/ruby-3.x\n- Merge pull request #24 from sugarshin/feat/closet-sold-mode\n- Add lefthook for pre-commit format and pre-push CI gate\n- Apply biome format\n- Update dependency ruby to v3.4.9\n- Add Sold mode to Closet with Stats drill-down\n- Align Expo SDK 54 peers and group react/react-native in Renovate\n- Update CLAUDE.md\n- Merge pull request #23 from sugarshin/renovate/patch-react-monorepo\n- Update renovate config\n- Update dependency react to v19.1.6\n- Merge pull request #21 from sugarshin/renovate/react-native-0.81.x\n- Update dependency react-native to v0.81.6\n- Merge pull request #22 from sugarshin/chore/lint-format\n- Linter, formatter\n- chore(release): update source.json for v0.1.1",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.2.0/Seam-v0.2.0.ipa",
+      "size": 8930888,
       "versions": [
+        {
+          "version": "0.2.0",
+          "date": "2026-04-27",
+          "localizedDescription": "- Version bump 0.2.0\n- Merge pull request #27 from sugarshin/renovate/migrate-config\n- Merge pull request #25 from sugarshin/renovate/linters\n- Migrate config renovate.json\n- Pin dependencies\n- Merge pull request #26 from sugarshin/renovate/ruby-3.x\n- Merge pull request #24 from sugarshin/feat/closet-sold-mode\n- Add lefthook for pre-commit format and pre-push CI gate\n- Apply biome format\n- Update dependency ruby to v3.4.9\n- Add Sold mode to Closet with Stats drill-down\n- Align Expo SDK 54 peers and group react/react-native in Renovate\n- Update CLAUDE.md\n- Merge pull request #23 from sugarshin/renovate/patch-react-monorepo\n- Update renovate config\n- Update dependency react to v19.1.6\n- Merge pull request #21 from sugarshin/renovate/react-native-0.81.x\n- Update dependency react-native to v0.81.6\n- Merge pull request #22 from sugarshin/chore/lint-format\n- Linter, formatter\n- chore(release): update source.json for v0.1.1",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.2.0/Seam-v0.2.0.ipa",
+          "size": 8930888,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.1.1",
           "date": "2026-04-27",
