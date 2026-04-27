@@ -53,11 +53,8 @@ export const photoRepository = {
     for (let i = 0; i < orderedIds.length; i += 1) {
       const id = orderedIds[i];
       if (!id) continue;
-      // eslint-disable-next-line no-await-in-loop -- sequential to keep semantics simple
-      await db
-        .update(schema.photos)
-        .set({ sortOrder: i })
-        .where(eq(schema.photos.id, id));
+
+      await db.update(schema.photos).set({ sortOrder: i }).where(eq(schema.photos.id, id));
     }
     void itemId;
   },

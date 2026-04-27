@@ -20,13 +20,7 @@ const LEAD_TIME_LABEL_JA: Record<ReminderLeadTime, string> = {
   '1d': '1日前',
 };
 
-export const ALL_LEAD_TIMES: readonly ReminderLeadTime[] = [
-  '10m',
-  '30m',
-  '1h',
-  '3h',
-  '1d',
-];
+export const ALL_LEAD_TIMES: readonly ReminderLeadTime[] = ['10m', '30m', '1h', '3h', '1d'];
 
 export const leadTimeLabel = (lt: ReminderLeadTime): string => LEAD_TIME_LABEL_JA[lt];
 
@@ -102,7 +96,7 @@ export const scheduleAuctionReminders = async (
   for (const lt of opts.leadTimes) {
     const triggerMs = endMs - LEAD_TIME_MS[lt];
     if (triggerMs <= now) continue; // skip past lead times
-    // eslint-disable-next-line no-await-in-loop -- sequential to keep ordering deterministic
+
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: `終了まで${LEAD_TIME_LABEL_JA[lt]}: ${opts.itemName}`,
@@ -126,7 +120,6 @@ export const scheduleAuctionReminders = async (
 /** Cancel one or more previously-scheduled reminders by their identifier. */
 export const cancelReminders = async (notificationIds: readonly string[]): Promise<void> => {
   for (const id of notificationIds) {
-    // eslint-disable-next-line no-await-in-loop -- sequential keeps API simple
     await Notifications.cancelScheduledNotificationAsync(id);
   }
 };

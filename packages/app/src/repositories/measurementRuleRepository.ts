@@ -2,11 +2,7 @@ import { and, asc, eq } from 'drizzle-orm';
 import { db, schema } from '../db/client';
 import { newId } from '../utils/ids';
 import { nowIso } from '../utils/dates';
-import type {
-  GarmentCategory,
-  MeasurementKey,
-  MeasurementRule,
-} from '@seam/shared';
+import type { GarmentCategory, MeasurementKey, MeasurementRule } from '@seam/shared';
 
 type Row = typeof schema.measurementRules.$inferSelect;
 

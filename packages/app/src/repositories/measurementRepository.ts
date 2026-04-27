@@ -1,8 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { db, schema } from '../db/client';
 import { newId } from '../utils/ids';
-import type { Measurement, MeasurementInput } from '@seam/shared';
-import type { MeasurementKey, MeasurementUnit } from '@seam/shared';
+import type { Measurement, MeasurementInput, MeasurementKey, MeasurementUnit } from '@seam/shared';
 
 const toMeasurement = (row: typeof schema.measurements.$inferSelect): Measurement => ({
   id: row.id,

@@ -45,13 +45,7 @@ const parsePriceInput = (raw: string): number | undefined => {
   return Number.isFinite(n) && n >= 0 ? Math.round(n) : undefined;
 };
 
-export const SaleInfoModal = ({
-  visible,
-  submitting,
-  initial,
-  onCancel,
-  onSubmit,
-}: Props) => {
+export const SaleInfoModal = ({ visible, submitting, initial, onCancel, onSubmit }: Props) => {
   const [soldPrice, setSoldPrice] = useState('');
   const [soldAt, setSoldAt] = useState('');
   const [soldSource, setSoldSource] = useState('');
@@ -81,8 +75,7 @@ export const SaleInfoModal = ({
     const trimmedNotes = notes.trim();
     onSubmit({
       soldPrice: parsePriceInput(soldPrice),
-      soldAt:
-        soldAt.trim() === '' ? undefined : new Date(soldAt).toISOString(),
+      soldAt: soldAt.trim() === '' ? undefined : new Date(soldAt).toISOString(),
       soldSource: trimmedSource === '' ? undefined : trimmedSource,
       notes: trimmedNotes === '' ? undefined : trimmedNotes,
     });

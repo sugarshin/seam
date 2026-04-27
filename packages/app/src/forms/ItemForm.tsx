@@ -36,9 +36,10 @@ const isFavoriteScore = (n: number): n is FavoriteScore =>
 
 // Status options exposed to the picker — `sold` is reserved for Phase 6
 // (post-purchase flow), so we omit it from the form input.
-const SELECTABLE_STATUSES = ITEM_STATUSES.filter((s) => s !== 'sold') as ReadonlyArray<
-  Exclude<ItemStatus, 'sold'>
->;
+const SELECTABLE_STATUSES = ITEM_STATUSES.filter((s) => s !== 'sold') as readonly Exclude<
+  ItemStatus,
+  'sold'
+>[];
 const CANDIDATE_STATUS_SET = new Set<ItemStatus>([
   'wishlist',
   'watching',
@@ -56,15 +57,8 @@ const FormSchema = z.object({
   sizeLabel: z.string().trim().optional(),
   conditionRank: z.enum(CONDITION_RANKS as readonly [ConditionRank, ...ConditionRank[]]).optional(),
   conditionNotes: z.string().trim().optional(),
-  fitRating: z
-    .enum(['too_small', 'just', 'slightly_large', 'large', 'too_large'])
-    .optional(),
-  favoriteScore: z
-    .number()
-    .int()
-    .min(1)
-    .max(5)
-    .optional(),
+  fitRating: z.enum(['too_small', 'just', 'slightly_large', 'large', 'too_large']).optional(),
+  favoriteScore: z.number().int().min(1).max(5).optional(),
   purchasePrice: z.string().trim().optional(),
   shippingFee: z.string().trim().optional(),
   purchaseDate: z.string().trim().optional(),
@@ -126,23 +120,22 @@ type Props = {
 
 const PLACEHOLDER_ITEM_ID = 'pending';
 
-const STATUS_OPTIONS: ReadonlyArray<PickerOption<ItemStatus>> = SELECTABLE_STATUSES.map((s) => ({
+const STATUS_OPTIONS: readonly PickerOption<ItemStatus>[] = SELECTABLE_STATUSES.map((s) => ({
   value: s,
   label: ITEM_STATUS_LABEL[s],
 }));
 
-const CATEGORY_OPTIONS: ReadonlyArray<PickerOption<GarmentCategory>> = GARMENT_CATEGORIES.map(
-  (c) => ({ value: c, label: CATEGORY_LABEL[c] }),
-);
+const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEGORIES.map((c) => ({
+  value: c,
+  label: CATEGORY_LABEL[c],
+}));
 
-const CONDITION_OPTIONS: ReadonlyArray<PickerOption<ConditionRank>> = CONDITION_RANKS.map((r) => ({
+const CONDITION_OPTIONS: readonly PickerOption<ConditionRank>[] = CONDITION_RANKS.map((r) => ({
   value: r,
   label: r,
 }));
 
-const FIT_RATING_OPTIONS: ReadonlyArray<
-  PickerOption<NonNullable<ItemFormValues['fitRating']>>
-> = [
+const FIT_RATING_OPTIONS: readonly PickerOption<NonNullable<ItemFormValues['fitRating']>>[] = [
   { value: 'too_small', label: '小さすぎ' },
   { value: 'just', label: 'ジャスト' },
   { value: 'slightly_large', label: '少し大きい' },
@@ -150,11 +143,12 @@ const FIT_RATING_OPTIONS: ReadonlyArray<
   { value: 'too_large', label: '大きすぎ' },
 ];
 
-const FAVORITE_SCORE_OPTIONS: ReadonlyArray<PickerOption<string>> = FAVORITE_SCORE_VALUES.map(
-  (n) => ({ value: String(n), label: '★'.repeat(n) }),
-);
+const FAVORITE_SCORE_OPTIONS: readonly PickerOption<string>[] = FAVORITE_SCORE_VALUES.map((n) => ({
+  value: String(n),
+  label: '★'.repeat(n),
+}));
 
-const SOURCE_TYPE_OPTIONS: ReadonlyArray<PickerOption<SourceType>> = SOURCE_TYPES.map((s) => ({
+const SOURCE_TYPE_OPTIONS: readonly PickerOption<SourceType>[] = SOURCE_TYPES.map((s) => ({
   value: s,
   label: SOURCE_TYPE_LABEL[s],
 }));

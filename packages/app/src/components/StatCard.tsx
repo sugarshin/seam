@@ -14,8 +14,7 @@ type Props = {
 };
 
 export const StatCard = ({ title, value, subtext, tone = 'default', style }: Props) => {
-  const accent =
-    tone === 'warning' ? colors.warning : tone === 'good' ? colors.same : colors.text;
+  const accent = tone === 'warning' ? colors.warning : tone === 'good' ? colors.same : colors.text;
   return (
     <View style={[card, { borderColor: tone === 'default' ? colors.border : accent }, style]}>
       <Text style={[titleStyle, { color: tone === 'default' ? colors.textMuted : accent }]}>

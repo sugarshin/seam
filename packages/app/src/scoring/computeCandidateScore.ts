@@ -44,20 +44,18 @@ export const computeCandidateScore = async (
     throw new Error(`Item not found: ${itemId}`);
   }
 
-  const [candidateMeasurements, candidateInfo, anchorRows, ownedItems, rules] =
-    await Promise.all([
-      measurementRepository.listByItem(itemId),
-      candidateInfoRepository.getByItemId(itemId),
-      fitAnchorRepository.listByCategory(candidate.category),
-      itemRepository.listOwned(),
-      measurementRuleRepository.listByCategory(candidate.category),
-    ]);
+  const [candidateMeasurements, candidateInfo, anchorRows, ownedItems, rules] = await Promise.all([
+    measurementRepository.listByItem(itemId),
+    candidateInfoRepository.getByItemId(itemId),
+    fitAnchorRepository.listByCategory(candidate.category),
+    itemRepository.listOwned(),
+    measurementRuleRepository.listByCategory(candidate.category),
+  ]);
 
   // Hydrate anchors → SizeScoreAnchor[]
   const anchors: SizeScoreAnchor[] = [];
   const comparedAnchorIds: string[] = [];
   for (const a of anchorRows) {
-    // eslint-disable-next-line no-await-in-loop
     const [aItem, aMs] = await Promise.all([
       itemRepository.getById(a.itemId),
       measurementRepository.listByItem(a.itemId),

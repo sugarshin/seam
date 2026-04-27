@@ -2,8 +2,7 @@ import { eq } from 'drizzle-orm';
 import { db, schema } from '../db/client';
 import { newId } from '../utils/ids';
 import { nowIso } from '../utils/dates';
-import type { FitAnchor } from '@seam/shared';
-import type { GarmentCategory } from '@seam/shared';
+import type { FitAnchor, GarmentCategory } from '@seam/shared';
 
 const toAnchor = (row: typeof schema.fitAnchors.$inferSelect): FitAnchor => ({
   id: row.id,

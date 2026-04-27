@@ -39,10 +39,7 @@ export const saleInfoRepository = {
       .where(eq(schema.saleInfos.itemId, info.itemId))
       .limit(1);
     if (existing.length > 0) {
-      await db
-        .update(schema.saleInfos)
-        .set(row)
-        .where(eq(schema.saleInfos.itemId, info.itemId));
+      await db.update(schema.saleInfos).set(row).where(eq(schema.saleInfos.itemId, info.itemId));
     } else {
       await db.insert(schema.saleInfos).values(row);
     }

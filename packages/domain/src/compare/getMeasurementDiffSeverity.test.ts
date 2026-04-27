@@ -40,12 +40,24 @@ describe('getMeasurementDiffSeverity', () => {
 
   it('directional rule fires when bodyLength is short by absAtWarning cm', () => {
     // bodyLength sign=negative, absAtWarning=4 → -4cm or worse → warning.
-    const d = diff({ key: 'bodyLength', diffCm: -4, diffPct: -0.05, candidateValue: 76, referenceValue: 80 });
+    const d = diff({
+      key: 'bodyLength',
+      diffCm: -4,
+      diffPct: -0.05,
+      candidateValue: 76,
+      referenceValue: 80,
+    });
     expect(getMeasurementDiffSeverity(d, 't_shirt')).toBe('warning');
   });
 
   it('directional rule does NOT fire for positive bodyLength diff (item is longer)', () => {
-    const d = diff({ key: 'bodyLength', diffCm: 5, diffPct: 5 / 80, candidateValue: 85, referenceValue: 80 });
+    const d = diff({
+      key: 'bodyLength',
+      diffCm: 5,
+      diffPct: 5 / 80,
+      candidateValue: 85,
+      referenceValue: 80,
+    });
     // 5cm on 80 = 6.25% — within different (8%), abs 5/5 = 1 hits different exactly.
     expect(getMeasurementDiffSeverity(d, 't_shirt')).toBe('different');
   });
@@ -59,7 +71,13 @@ describe('getMeasurementDiffSeverity', () => {
     // pants close = 2cm OR 3% — 2.5cm on 80cm waist is 3.1% (close on abs not
     // hit: 2.5/2 = 1.25 > 1; pct: 3.1/3 = 1.04 > 1). Both above close, both
     // within different (4cm or 6%). Expect "different".
-    const d = diff({ key: 'waist', diffCm: 2.5, diffPct: 2.5 / 80, candidateValue: 82.5, referenceValue: 80 });
+    const d = diff({
+      key: 'waist',
+      diffCm: 2.5,
+      diffPct: 2.5 / 80,
+      candidateValue: 82.5,
+      referenceValue: 80,
+    });
     expect(getMeasurementDiffSeverity(d, 'pants')).toBe('different');
   });
 });

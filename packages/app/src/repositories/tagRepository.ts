@@ -38,9 +38,7 @@ export const tagRepository = {
     const tags = await Promise.all(tagNames.map((n) => this.ensure(n)));
     await db.delete(schema.itemTags).where(eq(schema.itemTags.itemId, itemId));
     if (tags.length > 0) {
-      await db
-        .insert(schema.itemTags)
-        .values(tags.map((t) => ({ itemId, tagId: t.id })));
+      await db.insert(schema.itemTags).values(tags.map((t) => ({ itemId, tagId: t.id })));
     }
   },
 

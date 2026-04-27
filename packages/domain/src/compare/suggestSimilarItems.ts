@@ -38,7 +38,10 @@ export const suggestSimilarItems = (
   const filtered = ownedItems.filter((it) => {
     if (it.id === candidate.id) return false;
     if (opts.sameCategory && it.category !== candidate.category) return false;
-    if (opts.sameBrand && (it.brand ?? '').toLowerCase() !== (candidate.brand ?? '').toLowerCase()) {
+    if (
+      opts.sameBrand &&
+      (it.brand ?? '').toLowerCase() !== (candidate.brand ?? '').toLowerCase()
+    ) {
       return false;
     }
     return true;

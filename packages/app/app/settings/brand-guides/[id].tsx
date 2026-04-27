@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  Text,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   CATEGORY_LABEL,
@@ -20,9 +13,10 @@ import { TextField } from '../../../src/components/TextField';
 import { brandGuideRepository } from '../../../src/repositories';
 import { colors, font, space } from '../../../src/theme';
 
-const CATEGORY_OPTIONS: ReadonlyArray<PickerOption<GarmentCategory>> = GARMENT_CATEGORIES.map(
-  (c) => ({ value: c, label: CATEGORY_LABEL[c] }),
-);
+const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEGORIES.map((c) => ({
+  value: c,
+  label: CATEGORY_LABEL[c],
+}));
 
 export default function BrandGuideEditScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

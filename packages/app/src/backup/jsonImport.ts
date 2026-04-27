@@ -116,10 +116,10 @@ export const truncateAllTables = async (): Promise<void> => {
     const tableName = IMPORT_ORDER[i];
     if (!tableName) continue;
     const handle = TABLE_HANDLES[tableName];
-    // eslint-disable-next-line no-await-in-loop -- sequential ordering matters for FKs
+
     await db.delete(handle.table as never);
   }
-}
+};
 
 const buildPkSet = async (tableName: TableName): Promise<Set<string>> => {
   const handle = TABLE_HANDLES[tableName];
@@ -166,11 +166,11 @@ export const importFromJsonFile = async (
 
     let toInsert: Record<string, unknown>[];
     if (opts.mode === 'merge') {
-      // eslint-disable-next-line no-await-in-loop -- per-table dependency ordering
       const existing = await buildPkSet(tableName);
-      toInsert = incoming.filter(
-        (row) => !existing.has(rowKey(row, handle.pk)),
-      ) as Record<string, unknown>[];
+      toInsert = incoming.filter((row) => !existing.has(rowKey(row, handle.pk))) as Record<
+        string,
+        unknown
+      >[];
     } else {
       toInsert = incoming as Record<string, unknown>[];
     }
@@ -186,7 +186,7 @@ export const importFromJsonFile = async (
       const CHUNK = 50;
       for (let i = 0; i < toInsert.length; i += CHUNK) {
         const chunk = toInsert.slice(i, i + CHUNK);
-        // eslint-disable-next-line no-await-in-loop -- chunked sequential inserts
+
         await db.insert(handle.table as never).values(chunk as never);
       }
       insertedCounts[tableName] = toInsert.length;

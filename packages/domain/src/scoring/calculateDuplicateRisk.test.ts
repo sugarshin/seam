@@ -62,9 +62,7 @@ describe('calculateDuplicateRisk', () => {
   });
 
   it('compares case- and whitespace-insensitively', () => {
-    const owned = [
-      item({ id: '1', category: 'pants', brand: '  LEVI’S ', color: 'INDIGO ' }),
-    ];
+    const owned = [item({ id: '1', category: 'pants', brand: '  LEVI’S ', color: 'INDIGO ' })];
     expect(calculateDuplicateRisk(candidate, owned)).toBe(40);
   });
 

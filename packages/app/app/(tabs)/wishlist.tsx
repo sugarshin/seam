@@ -23,27 +23,23 @@ import { Chip } from '../../src/components/Chip';
 import { EmptyState } from '../../src/components/EmptyState';
 import { ItemCard } from '../../src/components/ItemCard';
 import { Picker, type PickerOption } from '../../src/components/Picker';
-import {
-  candidateInfoRepository,
-  itemRepository,
-  photoRepository,
-} from '../../src/repositories';
+import { candidateInfoRepository, itemRepository, photoRepository } from '../../src/repositories';
 import { colors, font, radii, space } from '../../src/theme';
 
 type WishSort = 'auctionEndsAt_asc' | 'price_asc' | 'createdAt_desc';
 
-const SORT_OPTIONS: ReadonlyArray<PickerOption<WishSort>> = [
+const SORT_OPTIONS: readonly PickerOption<WishSort>[] = [
   { value: 'auctionEndsAt_asc', label: '終了日時が近い順' },
   { value: 'price_asc', label: '価格が安い順' },
   { value: 'createdAt_desc', label: '追加日が新しい順' },
 ];
 
-const STATUS_FILTER_OPTIONS: ReadonlyArray<PickerOption<ItemStatus | '__all__'>> = [
+const STATUS_FILTER_OPTIONS: readonly PickerOption<ItemStatus | '__all__'>[] = [
   { value: '__all__', label: 'すべてのステータス' },
   ...CANDIDATE_STATUSES.map((s) => ({ value: s, label: ITEM_STATUS_LABEL[s] })),
 ];
 
-const SOURCE_FILTER_OPTIONS: ReadonlyArray<PickerOption<SourceType | '__all__'>> = [
+const SOURCE_FILTER_OPTIONS: readonly PickerOption<SourceType | '__all__'>[] = [
   { value: '__all__', label: 'すべての出品元' },
   ...SOURCE_TYPES.map((s) => ({ value: s, label: SOURCE_TYPE_LABEL[s] })),
 ];
@@ -89,10 +85,7 @@ export default function WishlistScreen() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const items = await itemRepository.list(
-        { statuses: CANDIDATE_STATUSES },
-        'createdAt_desc',
-      );
+      const items = await itemRepository.list({ statuses: CANDIDATE_STATUSES }, 'createdAt_desc');
       const enriched: WishItem[] = await Promise.all(
         items.map(async (item) => {
           const [candidate, photos] = await Promise.all([
@@ -137,15 +130,11 @@ export default function WishlistScreen() {
         <ItemCard
           item={item.item}
           thumbnailRelativePath={item.thumbnail}
-          onPress={() =>
-            router.push({ pathname: '/candidate/[id]', params: { id: item.item.id } })
-          }
+          onPress={() => router.push({ pathname: '/candidate/[id]', params: { id: item.item.id } })}
         />
         {(total !== undefined || ends !== undefined) && (
           <View style={metaRow}>
-            {total !== undefined && (
-              <Text style={metaPrice}>¥{total.toLocaleString()}</Text>
-            )}
+            {total !== undefined && <Text style={metaPrice}>¥{total.toLocaleString()}</Text>}
             {ends && <Text style={metaEnds}>～ {ends.replace('T', ' ').slice(0, 16)}</Text>}
           </View>
         )}

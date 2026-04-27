@@ -27,14 +27,14 @@ type Props = {
   onSubmit: (draft: FailureLogDraft) => void;
 };
 
-const RESULT_OPTIONS: ReadonlyArray<PickerOption<FailureLog['result']>> = [
+const RESULT_OPTIONS: readonly PickerOption<FailureLog['result']>[] = [
   { value: 'success', label: '成功' },
   { value: 'mixed', label: '一部成功' },
   { value: 'failure', label: '失敗' },
 ];
 
-const REASON_OPTIONS: ReadonlyArray<PickerOption<FailureReason>> = (
-  Object.entries(FAILURE_REASON_LABEL) as Array<[FailureReason, string]>
+const REASON_OPTIONS: readonly PickerOption<FailureReason>[] = (
+  Object.entries(FAILURE_REASON_LABEL) as [FailureReason, string][]
 ).map(([value, label]) => ({ value, label }));
 
 export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Props) => {

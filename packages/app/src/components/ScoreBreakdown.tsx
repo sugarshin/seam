@@ -82,9 +82,7 @@ export const ScoreBreakdown = ({ breakdown, style }: Props) => {
 };
 
 /** Pull a CandidateEvaluation row into the shape ScoreBreakdown expects. */
-export const breakdownFromEvaluation = (
-  ev: CandidateEvaluation,
-): Props['breakdown'] => ({
+export const breakdownFromEvaluation = (ev: CandidateEvaluation): Props['breakdown'] => ({
   sizeScore: ev.sizeScore,
   priceScore: ev.priceScore,
   conditionScore: ev.conditionScore,

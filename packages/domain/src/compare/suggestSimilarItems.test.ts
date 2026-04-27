@@ -29,10 +29,7 @@ describe('suggestSimilarItems', () => {
   });
 
   it('filters by same category by default', () => {
-    const owned = [
-      item({ id: 'a', category: 't_shirt' }),
-      item({ id: 'b', category: 'pants' }),
-    ];
+    const owned = [item({ id: 'a', category: 't_shirt' }), item({ id: 'b', category: 'pants' })];
     expect(suggestSimilarItems(candidate, owned).map((i) => i.id)).toEqual(['a']);
   });
 
@@ -41,9 +38,9 @@ describe('suggestSimilarItems', () => {
       item({ id: 'a', category: 't_shirt', brand: 'Nike' }),
       item({ id: 'b', category: 't_shirt', brand: 'Adidas' }),
     ];
-    expect(
-      suggestSimilarItems(candidate, owned, { sameBrand: true }).map((i) => i.id),
-    ).toEqual(['a']);
+    expect(suggestSimilarItems(candidate, owned, { sameBrand: true }).map((i) => i.id)).toEqual([
+      'a',
+    ]);
   });
 
   it('ranks items with more matching attributes higher', () => {
@@ -52,11 +49,7 @@ describe('suggestSimilarItems', () => {
       item({ id: 'high', category: 't_shirt', brand: 'Nike', color: 'black', sizeLabel: 'L' }),
       item({ id: 'mid', category: 't_shirt', brand: 'Nike', color: 'white' }),
     ];
-    expect(suggestSimilarItems(candidate, owned).map((i) => i.id)).toEqual([
-      'high',
-      'mid',
-      'low',
-    ]);
+    expect(suggestSimilarItems(candidate, owned).map((i) => i.id)).toEqual(['high', 'mid', 'low']);
   });
 
   it('respects limit option', () => {

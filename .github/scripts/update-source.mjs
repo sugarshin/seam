@@ -9,9 +9,7 @@ const IPA_SIZE = Number(process.env.IPA_SIZE);
 const CHANGES = process.env.CHANGES || '';
 
 if (!REPO || !TAG || !VERSION || !Number.isFinite(IPA_SIZE)) {
-  throw new Error(
-    `missing env: REPO=${REPO} TAG=${TAG} VERSION=${VERSION} IPA_SIZE=${IPA_SIZE}`,
-  );
+  throw new Error(`missing env: REPO=${REPO} TAG=${TAG} VERSION=${VERSION} IPA_SIZE=${IPA_SIZE}`);
 }
 
 const downloadURL = `https://github.com/${REPO}/releases/download/${TAG}/Seam-${TAG}.ipa`;
@@ -32,10 +30,7 @@ const newVersion = {
   minOSVersion: '15.1',
 };
 
-app.versions = [
-  newVersion,
-  ...(app.versions || []).filter((v) => v.version !== VERSION),
-];
+app.versions = [newVersion, ...(app.versions || []).filter((v) => v.version !== VERSION)];
 
 app.version = newVersion.version;
 app.versionDate = newVersion.date;

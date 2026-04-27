@@ -155,8 +155,7 @@ export default function StatsScreen() {
             label: u.name,
             sublabel: `${u.daysSincePurchase} 日経過`,
             trailing: '0回',
-            onPress: () =>
-              router.push({ pathname: '/item/[id]', params: { id: u.id } }),
+            onPress: () => router.push({ pathname: '/item/[id]', params: { id: u.id } }),
           }))}
           emptyMessage="着ていない服はありません 🎉"
         />
@@ -165,11 +164,9 @@ export default function StatsScreen() {
       <Section title="重複の可能性" subtitle="同じカテゴリ × ブランド × 色">
         <RankingList
           items={snapshot.duplicateClusters.map((c, idx) => {
-            const parts = [
-              CATEGORY_LABEL[c.category],
-              c.brand,
-              c.color,
-            ].filter((p): p is string => Boolean(p));
+            const parts = [CATEGORY_LABEL[c.category], c.brand, c.color].filter((p): p is string =>
+              Boolean(p),
+            );
             return {
               id: `${c.category}-${c.brand ?? '-'}-${c.color ?? '-'}-${idx}`,
               label: parts.join(' · '),
@@ -188,8 +185,7 @@ export default function StatsScreen() {
             label: i.name,
             sublabel: `着用 ${i.wearCount} 回`,
             trailing: `¥${Math.round(i.cpw).toLocaleString()}`,
-            onPress: () =>
-              router.push({ pathname: '/item/[id]', params: { id: i.id } }),
+            onPress: () => router.push({ pathname: '/item/[id]', params: { id: i.id } }),
           }))}
           emptyMessage="CPW を計算できるアイテムがまだありません"
         />

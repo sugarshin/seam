@@ -1,18 +1,10 @@
 import { useCallback, useState } from 'react';
 import { ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { useFocusEffect, router } from 'expo-router';
-import {
-  CANDIDATE_STATUSES,
-  type CandidateInfo,
-  type GarmentItem,
-} from '@seam/shared';
+import { CANDIDATE_STATUSES, type CandidateInfo, type GarmentItem } from '@seam/shared';
 import { EmptyState } from '../../src/components/EmptyState';
 import { ItemCard } from '../../src/components/ItemCard';
-import {
-  candidateInfoRepository,
-  itemRepository,
-  photoRepository,
-} from '../../src/repositories';
+import { candidateInfoRepository, itemRepository, photoRepository } from '../../src/repositories';
 import { getMonthlyPurchaseSummary } from '../../src/stats';
 import { colors, font, space, useThemeColors } from '../../src/theme';
 
@@ -36,10 +28,7 @@ export default function HomeScreen() {
 
   const load = useCallback(async () => {
     const owned = await itemRepository.list({ statuses: ['owned'] }, 'createdAt_desc');
-    const wishlist = await itemRepository.list(
-      { statuses: CANDIDATE_STATUSES },
-      'createdAt_desc',
-    );
+    const wishlist = await itemRepository.list({ statuses: CANDIDATE_STATUSES }, 'createdAt_desc');
     const ownedTop = owned.slice(0, TOP_N);
     const wishTop = wishlist.slice(0, TOP_N);
     setRecentOwned(ownedTop);

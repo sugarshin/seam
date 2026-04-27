@@ -51,8 +51,7 @@ export const getMeasurementDiffSeverity = (
     }
   }
 
-  const thresholds: SeverityThresholds =
-    DEFAULT_THRESHOLDS_BY_GROUP[measurementGroupOf(category)];
+  const thresholds: SeverityThresholds = DEFAULT_THRESHOLDS_BY_GROUP[measurementGroupOf(category)];
 
   const absDiff = Math.abs(diff.diffCm);
   const absPct = Math.abs(diff.diffPct);
@@ -60,8 +59,7 @@ export const getMeasurementDiffSeverity = (
   // "Looser of the two" → take the *minimum* normalised score across the
   // absolute-cm and the percentage axis. A normalised score <= 1 means the
   // diff is within that level's threshold.
-  const within = (abs: number, pct: number): boolean =>
-    Math.min(absDiff / abs, absPct / pct) <= 1;
+  const within = (abs: number, pct: number): boolean => Math.min(absDiff / abs, absPct / pct) <= 1;
 
   if (within(thresholds.sameAbs, thresholds.samePct)) return 'same';
   if (within(thresholds.closeAbs, thresholds.closePct)) return 'close';

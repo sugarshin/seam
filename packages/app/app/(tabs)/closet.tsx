@@ -24,7 +24,7 @@ import { itemRepository, photoRepository, wearLogRepository } from '../../src/re
 import type { ItemSort } from '../../src/repositories';
 import { colors, font, radii, space } from '../../src/theme';
 
-const SORT_OPTIONS: ReadonlyArray<PickerOption<ItemSort>> = [
+const SORT_OPTIONS: readonly PickerOption<ItemSort>[] = [
   { value: 'createdAt_desc', label: '新しい順' },
   { value: 'purchaseDate_desc', label: '購入日が新しい順' },
   { value: 'purchasePrice_desc', label: '価格が高い順' },
@@ -95,9 +95,7 @@ export default function ClosetScreen() {
       item={item}
       thumbnailRelativePath={thumbnails[item.id]}
       wearCount={wearCounts[item.id]}
-      onPress={() =>
-        router.push({ pathname: '/item/[id]', params: { id: item.id } })
-      }
+      onPress={() => router.push({ pathname: '/item/[id]', params: { id: item.id } })}
     />
   );
 

@@ -43,7 +43,7 @@ export const createItemWithDetails = async (
   for (let i = 0; i < input.photos.length; i += 1) {
     const p = input.photos[i];
     if (!p) continue;
-    // eslint-disable-next-line no-await-in-loop -- sequential to keep sortOrder stable
+
     await photoRepository.create(created.id, p.relativePath, p.thumbnailRelativePath, i);
   }
 
@@ -136,7 +136,6 @@ export const deleteItemWithDetails = async (id: string): Promise<void> => {
   await itemRepository.delete(id);
   for (const p of photos) {
     try {
-      // eslint-disable-next-line no-await-in-loop -- best-effort cleanup
       await deletePhotoFiles(p.relativePath, p.thumbnailRelativePath);
     } catch {
       // ignore

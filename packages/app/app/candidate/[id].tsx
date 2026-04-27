@@ -66,7 +66,11 @@ import {
   tagRepository,
   updateItemWithDetails,
 } from '../../src/repositories';
-import { computeCandidateScore, recordDecision, type ComputeCandidateScoreResult } from '../../src/scoring';
+import {
+  computeCandidateScore,
+  recordDecision,
+  type ComputeCandidateScoreResult,
+} from '../../src/scoring';
 import { colors, font, radii, space } from '../../src/theme';
 
 type LoadedCandidate = {
@@ -92,13 +96,7 @@ const LEAD_TIME_MS_LOOKUP: Record<ReminderLeadTime, number> = {
   '1d': 24 * 60 * 60 * 1000,
 };
 
-const ALL_LEAD_TIMES_TUPLE: readonly ReminderLeadTime[] = [
-  '10m',
-  '30m',
-  '1h',
-  '3h',
-  '1d',
-];
+const ALL_LEAD_TIMES_TUPLE: readonly ReminderLeadTime[] = ['10m', '30m', '1h', '3h', '1d'];
 
 /**
  * Recover the lead-time labels currently configured by inspecting how many
@@ -140,8 +138,7 @@ const DECISION_TONE: Record<DecisionLog['decision'], string> = {
   lost_auction: colors.textMuted,
 };
 
-const formatYen = (n?: number): string =>
-  n !== undefined ? `¥${n.toLocaleString()}` : '—';
+const formatYen = (n?: number): string => (n !== undefined ? `¥${n.toLocaleString()}` : '—');
 
 const formatDate = (iso?: string): string => {
   if (!iso) return '—';
@@ -194,9 +191,7 @@ export default function CandidateDetailScreen() {
       decisionLogRepository.listByItem(itemId),
       reminderRepository.listByItem(itemId),
     ]);
-    const brandGuides = item.brand
-      ? await brandGuideRepository.listByBrand(item.brand)
-      : [];
+    const brandGuides = item.brand ? await brandGuideRepository.listByBrand(item.brand) : [];
     const brandChecklistStates: Record<string, BrandChecklistState[]> = {};
     await Promise.all(
       brandGuides.map(async (g) => {
@@ -250,7 +245,6 @@ export default function CandidateDetailScreen() {
         const formIds = new Set(input.photos.map((p) => p.id));
         for (const e of existing) {
           if (!formIds.has(e.id)) {
-            // eslint-disable-next-line no-await-in-loop
             await photoRepository.delete(e.id);
           }
         }
@@ -259,7 +253,7 @@ export default function CandidateDetailScreen() {
           const p = input.photos[i];
           if (!p) continue;
           if (existingIds.has(p.id)) continue;
-          // eslint-disable-next-line no-await-in-loop
+
           await photoRepository.create(itemId, p.relativePath, p.thumbnailRelativePath, i);
         }
         setEditing(false);
@@ -371,10 +365,7 @@ export default function CandidateDetailScreen() {
           const kept: MeasurementInput[] = loaded.measurements
             .filter((m) => !adoptedKeys.has(m.key))
             .map(({ itemId: iid, key, value, unit }) => ({ itemId: iid, key, value, unit }));
-          const next: MeasurementInput[] = [
-            ...kept,
-            ...adopted.map((m) => ({ ...m, itemId })),
-          ];
+          const next: MeasurementInput[] = [...kept, ...adopted.map((m) => ({ ...m, itemId }))];
           await measurementRepository.upsertForItem(itemId, next);
           setExtractionVisible(false);
           await refresh();
@@ -458,7 +449,6 @@ export default function CandidateDetailScreen() {
           });
 
           for (const r of scheduled) {
-            // eslint-disable-next-line no-await-in-loop -- sequential keeps inserts predictable
             await reminderRepository.create({
               itemId,
               remindAt: r.remindAt,
@@ -468,10 +458,7 @@ export default function CandidateDetailScreen() {
           }
 
           if (scheduled.length === 0 && result.leadTimes.length > 0) {
-            Alert.alert(
-              '通知をスケジュールできませんでした',
-              '選択した時刻はすでに過ぎています。',
-            );
+            Alert.alert('通知をスケジュールできませんでした', '選択した時刻はすでに過ぎています。');
           }
 
           setReminderModalVisible(false);
@@ -565,14 +552,11 @@ export default function CandidateDetailScreen() {
               fitAnchorName: loaded.anchor?.name,
               fitAnchorNotes: loaded.anchor?.notes,
               sourceType: c?.sourceType,
-              candidateCurrentPrice:
-                c?.currentPrice !== undefined ? String(c.currentPrice) : '',
-              candidateShippingFee:
-                c?.shippingFee !== undefined ? String(c.shippingFee) : '',
+              candidateCurrentPrice: c?.currentPrice !== undefined ? String(c.currentPrice) : '',
+              candidateShippingFee: c?.shippingFee !== undefined ? String(c.shippingFee) : '',
               auctionEndsAt: c?.auctionEndsAt,
               easyBuyPrice: c?.easyBuyPrice !== undefined ? String(c.easyBuyPrice) : '',
-              acceptablePrice:
-                c?.acceptablePrice !== undefined ? String(c.acceptablePrice) : '',
+              acceptablePrice: c?.acceptablePrice !== undefined ? String(c.acceptablePrice) : '',
               maxBidPrice: c?.maxBidPrice !== undefined ? String(c.maxBidPrice) : '',
               sellerName: c?.sellerName,
               listingDescription: c?.listingDescription,
@@ -656,12 +640,8 @@ export default function CandidateDetailScreen() {
                 totalScore={loaded.latestEvaluation.totalScore}
                 decision={loaded.latestEvaluation.decision}
               />
-              <ScoreBreakdown
-                breakdown={breakdownFromEvaluation(loaded.latestEvaluation)}
-              />
-              <Text style={muted}>
-                記録日時: {formatDate(loaded.latestEvaluation.createdAt)}
-              </Text>
+              <ScoreBreakdown breakdown={breakdownFromEvaluation(loaded.latestEvaluation)} />
+              <Text style={muted}>記録日時: {formatDate(loaded.latestEvaluation.createdAt)}</Text>
             </View>
           </View>
         )}
@@ -679,16 +659,18 @@ export default function CandidateDetailScreen() {
             {c.sellerName && <Kv k="出品者" v={c.sellerName} />}
             {loaded.item.productUrl && <Kv k="URL" v={loaded.item.productUrl} />}
             {c.listingDescription && <Kv k="説明" v={c.listingDescription} />}
-            {overBudget && (
-              <Text style={warning}>合計が上限価格を超えています</Text>
-            )}
+            {overBudget && <Text style={warning}>合計が上限価格を超えています</Text>}
           </View>
         )}
 
         <View style={section}>
           <View style={snapshotsHeader}>
             <Text style={sectionTitle}>価格スナップショット</Text>
-            <Text accessibilityRole="button" onPress={() => void recordCurrentPrice()} style={addLink}>
+            <Text
+              accessibilityRole="button"
+              onPress={() => void recordCurrentPrice()}
+              style={addLink}
+            >
               ＋現在価格を記録
             </Text>
           </View>
@@ -737,9 +719,7 @@ export default function CandidateDetailScreen() {
             {loaded.brandGuides.map((g) => (
               <View key={g.id} style={brandGuideCard}>
                 <Text style={brandGuideTitle}>{g.title}</Text>
-                {g.notes.length > 0 && (
-                  <Text style={brandGuideNotes}>{g.notes}</Text>
-                )}
+                {g.notes.length > 0 && <Text style={brandGuideNotes}>{g.notes}</Text>}
                 <View style={{ marginTop: space.sm }}>
                   <BrandChecklist
                     guide={g}
@@ -855,11 +835,7 @@ export default function CandidateDetailScreen() {
             variant="secondary"
           />
           <Button label="Buy として記録" onPress={() => openDecision('buy')} />
-          <Button
-            label="Watch にする"
-            onPress={() => openDecision('watch')}
-            variant="secondary"
-          />
+          <Button label="Watch にする" onPress={() => openDecision('watch')} variant="secondary" />
           <Button label="Skip にする" onPress={() => openDecision('skip')} variant="ghost" />
           <Button label="Lost Auction にする" onPress={markLostAuction} variant="ghost" />
           <Button label="編集" onPress={() => setEditing(true)} variant="ghost" />
@@ -908,7 +884,9 @@ export default function CandidateDetailScreen() {
 const Kv = ({ k, v, emphasize }: { k: string; v: string; emphasize?: boolean }) => (
   <View style={kvRow}>
     <Text style={kvKey}>{k}</Text>
-    <Text style={[kvVal, emphasize ? { color: colors.warning, fontWeight: font.weight.bold } : null]}>
+    <Text
+      style={[kvVal, emphasize ? { color: colors.warning, fontWeight: font.weight.bold } : null]}
+    >
       {v}
     </Text>
   </View>
