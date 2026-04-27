@@ -69,6 +69,11 @@ drizzle/.snapshot/
 .maestro/
 maestro-debug-output/
 
+# Claude Code (local-only files)
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+.claude/*.local.md
+
 # Misc
 .rts2_cache_*
 *.tmp

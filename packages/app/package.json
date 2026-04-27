@@ -1,6 +1,6 @@
 {
   "name": "@seam/app",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:check": "drizzle-kit check",
-    "prebuild": "expo prebuild",
+    "prebuild": "node scripts/prebuild.mjs",
+    "package-ipa": "node scripts/packageIpa.mjs",
     "clean": "rm -rf .expo .turbo dist *.tsbuildinfo"
   },
   "dependencies": {
