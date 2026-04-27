@@ -18,8 +18,9 @@ pnpm workspaces + Turborepo. Three packages, all `private`:
 - `packages/domain/` — pure-TS domain logic (`type: "module"`). No RN / Expo
   imports. Subpath exports: `compare`, `scoring`, `extraction`, `pricing`,
   `wear`, `units`, `rules`. Tested with Vitest.
-- `packages/shared/` — Zod schemas, TS types, constants, locales (Japanese
-  display strings). Imported by both `app` and `domain`.
+- `packages/shared/` — Zod schemas, TS types, and constants (Japanese
+  display labels like `CATEGORY_LABEL` live as `*_LABEL` exports under
+  `constants/`). Imported by both `app` and `domain`.
 
 Workspace path aliases (resolved by `tsconfig` paths and Metro):
 
@@ -41,7 +42,14 @@ pnpm typecheck            # turbo run typecheck (each package: tsc --noEmit)
 pnpm test                 # turbo run test (vitest run in each package)
 pnpm lint                 # turbo run lint (only @seam/app has eslint)
 pnpm build                # turbo run build
+pnpm format               # biome format --write . (config: biome.json)
+pnpm format:check         # biome format . — used by CI
 ```
+
+Biome is configured for formatting only (`linter.enabled: false`); ESLint is
+still the linter for `@seam/app`. Biome's `files.includes` excludes
+`packages/app/src/db/migrations/**`, native `ios/`/`android/` dirs, and build
+output.
 
 Single-package and single-test:
 
@@ -72,8 +80,20 @@ maestro test .maestro/                       # run all flows
 maestro test .maestro/10_create_item.yaml    # single flow
 ```
 
-CI (`.github/workflows/test.yml`) runs `pnpm -r typecheck` then `pnpm -r test`
-on every push / PR to `main`. Maestro is intentionally skipped.
+CI (`.github/workflows/test.yml`) runs, in order, `pnpm format:check`,
+`pnpm -r lint`, `pnpm -r typecheck`, `pnpm -r test`, then a Metro bundle build
+(`expo export --platform ios`) on every push / PR to `main`. Maestro is
+intentionally skipped — GitHub-hosted Linux runners can't host an iOS
+simulator.
+
+`.github/workflows/release.yml` is a separate workflow that triggers on `v*`
+tags (or `workflow_dispatch`). On macOS it runs `expo prebuild`, strips the
+push entitlement, and produces an **unsigned** IPA via `xcodebuild archive`
+(`CODE_SIGNING_ALLOWED=NO`); the IPA is attached to a GitHub Release, and
+`.github/scripts/update-source.mjs` rewrites `docs/source.json` (the
+AltStore-style source manifest served from GitHub Pages). The tag version
+must match `packages/app/app.json`'s `expo.version`, otherwise the workflow
+fails fast.
 
 ## Database & migrations
 
@@ -149,8 +169,9 @@ repositories ad hoc in UI code.
   anything crossing the persistence or import/export boundary.
 - Keep UI and domain logic separate: screens call repositories and domain
   functions, never raw `db` queries from inside a component.
-- Japanese is the user-facing language; copy strings live in
-  `packages/shared/src/locales/`. Code identifiers stay in English.
+- Japanese is the user-facing language; display labels live as `*_LABEL`
+  constants in `packages/shared/src/constants/` (e.g. `CATEGORY_LABEL`,
+  `ITEM_STATUS_LABEL`). Code identifiers stay in English.
 - When adding a new table: update `schema.ts`, run `pnpm drizzle:generate`,
   add a Zod schema in `packages/shared/src/schemas/`, add a repository in
   `packages/app/src/repositories/`, and extend the JSON export/import in
