@@ -1,6 +1,6 @@
 import { Image, Pressable, Text, View, type ViewStyle } from 'react-native';
-import { CATEGORY_LABEL, ITEM_STATUS_LABEL, type GarmentItem } from '@seam/shared';
-import { Chip } from './Chip';
+import { CATEGORY_LABEL, ITEM_STATUS_LABEL, type GarmentItem, type SaleInfo } from '@seam/shared';
+import { Chip, type ChipTone } from './Chip';
 import { absolutePathFor } from '../photos/savePhoto';
 import { colors, font, radii, space } from '../theme';
 
@@ -9,14 +9,50 @@ type Props = {
   thumbnailRelativePath?: string;
   /** Optional wear count to display as a chip; pass when known to highlight unworn items. */
   wearCount?: number;
+  /** Sold-context info. When item.status === 'sold' and this is provided, sold metrics are shown. */
+  saleInfo?: SaleInfo;
+  /** soldPrice / totalPrice. Pass alongside `saleInfo` to render a recovery-rate chip. */
+  recoveryRate?: number;
   onPress?: () => void;
 };
 
-export const ItemCard = ({ item, thumbnailRelativePath, wearCount, onPress }: Props) => {
+const formatYen = (n?: number): string => (n !== undefined ? `¥${n.toLocaleString()}` : '—');
+
+const formatYearMonthDay = (iso?: string): string | undefined => {
+  if (!iso) return undefined;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    return iso.length >= 10 ? iso.slice(0, 10) : iso;
+  }
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const recoveryTone = (rate: number): ChipTone => {
+  if (rate >= 0.8) return 'default';
+  if (rate < 0.4) return 'warning';
+  return 'muted';
+};
+
+export const ItemCard = ({
+  item,
+  thumbnailRelativePath,
+  wearCount,
+  saleInfo,
+  recoveryRate,
+  onPress,
+}: Props) => {
+  const isSold = item.status === 'sold';
   const subtitleParts = [item.brand, item.sizeLabel, CATEGORY_LABEL[item.category]].filter(
     (p): p is string => Boolean(p),
   );
-  const isUnworn = item.status === 'owned' && wearCount !== undefined && wearCount === 0;
+  const isUnworn = !isSold && item.status === 'owned' && wearCount !== undefined && wearCount === 0;
+
+  const soldDate = isSold ? formatYearMonthDay(saleInfo?.soldAt) : undefined;
+  const soldMetaParts = [soldDate, saleInfo?.soldSource].filter((p): p is string => Boolean(p));
+
   const content = (
     <View style={card}>
       <View style={thumbBox}>
@@ -36,23 +72,37 @@ export const ItemCard = ({ item, thumbnailRelativePath, wearCount, onPress }: Pr
           <Text style={nameStyle} numberOfLines={1}>
             {item.name}
           </Text>
-          {item.isFitAnchor && <Chip label="Anchor" tone="inverse" />}
+          {!isSold && item.isFitAnchor && <Chip label="Anchor" tone="inverse" />}
         </View>
         {subtitleParts.length > 0 && (
           <Text style={subtitleStyle} numberOfLines={1}>
             {subtitleParts.join(' · ')}
           </Text>
         )}
+        {isSold && soldMetaParts.length > 0 && (
+          <Text style={subtitleStyle} numberOfLines={1}>
+            {soldMetaParts.join(' · ')}
+          </Text>
+        )}
         <View style={badgeRow}>
           <Chip label={ITEM_STATUS_LABEL[item.status]} tone="muted" />
-          {item.favoriteScore !== undefined && (
+          {!isSold && item.favoriteScore !== undefined && (
             <Chip label={`★ ${item.favoriteScore}`} tone="default" />
           )}
-          {item.isSellCandidate && <Chip label="売却候補" tone="warning" />}
-          {wearCount !== undefined && item.status === 'owned' && (
+          {!isSold && item.isSellCandidate && <Chip label="売却候補" tone="warning" />}
+          {!isSold && wearCount !== undefined && item.status === 'owned' && (
             <Chip
               label={isUnworn ? '未着用' : `着用 ${wearCount}回`}
               tone={isUnworn ? 'warning' : 'default'}
+            />
+          )}
+          {isSold && saleInfo?.soldPrice !== undefined && (
+            <Chip label={`売却 ${formatYen(saleInfo.soldPrice)}`} tone="default" />
+          )}
+          {isSold && recoveryRate !== undefined && (
+            <Chip
+              label={`回収 ${Math.round(recoveryRate * 100)}%`}
+              tone={recoveryTone(recoveryRate)}
             />
           )}
         </View>

@@ -24,6 +24,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Expo SDK peer alignment
+        # Catches drift between installed react / react-native / expo-* and
+        # what the active Expo SDK expects. A patch bump that slips past the
+        # Renovate `react + react-native` group would fail here at PR time.
+        run: pnpm --filter @seam/app exec expo install --check
+
       - name: Format check
         run: pnpm format:check
 
