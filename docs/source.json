@@ -1,0 +1,40 @@
+{
+  "$schema": "https://github.com/SideStore/sidestore-source-types/raw/main/schema.json",
+  "name": "Seam",
+  "identifier": "io.github.sugarshin.seam.source",
+  "sourceURL": "https://sugarshin.github.io/seam/source.json",
+  "iconURL": "https://sugarshin.github.io/seam/icon.png",
+  "subtitle": "Vintage clothing decision helper",
+  "description": "Personal iOS app for deciding whether to buy vintage clothing.",
+  "website": "https://github.com/sugarshin/seam",
+  "tintColor": "#000000",
+  "apps": [
+    {
+      "name": "Seam",
+      "bundleIdentifier": "com.sugarshin.seam",
+      "developerName": "sugarshin",
+      "subtitle": "Vintage clothing buy/skip decisions.",
+      "localizedDescription": "Compare candidate vintage items against owned items by measurement, price, condition, and duplication risk. Local-first; no auth.",
+      "iconURL": "https://sugarshin.github.io/seam/icon.png",
+      "tintColor": "#000000",
+      "category": "lifestyle",
+      "screenshotURLs": [],
+      "version": "1.0.0",
+      "versionDate": "2026-04-26",
+      "versionDescription": "Initial release.",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v1.0.0/Seam-v1.0.0.ipa",
+      "size": 9142842,
+      "versions": [
+        {
+          "version": "1.0.0",
+          "date": "2026-04-26",
+          "localizedDescription": "Initial release.",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v1.0.0/Seam-v1.0.0.ipa",
+          "size": 9142842,
+          "minOSVersion": "15.1"
+        }
+      ]
+    }
+  ],
+  "news": []
+}
