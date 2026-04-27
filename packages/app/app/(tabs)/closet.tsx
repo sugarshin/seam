@@ -64,9 +64,7 @@ const RECOVERY_RANGE_LABEL: Record<RecoveryRangeKey, string> = {
   veryLow: '回収 <30%',
 };
 
-const recoveryRangeBounds = (
-  key: RecoveryRangeKey,
-): { min?: number; max?: number } => {
+const recoveryRangeBounds = (key: RecoveryRangeKey): { min?: number; max?: number } => {
   switch (key) {
     case 'all':
       return {};
@@ -171,16 +169,7 @@ export default function ClosetScreen() {
     } finally {
       setLoading(false);
     }
-  }, [
-    mode,
-    ownedSort,
-    soldSort,
-    search,
-    categoryFilters,
-    anchorOnly,
-    soldYear,
-    recoveryRange,
-  ]);
+  }, [mode, ownedSort, soldSort, search, categoryFilters, anchorOnly, soldYear, recoveryRange]);
 
   useFocusEffect(
     useCallback(() => {

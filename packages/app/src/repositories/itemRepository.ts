@@ -143,10 +143,7 @@ export const itemRepository = {
    * `recoveryRate_desc` and `netCpw_asc` are sorted in JS (require non-trivial computation).
    * `recoveryRateMin/Max` filtering is also applied in JS for the same reason.
    */
-  async listSold(
-    filter: SoldFilter = {},
-    sort: ItemSort = 'soldAt_desc',
-  ): Promise<SoldItem[]> {
+  async listSold(filter: SoldFilter = {}, sort: ItemSort = 'soldAt_desc'): Promise<SoldItem[]> {
     const conditions: SQL[] = [eq(schema.items.status, 'sold')];
     if (filter.categories && filter.categories.length > 0) {
       conditions.push(inArray(schema.items.category, filter.categories as string[]));
