@@ -1,0 +1,30 @@
+# Git hooks managed by lefthook (https://github.com/evilmartians/lefthook).
+# Installed by the `prepare` script in package.json on `pnpm install`.
+#
+# Strategy:
+#   - pre-commit:  fast, autofixable on staged files only (Biome format).
+#                  Keeps commit latency near-instant; lint and type errors
+#                  surface at push time instead of blocking iteration.
+#   - pre-push:    full CI-equivalent gate (format check + lint + typecheck +
+#                  test). Acts as a safety net so `--no-verify` on commit
+#                  doesn't leak into shared history.
+
+pre-commit:
+  parallel: true
+  commands:
+    biome-format:
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs,json}"
+      run: pnpm exec biome format --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    format-check:
+      run: pnpm format:check
+    lint:
+      run: pnpm -r lint
+    typecheck:
+      run: pnpm -r typecheck
+    test:
+      run: pnpm -r test
