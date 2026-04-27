@@ -26,6 +26,18 @@ import { Picker, type PickerOption } from '../../src/components/Picker';
 import { candidateInfoRepository, itemRepository, photoRepository } from '../../src/repositories';
 import { colors, font, radii, space } from '../../src/theme';
 
+const formatAuctionEnds = (iso: string): string => {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    return iso.replace('T', ' ').slice(0, 16);
+  }
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mi = String(d.getMinutes()).padStart(2, '0');
+  return `〆 ${mm}/${dd} ${hh}:${mi}`;
+};
+
 type WishSort = 'auctionEndsAt_asc' | 'price_asc' | 'createdAt_desc';
 
 const SORT_OPTIONS: readonly PickerOption<WishSort>[] = [
@@ -126,19 +138,13 @@ export default function WishlistScreen() {
     const total = c?.totalPrice ?? c?.currentPrice;
     const ends = c?.auctionEndsAt;
     return (
-      <View style={cardWrap}>
-        <ItemCard
-          item={item.item}
-          thumbnailRelativePath={item.thumbnail}
-          onPress={() => router.push({ pathname: '/candidate/[id]', params: { id: item.item.id } })}
-        />
-        {(total !== undefined || ends !== undefined) && (
-          <View style={metaRow}>
-            {total !== undefined && <Text style={metaPrice}>¥{total.toLocaleString()}</Text>}
-            {ends && <Text style={metaEnds}>～ {ends.replace('T', ' ').slice(0, 16)}</Text>}
-          </View>
-        )}
-      </View>
+      <ItemCard
+        item={item.item}
+        thumbnailRelativePath={item.thumbnail}
+        priceLabel={total !== undefined ? `¥${total.toLocaleString()}` : undefined}
+        endsLabel={ends ? formatAuctionEnds(ends) : undefined}
+        onPress={() => router.push({ pathname: '/candidate/[id]', params: { id: item.item.id } })}
+      />
     );
   };
 
@@ -234,31 +240,6 @@ const chipScrollWrapper: ViewStyle = {
   borderBottomWidth: 1,
   borderBottomColor: colors.border,
 };
-
-const cardWrap: ViewStyle = {
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
-const metaRow: ViewStyle = {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingHorizontal: space.lg,
-  paddingBottom: space.sm,
-  marginTop: -space.xs,
-};
-
-const metaPrice = {
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.bold,
-} as const;
-
-const metaEnds = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
 
 const fab: ViewStyle = {
   position: 'absolute',
