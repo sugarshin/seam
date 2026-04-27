@@ -1,6 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "local>sugarshin/renovate-config"
-  ]
+  "extends": ["github>sugarshin/renovate-config"]
 }
+
