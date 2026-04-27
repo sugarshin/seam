@@ -4,6 +4,19 @@
   "reviewers": ["sugarshin"],
   "packageRules": [
     {
+      "description": "Group react / react-native and their type & community siblings into a single PR. react-native ships a renderer that must match the installed react version exactly; bumping them in separate PRs causes 'Incompatible React versions' crashes at app start. Renovate has no preset that crosses the react and react-native monorepos, so we group manually.",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "react-native",
+        "react-test-renderer",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "matchPackagePrefixes": ["@react-native/", "@react-native-community/"],
+      "groupName": "react + react-native"
+    },
+    {
       "description": "Constrain Expo SDK 54 managed peers — only bump these via an Expo SDK upgrade. Out-of-range updates break babel-preset-expo's bundled @react-native/codegen.",
       "matchPackageNames": ["react", "react-dom"],
       "allowedVersions": "<19.2.0"
