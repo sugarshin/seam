@@ -106,7 +106,15 @@ export default function StatsScreen() {
             value={snapshot.sellCandidates.length}
             tone={snapshot.sellCandidates.length > 0 ? 'warning' : 'default'}
           />
-          <StatCard title="売却済み" value={totals.sold} />
+          <StatCard
+            title="売却済み"
+            value={totals.sold}
+            onPress={
+              totals.sold > 0
+                ? () => router.push({ pathname: '/(tabs)/closet', params: { mode: 'sold' } })
+                : undefined
+            }
+          />
         </View>
       </Section>
 

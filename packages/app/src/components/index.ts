@@ -5,6 +5,8 @@ export { Picker } from './Picker';
 export type { PickerOption } from './Picker';
 export { Chip } from './Chip';
 export type { ChipTone } from './Chip';
+export { SegmentedControl } from './SegmentedControl';
+export type { SegmentOption } from './SegmentedControl';
 export { EmptyState } from './EmptyState';
 export { ItemCard } from './ItemCard';
 export { MeasurementInputGroup } from './MeasurementInputGroup';

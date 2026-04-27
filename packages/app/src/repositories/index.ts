@@ -1,5 +1,12 @@
 export { itemRepository } from './itemRepository';
-export type { ItemFilter, ItemSort } from './itemRepository';
+export type { ItemFilter, ItemSort, SoldFilter } from './itemRepository';
+export {
+  compareSoldByRecoveryRateDesc,
+  compareSoldByNetCpwAsc,
+  computeRecoveryRate,
+  passesRecoveryRateBounds,
+} from './soldHelpers';
+export type { SoldItem } from './soldHelpers';
 export { measurementRepository } from './measurementRepository';
 export { photoRepository } from './photoRepository';
 export { fitAnchorRepository } from './fitAnchorRepository';
