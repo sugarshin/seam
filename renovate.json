@@ -11,9 +11,10 @@
         "react-native",
         "react-test-renderer",
         "@types/react",
-        "@types/react-dom"
+        "@types/react-dom",
+        "@react-native/{/,}**",
+        "@react-native-community/{/,}**"
       ],
-      "matchPackagePrefixes": ["@react-native/", "@react-native-community/"],
       "groupName": "react + react-native"
     },
     {
