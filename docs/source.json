@@ -19,12 +19,20 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.2.0",
+      "version": "0.3.0",
       "versionDate": "2026-04-27",
-      "versionDescription": "- Version bump 0.2.0\n- Merge pull request #27 from sugarshin/renovate/migrate-config\n- Merge pull request #25 from sugarshin/renovate/linters\n- Migrate config renovate.json\n- Pin dependencies\n- Merge pull request #26 from sugarshin/renovate/ruby-3.x\n- Merge pull request #24 from sugarshin/feat/closet-sold-mode\n- Add lefthook for pre-commit format and pre-push CI gate\n- Apply biome format\n- Update dependency ruby to v3.4.9\n- Add Sold mode to Closet with Stats drill-down\n- Align Expo SDK 54 peers and group react/react-native in Renovate\n- Update CLAUDE.md\n- Merge pull request #23 from sugarshin/renovate/patch-react-monorepo\n- Update renovate config\n- Update dependency react to v19.1.6\n- Merge pull request #21 from sugarshin/renovate/react-native-0.81.x\n- Update dependency react-native to v0.81.6\n- Merge pull request #22 from sugarshin/chore/lint-format\n- Linter, formatter\n- chore(release): update source.json for v0.1.1",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.2.0/Seam-v0.2.0.ipa",
-      "size": 8930888,
+      "versionDescription": "- Version bump 0.3.0\n- Merge pull request #28 from sugarshin/feat/wishlist-price-layout\n- Improve Wishlist price/auction-end visibility\n- chore(release): update source.json for v0.2.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.3.0/Seam-v0.3.0.ipa",
+      "size": 8931319,
       "versions": [
+        {
+          "version": "0.3.0",
+          "date": "2026-04-27",
+          "localizedDescription": "- Version bump 0.3.0\n- Merge pull request #28 from sugarshin/feat/wishlist-price-layout\n- Improve Wishlist price/auction-end visibility\n- chore(release): update source.json for v0.2.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.3.0/Seam-v0.3.0.ipa",
+          "size": 8931319,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.2.0",
           "date": "2026-04-27",
