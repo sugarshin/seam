@@ -169,11 +169,21 @@ jobs:
 
       - name: Generate changelog
         id: changelog
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ needs.build-ipa.outputs.tag }}
-          writeToFile: false
+        env:
+          TAG: ${{ needs.build-ipa.outputs.tag }}
+        run: |
+          set -euo pipefail
+          PREV=$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)
+          if [ -z "$PREV" ]; then
+            CHANGES="Initial release."
+          else
+            CHANGES=$(git log --pretty=format:"- %s" "${PREV}..${TAG}")
+          fi
+          {
+            echo "changes<<__EOF__"
+            echo "$CHANGES"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
