@@ -19,18 +19,18 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "1.0.0",
-      "versionDate": "2026-04-26",
+      "version": "0.1.0",
+      "versionDate": "2026-04-27",
       "versionDescription": "Initial release.",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v1.0.0/Seam-v1.0.0.ipa",
-      "size": 9142842,
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.0/Seam-v0.1.0.ipa",
+      "size": 0,
       "versions": [
         {
-          "version": "1.0.0",
-          "date": "2026-04-26",
+          "version": "0.1.0",
+          "date": "2026-04-27",
           "localizedDescription": "Initial release.",
-          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v1.0.0/Seam-v1.0.0.ipa",
-          "size": 9142842,
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.0/Seam-v0.1.0.ipa",
+          "size": 0,
           "minOSVersion": "15.1"
         }
       ]
