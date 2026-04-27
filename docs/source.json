@@ -19,12 +19,20 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.1.0",
+      "version": "0.1.1",
       "versionDate": "2026-04-27",
-      "versionDescription": "Initial release.",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.0/Seam-v0.1.0.ipa",
-      "size": 8914597,
+      "versionDescription": "- Version bump to 0.1.1\n- Merge pull request #20 from sugarshin/renovate/react-monorepo\n- Merge pull request #19 from sugarshin/renovate/github-actions-digests\n- Pin dependency @types/react to 19.1.17\n- Pin dependencies\n- fix(renovate): migrate deprecated matchPackagePrefixes to matchPackageNames\n- Merge pull request #18 from sugarshin/ci/add-build\n- ci: add expo export step to catch Metro/codegen failures\n- Merge pull request #17 from sugarshin/fix/package-versions\n- Fix package versions\n- Merge pull request #15 from sugarshin/renovate/react-native-gesture-handler-2.x\n- Update renovate config\n- Update dependency react-native-gesture-handler to ~2.31.0\n- Merge pull request #14 from sugarshin/renovate/react-native-0.x\n- Update dependency react-native to v0.85.2\n- Merge pull request #13 from sugarshin/renovate/drizzle-orm-0.x\n- Update dependency drizzle-orm to ^0.45.0\n- Merge pull request #9 from sugarshin/renovate/ruby-3.3.x\n- Merge pull request #6 from sugarshin/renovate/pnpm-10.33.x\n- Merge pull request #5 from sugarshin/renovate/patch-all-patch-update-dependencies\n- Update dependency react-native to v0.81.6\n- Merge pull request #4 from sugarshin/renovate/react-monorepo\n- chore(release): update source.json for v0.1.0\n- Pin dependencies\n- Update All minor update devDependencies (#12)\n- Merge pull request #3 from sugarshin/renovate/pin-dependencies\n- Pin dependencies\n- Update dependency ruby to v3.3.11\n- Update pnpm to v10.33.2",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.1/Seam-v0.1.1.ipa",
+      "size": 8922704,
       "versions": [
+        {
+          "version": "0.1.1",
+          "date": "2026-04-27",
+          "localizedDescription": "- Version bump to 0.1.1\n- Merge pull request #20 from sugarshin/renovate/react-monorepo\n- Merge pull request #19 from sugarshin/renovate/github-actions-digests\n- Pin dependency @types/react to 19.1.17\n- Pin dependencies\n- fix(renovate): migrate deprecated matchPackagePrefixes to matchPackageNames\n- Merge pull request #18 from sugarshin/ci/add-build\n- ci: add expo export step to catch Metro/codegen failures\n- Merge pull request #17 from sugarshin/fix/package-versions\n- Fix package versions\n- Merge pull request #15 from sugarshin/renovate/react-native-gesture-handler-2.x\n- Update renovate config\n- Update dependency react-native-gesture-handler to ~2.31.0\n- Merge pull request #14 from sugarshin/renovate/react-native-0.x\n- Update dependency react-native to v0.85.2\n- Merge pull request #13 from sugarshin/renovate/drizzle-orm-0.x\n- Update dependency drizzle-orm to ^0.45.0\n- Merge pull request #9 from sugarshin/renovate/ruby-3.3.x\n- Merge pull request #6 from sugarshin/renovate/pnpm-10.33.x\n- Merge pull request #5 from sugarshin/renovate/patch-all-patch-update-dependencies\n- Update dependency react-native to v0.81.6\n- Merge pull request #4 from sugarshin/renovate/react-monorepo\n- chore(release): update source.json for v0.1.0\n- Pin dependencies\n- Update All minor update devDependencies (#12)\n- Merge pull request #3 from sugarshin/renovate/pin-dependencies\n- Pin dependencies\n- Update dependency ruby to v3.3.11\n- Update pnpm to v10.33.2",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.1/Seam-v0.1.1.ipa",
+          "size": 8922704,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.1.0",
           "date": "2026-04-27",
