@@ -28,6 +28,12 @@ jobs:
         # Catches drift between installed react / react-native / expo-* and
         # what the active Expo SDK expects. A patch bump that slips past the
         # Renovate `react + react-native` group would fail here at PR time.
+        # EXPO_OFFLINE=1 pins the comparison to the bundledNativeModules.json
+        # shipped with the installed `expo` package; without it `expo install
+        # --check` fetches the latest map from api.expo.dev and CI starts
+        # failing the moment Expo publishes a new SDK patch.
+        env:
+          EXPO_OFFLINE: '1'
         run: pnpm --filter @seam/app exec expo install --check
 
       - name: Format check
