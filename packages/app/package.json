@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
-    "@types/react": "~19.1.10",
+    "@types/react": "19.1.17",
     "babel-plugin-inline-import": "3.0.0",
     "drizzle-kit": "0.31.10",
     "typescript": "5.9.3",
