@@ -1,6 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>sugarshin/renovate-config"],
+  "reviewers": ["sugarshin"],
   "packageRules": [
     {
       "description": "Constrain Expo SDK 54 managed peers — only bump these via an Expo SDK upgrade. Out-of-range updates break babel-preset-expo's bundled @react-native/codegen.",
