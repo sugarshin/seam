@@ -13,6 +13,10 @@ type Props = {
   saleInfo?: SaleInfo;
   /** soldPrice / totalPrice. Pass alongside `saleInfo` to render a recovery-rate chip. */
   recoveryRate?: number;
+  /** Right-aligned primary label, e.g. "¥4,000". Used on wishlist rows. */
+  priceLabel?: string;
+  /** Right-aligned secondary label below `priceLabel`, e.g. auction end time. */
+  endsLabel?: string;
   onPress?: () => void;
 };
 
@@ -42,6 +46,8 @@ export const ItemCard = ({
   wearCount,
   saleInfo,
   recoveryRate,
+  priceLabel,
+  endsLabel,
   onPress,
 }: Props) => {
   const isSold = item.status === 'sold';
@@ -107,6 +113,16 @@ export const ItemCard = ({
           )}
         </View>
       </View>
+      {(priceLabel !== undefined || endsLabel !== undefined) && (
+        <View style={priceBox}>
+          {priceLabel !== undefined && <Text style={priceText}>{priceLabel}</Text>}
+          {endsLabel !== undefined && (
+            <Text style={endsText} numberOfLines={1}>
+              {endsLabel}
+            </Text>
+          )}
+        </View>
+      )}
     </View>
   );
   if (onPress) {
@@ -185,3 +201,21 @@ const badgeRow: ViewStyle = {
   gap: space.xs,
   marginTop: space.xs,
 };
+
+const priceBox: ViewStyle = {
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+  gap: space.xs,
+  marginLeft: space.sm,
+};
+
+const priceText = {
+  fontSize: font.size.lg,
+  fontWeight: font.weight.bold,
+  color: colors.text,
+} as const;
+
+const endsText = {
+  fontSize: font.size.xs,
+  color: colors.textMuted,
+} as const;
