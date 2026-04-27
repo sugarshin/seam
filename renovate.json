@@ -55,6 +55,11 @@
       "matchPackageNames": ["expo{/,}**", "@expo/{/,}**"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "description": "Hold Ruby on the 3.4 line. CocoaPods (and its xcodeproj/activesupport deps) have no published Ruby 4.0 support, and CocoaPods has historically broken on frozen-string changes — re-evaluate once CocoaPods/Expo announce Ruby 4 support.",
+      "matchPackageNames": ["ruby"],
+      "allowedVersions": "<4"
     }
   ]
 }
