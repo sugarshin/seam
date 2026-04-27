@@ -26,7 +26,7 @@
     "@seam/domain": "workspace:*",
     "@seam/shared": "workspace:*",
     "date-fns": "^4.1.0",
-    "drizzle-orm": "^0.36.4",
+    "drizzle-orm": "^0.45.0",
     "expo": "~54.0.33",
     "expo-application": "~7.0.8",
     "expo-constants": "~18.0.13",
