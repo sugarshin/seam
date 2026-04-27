@@ -30,6 +30,9 @@ jobs:
       - name: Test
         run: pnpm -r test
 
+      - name: Build (Metro bundle)
+        run: pnpm --filter @seam/app exec expo export --platform ios --output-dir .expo/export-check
+
       # Maestro flows are skipped here — they need a real iOS simulator which
       # GitHub-hosted ubuntu runners can't provide. Run them locally with the
       # `maestro test .maestro/` command (see README).
