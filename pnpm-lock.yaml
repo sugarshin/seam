@@ -124,10 +124,10 @@ importers:
         specifier: 0.31.10
         version: 0.31.10
       eslint:
-        specifier: ^9.39.4
+        specifier: 9.39.4
         version: 9.39.4
       eslint-config-expo:
-        specifier: ^10.0.0
+        specifier: 10.0.0
         version: 10.0.0(eslint@9.39.4)(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
