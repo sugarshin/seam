@@ -23,14 +23,14 @@
       "versionDate": "2026-04-27",
       "versionDescription": "Initial release.",
       "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.0/Seam-v0.1.0.ipa",
-      "size": 0,
+      "size": 8914597,
       "versions": [
         {
           "version": "0.1.0",
           "date": "2026-04-27",
           "localizedDescription": "Initial release.",
           "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.1.0/Seam-v0.1.0.ipa",
-          "size": 0,
+          "size": 8914597,
           "minOSVersion": "15.1"
         }
       ]
