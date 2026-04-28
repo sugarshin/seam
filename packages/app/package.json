@@ -18,7 +18,7 @@
   "dependencies": {
     "@babel/runtime": "^7.29.2",
     "@hookform/resolvers": "^5.0.0",
-    "@paralleldrive/cuid2": "^2.2.2",
+    "@paralleldrive/cuid2": "^3.0.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@seam/domain": "workspace:*",
     "@seam/shared": "workspace:*",
