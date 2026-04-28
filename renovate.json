@@ -39,6 +39,10 @@
       "allowedVersions": "<4.3.0"
     },
     {
+      "matchPackageNames": ["react-native-worklets"],
+      "allowedVersions": "<0.8.0"
+    },
+    {
       "matchPackageNames": ["react-native-safe-area-context"],
       "allowedVersions": "<5.7.0"
     },
