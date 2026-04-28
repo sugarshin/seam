@@ -18,25 +18,25 @@
       "groupName": "react + react-native"
     },
     {
-      "description": "Constrain Expo SDK 54 managed peers — only bump these via an Expo SDK upgrade. Out-of-range updates break babel-preset-expo's bundled @react-native/codegen.",
+      "description": "Constrain Expo SDK 55 managed peers — only bump these via an Expo SDK upgrade. Out-of-range updates break babel-preset-expo's bundled @react-native/codegen.",
       "matchPackageNames": ["react", "react-dom"],
-      "allowedVersions": "<19.2.0"
+      "allowedVersions": "<19.3.0"
     },
     {
       "matchPackageNames": ["@types/react"],
-      "allowedVersions": "<19.2.0"
+      "allowedVersions": "<19.3.0"
     },
     {
       "matchPackageNames": ["react-native"],
-      "allowedVersions": "<0.82.0"
+      "allowedVersions": "<0.84.0"
     },
     {
       "matchPackageNames": ["react-native-gesture-handler"],
-      "allowedVersions": "<2.29.0"
+      "allowedVersions": "<2.31.0"
     },
     {
       "matchPackageNames": ["react-native-reanimated"],
-      "allowedVersions": "<4.2.0"
+      "allowedVersions": "<4.3.0"
     },
     {
       "matchPackageNames": ["react-native-safe-area-context"],
@@ -44,15 +44,15 @@
     },
     {
       "matchPackageNames": ["react-native-screens"],
-      "allowedVersions": "<4.17.0"
+      "allowedVersions": "<4.24.0"
     },
     {
       "matchPackageNames": ["@react-native-async-storage/async-storage"],
       "allowedVersions": "<2.3.0"
     },
     {
-      "description": "Pin all expo / @expo packages to the SDK 54 line — bump only via Expo SDK major upgrades.",
-      "matchPackageNames": ["expo{/,}**", "@expo/{/,}**"],
+      "description": "Pin all expo / @expo / eslint-config-expo packages to the SDK 55 line — bump only via Expo SDK major upgrades.",
+      "matchPackageNames": ["expo{/,}**", "@expo/{/,}**", "eslint-config-expo"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },

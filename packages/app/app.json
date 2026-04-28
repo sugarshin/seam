@@ -15,7 +15,13 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.sugarshin.seam"
     },
-    "plugins": ["expo-router", "expo-sqlite", "expo-image-picker", "expo-secure-store"],
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-image-picker",
+      "expo-secure-store",
+      "expo-sharing"
+    ],
     "experiments": {
       "typedRoutes": true
     }

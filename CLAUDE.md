@@ -13,7 +13,7 @@ App Store distribution. Full requirements live in `plan/initial-plan.md`.
 
 pnpm workspaces + Turborepo. Three packages, all `private`:
 
-- `packages/app/` — Expo SDK 54 iOS app. Expo Router (`app/` dir), expo-sqlite,
+- `packages/app/` — Expo SDK 55 iOS app. Expo Router (`app/` dir), expo-sqlite,
   Drizzle ORM, Zustand, react-hook-form, expo-notifications.
 - `packages/domain/` — pure-TS domain logic (`type: "module"`). No RN / Expo
   imports. Subpath exports: `compare`, `scoring`, `extraction`, `pricing`,
