@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 60
     outputs:
       version: ${{ steps.meta.outputs.version }}
+      build_version: ${{ steps.meta.outputs.build_version }}
       ipa_size: ${{ steps.meta.outputs.ipa_size }}
       ipa_sha256: ${{ steps.meta.outputs.ipa_sha256 }}
       tag: ${{ steps.tag.outputs.tag }}
@@ -161,8 +162,16 @@ jobs:
       - name: Compute metadata
         id: meta
         run: |
+          set -euo pipefail
           IPA="${{ steps.package.outputs.ipa_path }}"
+          INFO_PLIST="$(dirname "$IPA")/Payload/Seam.app/Info.plist"
+          BUILD_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
+          if [ -z "$BUILD_VERSION" ]; then
+            echo "::error::failed to read CFBundleVersion from $INFO_PLIST"
+            exit 1
+          fi
           echo "version=${{ steps.tag.outputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "build_version=$BUILD_VERSION" >> "$GITHUB_OUTPUT"
           echo "ipa_size=$(stat -f%z "$IPA")" >> "$GITHUB_OUTPUT"
           echo "ipa_sha256=$(shasum -a 256 "$IPA" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
 
@@ -218,6 +227,7 @@ jobs:
       - name: Update docs/source.json
         env:
           VERSION: ${{ needs.build-ipa.outputs.version }}
+          BUILD_VERSION: ${{ needs.build-ipa.outputs.build_version }}
           IPA_SIZE: ${{ needs.build-ipa.outputs.ipa_size }}
           TAG: ${{ needs.build-ipa.outputs.tag }}
           CHANGES: ${{ steps.changelog.outputs.changes }}
