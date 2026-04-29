@@ -41,28 +41,13 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
-          xcode-version: '26.0'
+          xcode-version: '26.2'
 
-      - name: Cache iOS platform runtime
-        id: ios-platform-cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: |
-            ~/Library/Developer/CoreSimulator
-          key: ${{ runner.os }}-ios-platform-xcode-26.0-v1
-          restore-keys: |
-            ${{ runner.os }}-ios-platform-xcode-26.0-
-
-      - name: Download iOS platform
-        if: steps.ios-platform-cache.outputs.cache-hit != 'true'
-        run: xcodebuild -downloadPlatform iOS
-
+      # macos-26 default Xcode (26.2) には iOS 26.2 device platform runtime が同梱
+      # されているため、xcodebuild -downloadPlatform iOS は不要。ios-build-check.yml
+      # の検証 run で確認済み。-showsdks のみ残し、初期状態を可視化する。
       - name: Show iOS platform info
-        run: |
-          xcodebuild -showsdks
-          du -sh ~/Library/Developer/CoreSimulator 2>/dev/null || echo "no ~/Library/Developer/CoreSimulator"
-          ls -la ~/Library/Developer/CoreSimulator/Volumes 2>/dev/null || true
-          ls -la /Library/Developer/CoreSimulator/Volumes 2>/dev/null || true
+        run: xcodebuild -showsdks
 
       - uses: pnpm/action-setup@078e9d416474b29c0c387560859308974f7e9c53 # v6
         with:
