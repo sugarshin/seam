@@ -1,6 +1,8 @@
 ---
 name: release
 description: Cut a new release of the seam iOS app — bump expo.version in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, then push both to origin/main. Use for any phrasing that means releasing, version bumping, or tagging a new version (English or Japanese: release / version bump / リリース / バージョンアップ / タグを切る).
+user-invocable: true
+disable-model-invocation: true
 ---
 
 # Release skill
