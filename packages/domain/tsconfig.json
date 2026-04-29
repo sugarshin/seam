@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "rootDir": "..",
     "types": ["vitest/globals"],
     "paths": {
       "@seam/shared": ["../shared/src/index.ts"],
