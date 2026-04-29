@@ -20,7 +20,7 @@ concurrency:
 jobs:
   build-ipa:
     name: Build unsigned IPA
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 60
     outputs:
       version: ${{ steps.meta.outputs.version }}
@@ -40,7 +40,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
-          xcode-version: '16.4'
+          xcode-version: '26.0'
 
       - uses: pnpm/action-setup@078e9d416474b29c0c387560859308974f7e9c53 # v6
         with:
