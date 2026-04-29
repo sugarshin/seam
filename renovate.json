@@ -18,41 +18,49 @@
       "groupName": "react + react-native"
     },
     {
-      "description": "Constrain Expo SDK 55 managed peers — only bump these via an Expo SDK upgrade. Out-of-range updates break babel-preset-expo's bundled @react-native/codegen.",
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (exact 19.2.0). Patch updates fail `expo install --check` in CI; out-of-range updates break babel-preset-expo's bundled @react-native/codegen. Renovate has no official Expo preset (see github.com/renovatebot/renovate/issues/7417), so we mirror bundledNativeModules.json by hand. Re-evaluate on Expo SDK upgrade.",
       "matchPackageNames": ["react", "react-dom"],
-      "allowedVersions": "<19.3.0"
+      "allowedVersions": "<=19.2.0"
     },
     {
+      "description": "Match React's bundled major.minor; @types/react is not in bundledNativeModules but type drift across minor lines breaks Expo's published .d.ts.",
       "matchPackageNames": ["@types/react"],
       "allowedVersions": "<19.3.0"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (exact 0.83.6). Patch updates fail `expo install --check`.",
       "matchPackageNames": ["react-native"],
-      "allowedVersions": "<0.84.0"
+      "allowedVersions": "<=0.83.6"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (~2.30.0).",
       "matchPackageNames": ["react-native-gesture-handler"],
       "allowedVersions": "<2.31.0"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (exact 4.2.1). Patch updates fail `expo install --check`.",
       "matchPackageNames": ["react-native-reanimated"],
-      "allowedVersions": "<4.3.0"
+      "allowedVersions": "<=4.2.1"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (exact 0.7.4).",
       "matchPackageNames": ["react-native-worklets"],
-      "allowedVersions": "<0.8.0"
+      "allowedVersions": "<=0.7.4"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (~5.6.2).",
       "matchPackageNames": ["react-native-safe-area-context"],
       "allowedVersions": "<5.7.0"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (~4.23.0).",
       "matchPackageNames": ["react-native-screens"],
       "allowedVersions": "<4.24.0"
     },
     {
+      "description": "Pin to Expo SDK 55 bundledNativeModules.json (exact 2.2.0).",
       "matchPackageNames": ["@react-native-async-storage/async-storage"],
-      "allowedVersions": "<2.3.0"
+      "allowedVersions": "<=2.2.0"
     },
     {
       "description": "Pin all expo / @expo / eslint-config-expo packages to the SDK 55 line — bump only via Expo SDK major upgrades.",
