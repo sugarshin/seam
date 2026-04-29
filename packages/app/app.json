@@ -13,7 +13,8 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.sugarshin.seam"
+      "bundleIdentifier": "com.sugarshin.seam",
+      "buildNumber": "2"
     },
     "plugins": [
       "expo-router",
