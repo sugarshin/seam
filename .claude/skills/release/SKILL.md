@@ -1,14 +1,20 @@
 ---
 name: release
-description: Cut a new release of the seam iOS app — bump expo.version in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, then push both to origin/main. Use for any phrasing that means releasing, version bumping, or tagging a new version (English or Japanese: release / version bump / リリース / バージョンアップ / タグを切る).
+description: Cut a new release of the seam iOS app — bump expo.version AND expo.ios.buildNumber in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, then push both to origin/main. Use for any phrasing that means releasing, version bumping, or tagging a new version (English or Japanese: release / version bump / リリース / バージョンアップ / タグを切る).
 user-invocable: true
 disable-model-invocation: true
 ---
 
 # Release skill
 
-`packages/app/app.json` の `expo.version` を bump し、commit / tag / push して
-`.github/workflows/release.yml` をトリガーするまでを 1 コマンドで行う。
+`packages/app/app.json` の `expo.version` と `expo.ios.buildNumber` を両方 bump し、
+commit / tag / push して `.github/workflows/release.yml` をトリガーするまでを
+1 コマンドで行う。
+
+`buildNumber` を毎回 strictly increase させるのは SideStore / AltStore の update
+検出 (`(version, buildVersion)` tuple 比較) を確実に効かせるための必須手順。
+過去 v0.4.0 で `buildNumber=1` のまま放置していたために OPEN ボタンが stuck する
+事象が発生した。
 
 CI の動作（IPA build、GitHub Release 作成、`docs/source.json` 更新）は責務外。
 tag push が成功したら完了とする。
@@ -50,16 +56,23 @@ tag push が成功したら完了とする。
 6. **Tag 衝突なし**
    - `git tag -l vX.Y.Z` が空、かつ `git ls-remote --tags origin vX.Y.Z` が空
    - 失敗時: 「tag vX.Y.Z は既に存在します。別のバージョンを指定してください」
+7. **`ios.buildNumber` が存在し整数として解釈できる**
+   - `node -p "require('./packages/app/app.json').expo.ios.buildNumber"` が integer 文字列
+   - 失敗時: 「`packages/app/app.json` の `expo.ios.buildNumber` が未設定または不正です。`"buildNumber": "<n>"` を追加してから再実行してください」
 
 ## Procedure
 
-### Step 1: 現バージョン読み取りと引数解析
+### Step 1: 現バージョン / buildNumber 読み取りと引数解析
 
 ```bash
 node -p "require('./packages/app/app.json').expo.version"
+node -p "require('./packages/app/app.json').expo.ios.buildNumber"
 ```
 
-引数の判定:
+新 `buildNumber` は **常に現在値 + 1**（integer として加算、文字列として保存）。
+引数指定不可。
+
+引数 (= version) の判定:
 - `^[0-9]+\.[0-9]+\.[0-9]+$` → 明示バージョン
 - `patch` / `minor` / `major` → 現バージョンから算出
 - 空 → Step 2 へ
@@ -81,17 +94,21 @@ AskUserQuestion で 4 択を提示:
 
 ### Step 4: app.json を編集
 
-`Edit` ツールで `packages/app/app.json` の `"version": "X.Y.Z"` を新バージョンに置き換える。
-他のフィールドには触れない。
+`Edit` ツールで以下 2 箇所を更新する。他のフィールドには触れない。
+
+1. `"version": "A.B.C"` → `"version": "X.Y.Z"`（新バージョン）
+2. `"buildNumber": "<old>"` → `"buildNumber": "<old + 1>"`（現在値 +1）
 
 ### Step 5: Commit
 
 ```bash
 git add packages/app/app.json
-git commit -m "Version bump X.Y.Z"
+git commit -m "Version bump X.Y.Z (build N)"
 ```
 
-過去パターン踏襲（`chore:` プレフィックスなし、3 桁バージョンのみ）。
+`N` は新 `buildNumber`。`Version bump <version> (build <n>)` 形式で固定
+（`chore:` プレフィックスなし）。過去 `Version bump X.Y.Z` 単独だった頃と
+読み取れる semantic は同じ。
 
 ### Step 6: Main を push
 
@@ -118,8 +135,8 @@ lightweight tag（`-a` 不要、過去パターン踏襲）。失敗時: Recover
 完了時に以下を一行ずつ表示:
 
 ```
-Released seam vX.Y.Z (was vA.B.C)
-- commit: <short-hash> "Version bump X.Y.Z"
+Released seam vX.Y.Z build N (was vA.B.C build M)
+- commit: <short-hash> "Version bump X.Y.Z (build N)"
 - tag:    vX.Y.Z (lightweight)
 - pushed: origin/main, origin/refs/tags/vX.Y.Z
 ```
@@ -176,6 +193,10 @@ GitHub Release が作成済みの場合は GitHub UI から削除する必要が
 - バージョンは `MAJOR.MINOR.PATCH` のみ（Apple `CFBundleShortVersionString` ルール、`-beta` 等 pre-release suffix 禁止）
 - tag pattern は `vX.Y.Z`（`v` プレフィックス必須、`.github/workflows/release.yml` の trigger と一致）
 - `app.json` の `expo.version` と tag のバージョン部分（`v` を剥がす）は完全一致必須（mismatch で CI fail-fast）
+- `expo.ios.buildNumber` はリリース毎に **strictly increase**（前回値 +1）。同一値で再リリース禁止
+  — SideStore / AltStore は `(version, buildVersion)` tuple で update 検出するため、
+  同値だと iOS 上書きインストール時の version 比較や stale な `InstalledApp` レコードに
+  対する update 判定で OPEN button stuck になる
 - リリースは `main` ブランチでのみ実行
 - pre-push hook は skip しない（`--no-verify` 禁止）
 - 同じバージョン番号での再リリース禁止（SideStore キャッシュ問題）
