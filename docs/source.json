@@ -19,12 +19,20 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.3.0",
-      "versionDate": "2026-04-27",
-      "versionDescription": "- Version bump 0.3.0\n- Merge pull request #28 from sugarshin/feat/wishlist-price-layout\n- Improve Wishlist price/auction-end visibility\n- chore(release): update source.json for v0.2.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.3.0/Seam-v0.3.0.ipa",
-      "size": 8931319,
+      "version": "0.4.0",
+      "versionDate": "2026-04-29",
+      "versionDescription": "- Always download iOS platform runtime (SDK presence does not imply runtime)\n- Add iOS platform download step for macOS 26 runner\n- Bump release workflow to macOS 26 / Xcode 26 for Expo SDK 55 (Swift 6.2)\n- Version bump 0.4.0\n- Update skill\n- Add release skill\n- Merge pull request #48 from sugarshin/update-expo\n- Add react-native-worklets for Reanimated 4\n- Upgrade to Expo SDK 55\n- Merge pull request #34 from sugarshin/renovate/paralleldrive-cuid2-3.x\n- Merge pull request #45 from sugarshin/renovate/major-3-test-packages\n- Merge pull request #43 from sugarshin/renovate/major-6-github-actions-digests\n- Update test packages to v3\n- Update GitHub Actions digests to v6\n- Merge pull request #44 from sugarshin/renovate/major-3-github-actions-digests\n- Merge pull request #42 from sugarshin/renovate/major-5-github-actions-digests\n- Update softprops/action-gh-release action to v3\n- Update GitHub Actions digests to v5\n- Merge pull request #39 from sugarshin/renovate/major-7-github-actions-digests\n- Update dependency @paralleldrive/cuid2 to v3\n- Update actions/upload-artifact action to v7\n- Merge pull request #33 from sugarshin/renovate/hookform-resolvers-5.x\n- chore(renovate): hold ruby on 3.4 line\n- Update dependency @hookform/resolvers to v5\n- Merge pull request #32 from sugarshin/renovate/hookform-resolvers-4.x\n- Merge pull request #37 from sugarshin/renovate/node-24.x\n- Merge pull request #31 from sugarshin/renovate/major-8-github-actions-digests\n- Update dependency @hookform/resolvers to v4\n- Update actions/download-artifact action to v8\n- Merge pull request #29 from sugarshin/renovate/pin-dependencies\n- Update dependency node to v24\n- Pin dependency lefthook to 2.1.6\n- Pin Expo SDK peer alignment check to offline mode\n- chore(release): update source.json for v0.3.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.4.0/Seam-v0.4.0.ipa",
+      "size": 9978514,
       "versions": [
+        {
+          "version": "0.4.0",
+          "date": "2026-04-29",
+          "localizedDescription": "- Always download iOS platform runtime (SDK presence does not imply runtime)\n- Add iOS platform download step for macOS 26 runner\n- Bump release workflow to macOS 26 / Xcode 26 for Expo SDK 55 (Swift 6.2)\n- Version bump 0.4.0\n- Update skill\n- Add release skill\n- Merge pull request #48 from sugarshin/update-expo\n- Add react-native-worklets for Reanimated 4\n- Upgrade to Expo SDK 55\n- Merge pull request #34 from sugarshin/renovate/paralleldrive-cuid2-3.x\n- Merge pull request #45 from sugarshin/renovate/major-3-test-packages\n- Merge pull request #43 from sugarshin/renovate/major-6-github-actions-digests\n- Update test packages to v3\n- Update GitHub Actions digests to v6\n- Merge pull request #44 from sugarshin/renovate/major-3-github-actions-digests\n- Merge pull request #42 from sugarshin/renovate/major-5-github-actions-digests\n- Update softprops/action-gh-release action to v3\n- Update GitHub Actions digests to v5\n- Merge pull request #39 from sugarshin/renovate/major-7-github-actions-digests\n- Update dependency @paralleldrive/cuid2 to v3\n- Update actions/upload-artifact action to v7\n- Merge pull request #33 from sugarshin/renovate/hookform-resolvers-5.x\n- chore(renovate): hold ruby on 3.4 line\n- Update dependency @hookform/resolvers to v5\n- Merge pull request #32 from sugarshin/renovate/hookform-resolvers-4.x\n- Merge pull request #37 from sugarshin/renovate/node-24.x\n- Merge pull request #31 from sugarshin/renovate/major-8-github-actions-digests\n- Update dependency @hookform/resolvers to v4\n- Update actions/download-artifact action to v8\n- Merge pull request #29 from sugarshin/renovate/pin-dependencies\n- Update dependency node to v24\n- Pin dependency lefthook to 2.1.6\n- Pin Expo SDK peer alignment check to offline mode\n- chore(release): update source.json for v0.3.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.4.0/Seam-v0.4.0.ipa",
+          "size": 9978514,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.3.0",
           "date": "2026-04-27",
