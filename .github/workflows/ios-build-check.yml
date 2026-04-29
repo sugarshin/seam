@@ -1,0 +1,103 @@
+name: ios-build-check
+
+on:
+  pull_request:
+    paths:
+      - 'packages/app/package.json'
+      - 'packages/app/app.json'
+      - 'packages/app/scripts/stripPushEntitlement.mjs'
+      - 'pnpm-lock.yaml'
+      - '.npmrc'
+      - '.github/workflows/ios-build-check.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-build-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios-build:
+    name: iOS build (unsigned, no archive)
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
+        with:
+          xcode-version: '26.0'
+
+      - name: Download iOS platform
+        run: |
+          set -euo pipefail
+          xcodebuild -downloadPlatform iOS
+          xcodebuild -showsdks
+
+      - uses: pnpm/action-setup@078e9d416474b29c0c387560859308974f7e9c53 # v6
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.9'
+          bundler-cache: false
+
+      - name: Install JS deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Expo prebuild
+        working-directory: packages/app
+        run: pnpm exec expo prebuild --platform ios --clean --no-install
+
+      - name: Strip push entitlement
+        working-directory: packages/app
+        run: node scripts/stripPushEntitlement.mjs
+
+      - name: Cache Pods
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: |
+            packages/app/ios/Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-${{ hashFiles('pnpm-lock.yaml', 'packages/app/package.json', 'packages/app/app.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Pod install
+        working-directory: packages/app/ios
+        env:
+          RCT_NEW_ARCH_ENABLED: '1'
+          USE_HERMES: '1'
+        run: pod install --repo-update
+
+      - name: Cache Xcode DerivedData
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-xcode-${{ hashFiles('packages/app/ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-xcode-
+
+      - name: Build (unsigned, no archive)
+        working-directory: packages/app/ios
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -workspace Seam.xcworkspace \
+            -scheme Seam \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            ENABLE_BITCODE=NO \
+            build
