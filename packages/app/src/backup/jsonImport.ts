@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { db, schema } from '../db/client';
 
 /** Loose row shape — each table's rows are arbitrary records of scalars. */
-const RowSchema = z.record(z.unknown());
+const RowSchema = z.record(z.string(), z.unknown());
 
 const TablesSchema = z.object({
   items: z.array(RowSchema),
