@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import * as Application from 'expo-application';
 import * as DocumentPicker from 'expo-document-picker';
 import { useFocusEffect, router } from 'expo-router';
@@ -237,9 +237,16 @@ export default function SettingsScreen() {
         </Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>アプリ情報</Text>
-        <Text style={styles.kv}>version: {Application.nativeApplicationVersion ?? '0.0.1'}</Text>
+      <View style={styles.brandFooter}>
+        <Image
+          source={require('../../assets/logo-mark.png')}
+          style={[styles.brandLogo, { tintColor: palette.textMuted }]}
+          resizeMode="contain"
+          accessibilityLabel="Seam"
+        />
+        <Text style={[styles.brandVersion, { color: palette.textMuted }]}>
+          v{Application.nativeApplicationVersion ?? '0.0.1'}
+        </Text>
       </View>
     </ScrollView>
   );
@@ -317,13 +324,22 @@ const styles = {
     color: colors.textMuted,
     lineHeight: 16,
   },
-  kv: {
-    fontSize: font.size.sm,
-    color: colors.text,
-  },
   kvMuted: {
     marginTop: space.sm,
     fontSize: font.size.xs,
     color: colors.textMuted,
+  },
+  brandFooter: {
+    alignItems: 'center' as const,
+    paddingVertical: space.xxl,
+    gap: space.xs,
+  },
+  brandLogo: {
+    width: 96,
+    height: 32,
+  },
+  brandVersion: {
+    fontSize: font.size.xs,
+    letterSpacing: 0.5,
   },
 };
