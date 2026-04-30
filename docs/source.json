@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.4.1",
-      "versionDate": "2026-04-29",
-      "versionDescription": "- Version bump 0.4.1 (build 3)\n- Merge pull request #50 from sugarshin/chore/ci-improvement\n- release: switch to default Xcode 26.2 and drop iOS platform download\n- Try Xcode 26.2 (macos-26 default) without explicit platform download\n- Add ios-build-check workflow for cost-effective PR native build validation\n- Merge pull request #51 from sugarshin/fix/sidestore-buildversion-detection\n- Update release skill to bump ios.buildNumber alongside expo.version\n- Bump CFBundleVersion per release and surface buildVersion in source.json\n- chore(release): update source.json for v0.4.0\n- Cache iOS platform runtime to avoid repeated multi-GB download",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.4.1/Seam-v0.4.1.ipa",
-      "size": 9994853,
+      "version": "0.4.2",
+      "versionDate": "2026-04-30",
+      "versionDescription": "- Merge pull request #59 from sugarshin/release/v0.4.2\n- Version bump 0.4.2 (build 4)\n- Merge pull request #58 from sugarshin/renovate/pin-dependencies\n- Pin dependency vite to 8.0.10\n- Pin Node.js version\n- Merge pull request #57 from sugarshin/renovate/github-actions-digests\n- Merge pull request #40 from sugarshin/renovate/typescript-6.x\n- Set rootDir on @seam/domain tsconfig for TypeScript 6\n- Update dependency typescript to v6\n- Merge pull request #53 from sugarshin/fix/vitest4-relock\n- Merge pull request #54 from sugarshin/fix/zod-4-record-api\n- Update pnpm/action-setup digest to 903f9c1\n- Merge pull request #56 from sugarshin/revert-47-renovate/github-actions-digests\n- Revert \"Update pnpm/action-setup digest to 903f9c1\"\n- Merge pull request #47 from sugarshin/renovate/github-actions-digests\n- Pin vite to ^8 in root devDeps for vitest 4 compatibility\n- Fix z.record() call for zod v4\n- Update pnpm/action-setup digest to 903f9c1\n- Merge pull request #52 from sugarshin/fix-deps-config\n- Fix deps config\n- chore(release): update source.json for v0.4.1\n- Update test packages to v4\n- Update dependency zod to v4",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.4.2/Seam-v0.4.2.ipa",
+      "size": 10100456,
       "versions": [
+        {
+          "version": "0.4.2",
+          "buildVersion": "4",
+          "date": "2026-04-30",
+          "localizedDescription": "- Merge pull request #59 from sugarshin/release/v0.4.2\n- Version bump 0.4.2 (build 4)\n- Merge pull request #58 from sugarshin/renovate/pin-dependencies\n- Pin dependency vite to 8.0.10\n- Pin Node.js version\n- Merge pull request #57 from sugarshin/renovate/github-actions-digests\n- Merge pull request #40 from sugarshin/renovate/typescript-6.x\n- Set rootDir on @seam/domain tsconfig for TypeScript 6\n- Update dependency typescript to v6\n- Merge pull request #53 from sugarshin/fix/vitest4-relock\n- Merge pull request #54 from sugarshin/fix/zod-4-record-api\n- Update pnpm/action-setup digest to 903f9c1\n- Merge pull request #56 from sugarshin/revert-47-renovate/github-actions-digests\n- Revert \"Update pnpm/action-setup digest to 903f9c1\"\n- Merge pull request #47 from sugarshin/renovate/github-actions-digests\n- Pin vite to ^8 in root devDeps for vitest 4 compatibility\n- Fix z.record() call for zod v4\n- Update pnpm/action-setup digest to 903f9c1\n- Merge pull request #52 from sugarshin/fix-deps-config\n- Fix deps config\n- chore(release): update source.json for v0.4.1\n- Update test packages to v4\n- Update dependency zod to v4",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.4.2/Seam-v0.4.2.ipa",
+          "size": 10100456,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.4.1",
           "buildVersion": "3",
@@ -75,7 +84,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "3"
+      "buildVersion": "4"
     }
   ],
   "news": []
