@@ -1,6 +1,6 @@
 ---
 name: release
-description: Cut a new release of the seam iOS app — bump expo.version AND expo.ios.buildNumber in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, then push both to origin/main. Use for any phrasing that means releasing, version bumping, or tagging a new version (English or Japanese: release / version bump / リリース / バージョンアップ / タグを切る).
+description: Cut a new release of the seam iOS app — bump expo.version AND expo.ios.buildNumber in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, then push both to origin/main.
 user-invocable: true
 disable-model-invocation: true
 ---
@@ -19,14 +19,7 @@ commit / tag / push して `.github/workflows/release.yml` をトリガーする
 CI の動作（IPA build、GitHub Release 作成、`docs/source.json` 更新）は責務外。
 tag push が成功したら完了とする。
 
-## When to use
-
-ユーザーが以下のような表現でリリースを要求したとき:
-
-- "release", "cut a release", "ship a version", "bump the version", "tag a new version"
-- 「リリース」「リリースして」「バージョンアップ」「version bump」「タグを切る」
-
-### 引数
+## 引数
 
 | 形式 | 例 | 挙動 |
 |---|---|---|
