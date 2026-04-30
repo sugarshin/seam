@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.4.2",
+      "version": "0.5.0",
       "versionDate": "2026-04-30",
-      "versionDescription": "- Merge pull request #59 from sugarshin/release/v0.4.2\n- Version bump 0.4.2 (build 4)\n- Merge pull request #58 from sugarshin/renovate/pin-dependencies\n- Pin dependency vite to 8.0.10\n- Pin Node.js version\n- Merge pull request #57 from sugarshin/renovate/github-actions-digests\n- Merge pull request #40 from sugarshin/renovate/typescript-6.x\n- Set rootDir on @seam/domain tsconfig for TypeScript 6\n- Update dependency typescript to v6\n- Merge pull request #53 from sugarshin/fix/vitest4-relock\n- Merge pull request #54 from sugarshin/fix/zod-4-record-api\n- Update pnpm/action-setup digest to 903f9c1\n- Merge pull request #56 from sugarshin/revert-47-renovate/github-actions-digests\n- Revert \"Update pnpm/action-setup digest to 903f9c1\"\n- Merge pull request #47 from sugarshin/renovate/github-actions-digests\n- Pin vite to ^8 in root devDeps for vitest 4 compatibility\n- Fix z.record() call for zod v4\n- Update pnpm/action-setup digest to 903f9c1\n- Merge pull request #52 from sugarshin/fix-deps-config\n- Fix deps config\n- chore(release): update source.json for v0.4.1\n- Update test packages to v4\n- Update dependency zod to v4",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.4.2/Seam-v0.4.2.ipa",
-      "size": 10100456,
+      "versionDescription": "- Version bump 0.5.0 (build 5)\n- Merge pull request #61 from sugarshin/sugarshin-patch-1\n- Show Seam logo in settings footer\n- Apply new app icon and logo assets\n- Add files via upload\n- chore(release): update source.json for v0.4.2",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.5.0/Seam-v0.5.0.ipa",
+      "size": 12516241,
       "versions": [
+        {
+          "version": "0.5.0",
+          "buildVersion": "5",
+          "date": "2026-04-30",
+          "localizedDescription": "- Version bump 0.5.0 (build 5)\n- Merge pull request #61 from sugarshin/sugarshin-patch-1\n- Show Seam logo in settings footer\n- Apply new app icon and logo assets\n- Add files via upload\n- chore(release): update source.json for v0.4.2",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.5.0/Seam-v0.5.0.ipa",
+          "size": 12516241,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.4.2",
           "buildVersion": "4",
@@ -84,7 +93,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "4"
+      "buildVersion": "5"
     }
   ],
   "news": []
