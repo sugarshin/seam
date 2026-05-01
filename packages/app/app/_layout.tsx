@@ -71,6 +71,7 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          headerBackButtonDisplayMode: 'minimal',
           contentStyle: { backgroundColor: palette.bg },
         }}
       >

@@ -10,8 +10,10 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CATEGORY_LABEL,
+  FIT_RATING_LABEL,
   ITEM_STATUS_LABEL,
   MEASUREMENT_KEY_LABEL,
   type FailureLog,
@@ -80,6 +82,7 @@ const formatCostPerWear = (n: number | null): string => {
 export default function ItemDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const itemId = typeof id === 'string' ? id : undefined;
+  const insets = useSafeAreaInsets();
 
   const [loaded, setLoaded] = useState<LoadedItem | null>(null);
   const [editing, setEditing] = useState(false);
@@ -376,7 +379,7 @@ export default function ItemDetailScreen() {
   if (editing) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
-        <Stack.Screen options={{ title: '編集', headerShown: true }} />
+        <Stack.Screen options={{ title: '編集', headerShown: true, headerRight: () => null }} />
         <ItemForm
           itemId={itemId}
           tagSuggestions={tagSuggestions}
@@ -462,7 +465,10 @@ export default function ItemDetailScreen() {
           ),
         }}
       />
-      <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: space.xxl + insets.bottom }}
+      >
         {loaded.photos.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={photoStrip}>
             {loaded.photos.map((p) => (
@@ -488,12 +494,6 @@ export default function ItemDetailScreen() {
             <Chip label={ITEM_STATUS_LABEL[loaded.item.status]} tone="muted" />
             {loaded.item.isFitAnchor && <Chip label="Fit Anchor" tone="inverse" />}
             {loaded.item.isSellCandidate && <Chip label="売却候補" tone="warning" />}
-            {loaded.item.favoriteScore !== undefined && (
-              <Chip label={`★ ${loaded.item.favoriteScore}`} />
-            )}
-            {loaded.item.conditionRank && (
-              <Chip label={`Cond ${loaded.item.conditionRank}`} tone="muted" />
-            )}
           </View>
         </View>
 
@@ -515,6 +515,11 @@ export default function ItemDetailScreen() {
           <Text style={sectionTitle}>詳細</Text>
           {loaded.item.color && <Kv k="色" v={loaded.item.color} />}
           {loaded.item.sizeLabel && <Kv k="サイズ表記" v={loaded.item.sizeLabel} />}
+          {loaded.item.conditionRank && <Kv k="コンディション" v={loaded.item.conditionRank} />}
+          {loaded.item.fitRating && <Kv k="フィット" v={FIT_RATING_LABEL[loaded.item.fitRating]} />}
+          {loaded.item.favoriteScore !== undefined && (
+            <Kv k="お気に入り度" v={'★'.repeat(loaded.item.favoriteScore)} />
+          )}
           {loaded.item.purchasePrice !== undefined && (
             <Kv k="購入価格" v={`¥${loaded.item.purchasePrice.toLocaleString()}`} />
           )}
