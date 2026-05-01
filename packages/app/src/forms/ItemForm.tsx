@@ -518,6 +518,23 @@ export const ItemForm = ({
             )}
           />
 
+          <Controller
+            control={control}
+            name="productUrl"
+            render={({ field }) => (
+              <TextField
+                label="商品 URL"
+                value={field.value ?? ''}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                error={errors.productUrl?.message}
+                keyboardType="url"
+                autoCapitalize="none"
+                placeholder="https://jp.mercari.com/item/..."
+              />
+            )}
+          />
+
           <View style={twoColumn}>
             <View style={{ flex: 1 }}>
               <Controller
