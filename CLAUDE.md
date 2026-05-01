@@ -11,7 +11,7 @@ App Store distribution. Full requirements live in `plan/initial-plan.md`.
 
 ## Monorepo layout
 
-pnpm workspaces + Turborepo. Three packages, all `private`:
+pnpm workspaces. Three packages, all `private`:
 
 - `packages/app/` — Expo SDK 55 iOS app. Expo Router (`app/` dir), expo-sqlite,
   Drizzle ORM, Zustand, react-hook-form, expo-notifications.
@@ -30,18 +30,18 @@ Workspace path aliases (resolved by `tsconfig` paths and Metro):
 
 `@seam/domain` and `@seam/shared` resolve directly to source (`./src/index.ts`)
 — they are not built before consumption. Don't add a `dist`-based build step
-unless you also wire it into `turbo.json` and the package `exports`.
+unless you also update the package `exports`.
 
 ## Commands
 
-Run from the repo root unless noted. Turbo handles cross-package orchestration.
+Run from the repo root unless noted. Cross-package scripts use `pnpm -r`.
 
 ```sh
 pnpm install              # install all workspaces
-pnpm typecheck            # turbo run typecheck (each package: tsc --noEmit)
-pnpm test                 # turbo run test (vitest run in each package)
-pnpm lint                 # turbo run lint (only @seam/app has eslint)
-pnpm build                # turbo run build
+pnpm typecheck            # pnpm -r typecheck (each package: tsc --noEmit)
+pnpm test                 # pnpm -r test (vitest run in each package)
+pnpm lint                 # pnpm -r lint (only @seam/app has eslint)
+pnpm build                # pnpm -r build (no-op today; no package implements build)
 pnpm format               # biome format --write . (config: biome.json)
 pnpm format:check         # biome format . — used by CI
 ```

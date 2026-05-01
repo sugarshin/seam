@@ -2,7 +2,7 @@
 
 Personal clothing purchase decision app.
 
-## Monorepo (pnpm workspaces + Turborepo)
+## Monorepo (pnpm workspaces)
 
 ```
 packages/

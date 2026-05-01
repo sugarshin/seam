@@ -15,7 +15,6 @@
       "**/*.cjs",
       "**/*.json",
       "!**/node_modules",
-      "!**/.turbo",
       "!**/.expo",
       "!**/dist",
       "!**/build",
