@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.5.1",
+      "version": "0.6.0",
       "versionDate": "2026-05-01",
-      "versionDescription": "- Version bump 0.5.1 (build 6)\n- Merge pull request #63 from sugarshin/fix/item-detail-display\n- Fix item detail/edit screen display issues\n- Merge pull request #62 from sugarshin/remove-turborepo\n- Remove Turborepo in favor of pnpm -r\n- Pin actions to patch versions and drop debug showsdks step\n- Fix release skill\n- chore(release): update source.json for v0.5.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.5.1/Seam-v0.5.1.ipa",
-      "size": 12516203,
+      "versionDescription": "- Version bump 0.6.0 (build 7)\n- Merge pull request #64 from sugarshin/feature/condition-rank-guidelines\n- Add condition rank labels and selection guidelines\n- chore(release): update source.json for v0.5.1",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.6.0/Seam-v0.6.0.ipa",
+      "size": 12516817,
       "versions": [
+        {
+          "version": "0.6.0",
+          "buildVersion": "7",
+          "date": "2026-05-01",
+          "localizedDescription": "- Version bump 0.6.0 (build 7)\n- Merge pull request #64 from sugarshin/feature/condition-rank-guidelines\n- Add condition rank labels and selection guidelines\n- chore(release): update source.json for v0.5.1",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.6.0/Seam-v0.6.0.ipa",
+          "size": 12516817,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.5.1",
           "buildVersion": "6",
@@ -102,7 +111,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "6"
+      "buildVersion": "7"
     }
   ],
   "news": []
