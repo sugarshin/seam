@@ -4,20 +4,19 @@
   "private": true,
   "description": "Seam - Personal clothing purchase decision app",
   "scripts": {
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "dev": "turbo run dev --parallel",
-    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "dev": "pnpm -r --parallel dev",
+    "clean": "pnpm -r clean && rm -rf node_modules",
     "prepare": "lefthook install"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.13",
     "lefthook": "2.1.6",
-    "turbo": "2.9.6",
     "typescript": "6.0.3",
     "vite": "8.0.10"
   },

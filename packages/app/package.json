@@ -13,7 +13,7 @@
     "drizzle:check": "drizzle-kit check",
     "prebuild": "node scripts/prebuild.mjs",
     "package-ipa": "node scripts/packageIpa.mjs",
-    "clean": "rm -rf .expo .turbo dist *.tsbuildinfo"
+    "clean": "rm -rf .expo dist *.tsbuildinfo"
   },
   "dependencies": {
     "@babel/runtime": "^7.29.2",

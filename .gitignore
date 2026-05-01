@@ -24,7 +24,6 @@ yarn-error.log*
 # Build / cache
 dist/
 build/
-.turbo/
 .cache/
 *.tsbuildinfo
 coverage/
