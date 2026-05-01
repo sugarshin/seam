@@ -9,6 +9,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CATEGORY_LABEL,
   CONDITION_RANK_LABEL,
@@ -34,6 +35,7 @@ import type { ExtractedMeasurement } from '@seam/domain';
 import { BrandChecklist } from '../../src/components/BrandChecklist';
 import { Button } from '../../src/components/Button';
 import { Chip } from '../../src/components/Chip';
+import { LinkText } from '../../src/components/LinkText';
 import { DecisionReasonModal } from '../../src/components/DecisionReasonModal';
 import { MeasurementExtractionReviewModal } from '../../src/components/MeasurementExtractionReviewModal';
 import {
@@ -151,6 +153,7 @@ const formatDate = (iso?: string): string => {
 export default function CandidateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const itemId = typeof id === 'string' ? id : undefined;
+  const insets = useSafeAreaInsets();
 
   const [loaded, setLoaded] = useState<LoadedCandidate | null>(null);
   const [editing, setEditing] = useState(false);
@@ -514,7 +517,7 @@ export default function CandidateDetailScreen() {
     const c = loaded.candidate;
     return (
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
-        <Stack.Screen options={{ title: '編集', headerShown: true }} />
+        <Stack.Screen options={{ title: '編集', headerShown: true, headerRight: () => null }} />
         <ItemForm
           itemId={itemId}
           tagSuggestions={tagSuggestions}
@@ -601,7 +604,10 @@ export default function CandidateDetailScreen() {
           ),
         }}
       />
-      <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: space.xxl + insets.bottom }}
+      >
         {loaded.photos.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={photoStrip}>
             {loaded.photos.map((p) => (
@@ -888,11 +894,11 @@ export default function CandidateDetailScreen() {
 const Kv = ({ k, v, emphasize }: { k: string; v: string; emphasize?: boolean }) => (
   <View style={kvRow}>
     <Text style={kvKey}>{k}</Text>
-    <Text
+    <LinkText
       style={[kvVal, emphasize ? { color: colors.warning, fontWeight: font.weight.bold } : null]}
     >
       {v}
-    </Text>
+    </LinkText>
   </View>
 );
 

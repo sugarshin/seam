@@ -29,6 +29,7 @@ import {
 import { calculateCostPerWear, calculateNetCostPerWear } from '@seam/domain';
 import { Button } from '../../src/components/Button';
 import { Chip } from '../../src/components/Chip';
+import { LinkText } from '../../src/components/LinkText';
 import { FailureLogEntry } from '../../src/components/FailureLogEntry';
 import { FailureLogModal, type FailureLogDraft } from '../../src/components/FailureLogModal';
 import { SaleInfoModal, type SaleInfoDraft } from '../../src/components/SaleInfoModal';
@@ -697,7 +698,7 @@ export default function ItemDetailScreen() {
 const Kv = ({ k, v }: { k: string; v: string }) => (
   <View style={kvRow}>
     <Text style={kvKey}>{k}</Text>
-    <Text style={kvVal}>{v}</Text>
+    <LinkText style={kvVal}>{v}</LinkText>
   </View>
 );
 
