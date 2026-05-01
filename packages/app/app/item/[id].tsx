@@ -13,6 +13,7 @@ import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CATEGORY_LABEL,
+  CONDITION_RANK_LABEL,
   FIT_RATING_LABEL,
   ITEM_STATUS_LABEL,
   MEASUREMENT_KEY_LABEL,
@@ -515,7 +516,12 @@ export default function ItemDetailScreen() {
           <Text style={sectionTitle}>詳細</Text>
           {loaded.item.color && <Kv k="色" v={loaded.item.color} />}
           {loaded.item.sizeLabel && <Kv k="サイズ表記" v={loaded.item.sizeLabel} />}
-          {loaded.item.conditionRank && <Kv k="コンディション" v={loaded.item.conditionRank} />}
+          {loaded.item.conditionRank && (
+            <Kv
+              k="コンディション"
+              v={`${loaded.item.conditionRank} — ${CONDITION_RANK_LABEL[loaded.item.conditionRank]}`}
+            />
+          )}
           {loaded.item.fitRating && <Kv k="フィット" v={FIT_RATING_LABEL[loaded.item.fitRating]} />}
           {loaded.item.favoriteScore !== undefined && (
             <Kv k="お気に入り度" v={'★'.repeat(loaded.item.favoriteScore)} />

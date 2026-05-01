@@ -47,3 +47,27 @@ export const CONDITION_RANK_SCORE: Record<'S' | 'A' | 'B' | 'C' | 'D', number> =
 
 export type ConditionRank = keyof typeof CONDITION_RANK_SCORE;
 export const CONDITION_RANKS: readonly ConditionRank[] = ['S', 'A', 'B', 'C', 'D'];
+
+/**
+ * 古着 / 中古品業界 (ヤフオク・メルカリ・Grailed 等) の標準的な
+ * コンディション区分を踏まえた表示ラベル。
+ */
+export const CONDITION_RANK_LABEL: Record<ConditionRank, string> = {
+  S: '新品・未使用',
+  A: '美品',
+  B: '良好',
+  C: 'やや使用感あり',
+  D: '難あり',
+};
+
+/**
+ * コンディションを判定するときの目安。Picker の補助テキストとして表示する。
+ * 業界標準の中古コンディション基準を簡略化した内容。
+ */
+export const CONDITION_RANK_DESCRIPTION: Record<ConditionRank, string> = {
+  S: 'タグ付き / デッドストック。一度も着用していない',
+  A: '着用数回程度。目立つ汚れ・ダメージなし、新品に近い状態',
+  B: '通常の使用感あり。目立つダメージなし、軽微な使用痕のみ',
+  C: '使用感がはっきり。小さなシミ・色あせ・ほつれなど軽微なダメージあり',
+  D: '目立つダメージあり (破れ・大きなシミ・色あせ・リペア跡)。ジャンク扱い',
+};

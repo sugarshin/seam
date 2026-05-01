@@ -11,6 +11,7 @@ import {
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   CATEGORY_LABEL,
+  CONDITION_RANK_LABEL,
   ITEM_STATUS_LABEL,
   MEASUREMENT_KEY_LABEL,
   SOURCE_TYPE_LABEL,
@@ -627,7 +628,10 @@ export default function CandidateDetailScreen() {
             {c?.sourceType && <Chip label={SOURCE_TYPE_LABEL[c.sourceType]} />}
             {loaded.item.isFitAnchor && <Chip label="Fit Anchor" tone="inverse" />}
             {loaded.item.conditionRank && (
-              <Chip label={`Cond ${loaded.item.conditionRank}`} tone="muted" />
+              <Chip
+                label={`${loaded.item.conditionRank} · ${CONDITION_RANK_LABEL[loaded.item.conditionRank]}`}
+                tone="muted"
+              />
             )}
           </View>
         </View>

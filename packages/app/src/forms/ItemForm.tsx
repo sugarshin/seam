@@ -7,6 +7,8 @@ import { z } from 'zod';
 import {
   CATEGORY_LABEL,
   CONDITION_RANKS,
+  CONDITION_RANK_DESCRIPTION,
+  CONDITION_RANK_LABEL,
   GARMENT_CATEGORIES,
   ITEM_STATUSES,
   ITEM_STATUS_LABEL,
@@ -133,7 +135,8 @@ const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEG
 
 const CONDITION_OPTIONS: readonly PickerOption<ConditionRank>[] = CONDITION_RANKS.map((r) => ({
   value: r,
-  label: r,
+  label: `${r} — ${CONDITION_RANK_LABEL[r]}`,
+  description: CONDITION_RANK_DESCRIPTION[r],
 }));
 
 const FIT_RATING_OPTIONS: readonly PickerOption<NonNullable<ItemFormValues['fitRating']>>[] = [
