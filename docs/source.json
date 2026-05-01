@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.6.0",
+      "version": "0.7.0",
       "versionDate": "2026-05-01",
-      "versionDescription": "- Version bump 0.6.0 (build 7)\n- Merge pull request #64 from sugarshin/feature/condition-rank-guidelines\n- Add condition rank labels and selection guidelines\n- chore(release): update source.json for v0.5.1",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.6.0/Seam-v0.6.0.ipa",
-      "size": 12516817,
+      "versionDescription": "- Version bump 0.7.0 (build 8)\n- Merge pull request #65 from sugarshin/feature/wishlist-product-url\n- Add product URL to wishlist items and make URLs clickable\n- chore(release): update source.json for v0.6.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.7.0/Seam-v0.7.0.ipa",
+      "size": 12517852,
       "versions": [
+        {
+          "version": "0.7.0",
+          "buildVersion": "8",
+          "date": "2026-05-01",
+          "localizedDescription": "- Version bump 0.7.0 (build 8)\n- Merge pull request #65 from sugarshin/feature/wishlist-product-url\n- Add product URL to wishlist items and make URLs clickable\n- chore(release): update source.json for v0.6.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.7.0/Seam-v0.7.0.ipa",
+          "size": 12517852,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.6.0",
           "buildVersion": "7",
@@ -111,7 +120,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "7"
+      "buildVersion": "8"
     }
   ],
   "news": []
