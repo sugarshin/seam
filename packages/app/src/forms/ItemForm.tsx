@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ScrollView, Switch, Text, View, type ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -169,6 +170,7 @@ export const ItemForm = ({
   onCancel,
   submitting = false,
 }: Props) => {
+  const insets = useSafeAreaInsets();
   const [measurements, setMeasurements] = useState<MeasurementInput[]>(
     defaults?.measurements ?? [],
   );
@@ -313,7 +315,10 @@ export const ItemForm = ({
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.bg }}
-      contentContainerStyle={{ padding: space.lg, paddingBottom: space.xxl }}
+      contentContainerStyle={{
+        padding: space.lg,
+        paddingBottom: space.xxl + insets.bottom,
+      }}
       keyboardShouldPersistTaps="handled"
     >
       <SectionTitle>基本</SectionTitle>
