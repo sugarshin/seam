@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { GARMENT_CATEGORIES } from '../constants/categories';
 import { ITEM_STATUSES } from '../constants/itemStatus';
-import { CONDITION_RANKS } from '../constants/scoreWeights';
+import { CONDITION_RANKS, type ConditionRank } from '../constants/scoreWeights';
 
 export const FitRatingSchema = z.enum([
   'too_small',
@@ -36,7 +36,7 @@ export const GarmentItemSchema = z.object({
   purchaseDate: z.string().optional(),
   purchaseSource: z.string().optional(),
   productUrl: z.string().url().optional().or(z.literal('')),
-  conditionRank: z.enum(CONDITION_RANKS as readonly [string, ...string[]]).optional(),
+  conditionRank: z.enum(CONDITION_RANKS as readonly [ConditionRank, ...ConditionRank[]]).optional(),
   conditionNotes: z.string().optional(),
   fitRating: FitRatingSchema.optional(),
   favoriteScore: FavoriteScoreSchema.optional(),

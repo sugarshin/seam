@@ -14,6 +14,7 @@ import { colors, font, radii, space } from '../theme';
 export type PickerOption<T extends string> = {
   value: T;
   label: string;
+  description?: string;
 };
 
 type Props<T extends string> = {
@@ -57,9 +58,14 @@ export function Picker<T extends string>({
           pressed && { opacity: 0.6 },
         ]}
       >
-        <Text style={[rowLabel, selected && { fontWeight: font.weight.semibold }]}>
-          {item.label}
-        </Text>
+        <View style={rowTextWrap}>
+          <Text style={[rowLabel, selected && { fontWeight: font.weight.semibold }]}>
+            {item.label}
+          </Text>
+          {item.description !== undefined && item.description !== '' && (
+            <Text style={rowDescription}>{item.description}</Text>
+          )}
+        </View>
         {selected && <Text style={checkMark}>✓</Text>}
       </Pressable>
     );
@@ -190,10 +196,20 @@ const rowStyle: ViewStyle = {
   paddingVertical: space.md,
 };
 
-const rowLabel = {
+const rowTextWrap: ViewStyle = {
   flex: 1,
+};
+
+const rowLabel = {
   fontSize: font.size.md,
   color: colors.text,
+} as const;
+
+const rowDescription = {
+  marginTop: 2,
+  fontSize: font.size.xs,
+  color: colors.textMuted,
+  lineHeight: font.size.xs * 1.4,
 } as const;
 
 const checkMark = {
