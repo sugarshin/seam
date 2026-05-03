@@ -12,6 +12,7 @@ export { EmptyState } from './EmptyState';
 export { ItemCard } from './ItemCard';
 export { MeasurementInputGroup } from './MeasurementInputGroup';
 export { PhotoPicker } from './PhotoPicker';
+export { ImageViewerModal } from './ImageViewerModal';
 export { TagInput } from './TagInput';
 export { DiffRow } from './DiffRow';
 export { SeverityBadge } from './SeverityBadge';

@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Pressable,
   ScrollView,
   Text,
   View,
@@ -35,6 +36,7 @@ import type { ExtractedMeasurement } from '@seam/domain';
 import { BrandChecklist } from '../../src/components/BrandChecklist';
 import { Button } from '../../src/components/Button';
 import { Chip } from '../../src/components/Chip';
+import { ImageViewerModal } from '../../src/components/ImageViewerModal';
 import { LinkText } from '../../src/components/LinkText';
 import { DecisionReasonModal } from '../../src/components/DecisionReasonModal';
 import { MeasurementExtractionReviewModal } from '../../src/components/MeasurementExtractionReviewModal';
@@ -166,6 +168,7 @@ export default function CandidateDetailScreen() {
   const [extractionSubmitting, setExtractionSubmitting] = useState(false);
   const [reminderModalVisible, setReminderModalVisible] = useState(false);
   const [reminderSubmitting, setReminderSubmitting] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   const refresh = useCallback(async () => {
     if (!itemId) return;
@@ -610,12 +613,15 @@ export default function CandidateDetailScreen() {
       >
         {loaded.photos.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={photoStrip}>
-            {loaded.photos.map((p) => (
-              <Image
+            {loaded.photos.map((p, i) => (
+              <Pressable
                 key={p.id}
-                source={{ uri: absolutePathFor(p.relativePath) }}
-                style={photoLarge}
-              />
+                accessibilityRole="imagebutton"
+                accessibilityLabel="画像を拡大"
+                onPress={() => setViewerIndex(i)}
+              >
+                <Image source={{ uri: absolutePathFor(p.relativePath) }} style={photoLarge} />
+              </Pressable>
             ))}
           </ScrollView>
         ) : (
@@ -886,6 +892,13 @@ export default function CandidateDetailScreen() {
         submitting={reminderSubmitting}
         onCancel={() => setReminderModalVisible(false)}
         onSubmit={onReminderSubmit}
+      />
+
+      <ImageViewerModal
+        visible={viewerIndex !== null}
+        uris={loaded.photos.map((p) => absolutePathFor(p.relativePath))}
+        initialIndex={viewerIndex ?? 0}
+        onRequestClose={() => setViewerIndex(null)}
       />
     </View>
   );
