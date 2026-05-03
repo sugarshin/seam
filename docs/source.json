@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.7.0",
-      "versionDate": "2026-05-01",
-      "versionDescription": "- Version bump 0.7.0 (build 8)\n- Merge pull request #65 from sugarshin/feature/wishlist-product-url\n- Add product URL to wishlist items and make URLs clickable\n- chore(release): update source.json for v0.6.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.7.0/Seam-v0.7.0.ipa",
-      "size": 12517852,
+      "version": "0.8.0",
+      "versionDate": "2026-05-03",
+      "versionDescription": "- Version bump 0.8.0 (build 9)\n- Merge pull request #67 from sugarshin/feature/image-viewer\n- Merge pull request #66 from sugarshin/renovate/zod-4.x-lockfile\n- Add tap-to-zoom image viewer for item and candidate detail screens\n- Update dependency zod to v4.4.1\n- chore(release): update source.json for v0.7.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.8.0/Seam-v0.8.0.ipa",
+      "size": 12537861,
       "versions": [
+        {
+          "version": "0.8.0",
+          "buildVersion": "9",
+          "date": "2026-05-03",
+          "localizedDescription": "- Version bump 0.8.0 (build 9)\n- Merge pull request #67 from sugarshin/feature/image-viewer\n- Merge pull request #66 from sugarshin/renovate/zod-4.x-lockfile\n- Add tap-to-zoom image viewer for item and candidate detail screens\n- Update dependency zod to v4.4.1\n- chore(release): update source.json for v0.7.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.8.0/Seam-v0.8.0.ipa",
+          "size": 12537861,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.7.0",
           "buildVersion": "8",
@@ -120,7 +129,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "8"
+      "buildVersion": "9"
     }
   ],
   "news": []
