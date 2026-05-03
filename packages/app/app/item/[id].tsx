@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Pressable,
   ScrollView,
   Switch,
   Text,
@@ -29,6 +30,7 @@ import {
 import { calculateCostPerWear, calculateNetCostPerWear } from '@seam/domain';
 import { Button } from '../../src/components/Button';
 import { Chip } from '../../src/components/Chip';
+import { ImageViewerModal } from '../../src/components/ImageViewerModal';
 import { LinkText } from '../../src/components/LinkText';
 import { FailureLogEntry } from '../../src/components/FailureLogEntry';
 import { FailureLogModal, type FailureLogDraft } from '../../src/components/FailureLogModal';
@@ -98,6 +100,7 @@ export default function ItemDetailScreen() {
   const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [saleSubmitting, setSaleSubmitting] = useState(false);
   const [sellCandidateBusy, setSellCandidateBusy] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   const refresh = useCallback(async () => {
     if (!itemId) return;
@@ -473,12 +476,15 @@ export default function ItemDetailScreen() {
       >
         {loaded.photos.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={photoStrip}>
-            {loaded.photos.map((p) => (
-              <Image
+            {loaded.photos.map((p, i) => (
+              <Pressable
                 key={p.id}
-                source={{ uri: absolutePathFor(p.relativePath) }}
-                style={photoLarge}
-              />
+                accessibilityRole="imagebutton"
+                accessibilityLabel="画像を拡大"
+                onPress={() => setViewerIndex(i)}
+              >
+                <Image source={{ uri: absolutePathFor(p.relativePath) }} style={photoLarge} />
+              </Pressable>
             ))}
           </ScrollView>
         ) : (
@@ -690,6 +696,13 @@ export default function ItemDetailScreen() {
         initial={loaded.saleInfo}
         onCancel={() => setSaleModalOpen(false)}
         onSubmit={(draft) => void submitSale(draft)}
+      />
+
+      <ImageViewerModal
+        visible={viewerIndex !== null}
+        uris={loaded.photos.map((p) => absolutePathFor(p.relativePath))}
+        initialIndex={viewerIndex ?? 0}
+        onRequestClose={() => setViewerIndex(null)}
       />
     </View>
   );
