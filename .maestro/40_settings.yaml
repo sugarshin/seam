@@ -1,0 +1,137 @@
+appId: com.sugarshin.seam
+name: settings
+tags:
+  - regression
+# CUJ-023,024: 個人ルール 追加 + 削除 / ブランドガイド 追加 + 編集 + 削除。
+---
+- runFlow: '_helpers/launch.yaml'
+
+# === CUJ-023: 個人ルール ===
+- runFlow: '_helpers/goto_settings.yaml'
+- tapOn:
+    id: 'btn:open-measurement-rules'
+- assertVisible: '個人ルール'
+
+# rule 追加
+- tapOn:
+    id: 'picker:rule-category'
+- tapOn:
+    id: 'option:rule-category:t_shirt'
+- tapOn:
+    id: 'picker:rule-measurement-key'
+- tapOn:
+    text: '肩幅'
+- tapOn:
+    id: 'picker:rule-operator'
+- tapOn:
+    text: '<'
+- tapOn:
+    id: 'field:rule-value'
+- inputText: '40'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: 'picker:rule-severity'
+- tapOn:
+    text: 'Warning'
+- tapOn:
+    id: 'field:rule-message'
+- inputText: 'E2E test rule'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: 'btn:add-rule'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:add-rule'
+- assertVisible: 'E2E test rule'
+
+# rule 削除
+- scrollUntilVisible:
+    element:
+      id: 'card:rule:.*:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'card:rule:.*:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+
+# === CUJ-024: ブランドガイド ===
+# 個人ルール画面 (Stack push) から tabs に戻すため cold restart
+- runFlow: '_helpers/launch.yaml'
+- runFlow: '_helpers/goto_settings.yaml'
+- tapOn:
+    id: 'btn:open-brand-guides'
+- assertVisible: 'ブランドガイド'
+
+# brand guide 追加
+- tapOn:
+    id: 'field:guide-brand'
+- inputText: 'E2E_Brand'
+- tapOn:
+    id: 'field:guide-title'
+- inputText: 'E2E ガイド'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: 'btn:add-brand-guide'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:add-brand-guide'
+- extendedWaitUntil:
+    visible:
+      id: 'card:brand-guide:.*'
+    timeout: 5000
+
+# brand guide 編集 (タイトル変更)
+- tapOn:
+    id: 'card:brand-guide:.*'
+- assertVisible: 'ガイド編集'
+- tapOn:
+    id: 'field:guide-title'
+- eraseText: 32
+- inputText: 'E2E ガイド (編集後)'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: 'btn:save-brand-guide'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:save-brand-guide'
+- extendedWaitUntil:
+    visible:
+      id: 'card:brand-guide:.*'
+    timeout: 5000
+
+# brand guide 削除
+- scrollUntilVisible:
+    element:
+      id: 'card:brand-guide:.*:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'card:brand-guide:.*:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'

@@ -1,0 +1,42 @@
+appId: com.sugarshin.seam
+name: filters
+# regression tag は付けない (視覚確認の補足)
+---
+- runFlow: '_helpers/launch.yaml'
+
+# 前提: Closet に何かしら item がある
+- runFlow:
+    file: '_helpers/create_item.yaml'
+    env:
+      itemName: 'E_Filter_Probe'
+
+# 検索
+- tapOn:
+    id: 'field:closet-search'
+- inputText: 'E_Filter_Probe'
+- tapOn:
+    point: '50%, 18%'
+- assertVisible: '.*E_Filter_Probe.*'
+
+# 検索クリア
+- tapOn:
+    id: 'field:closet-search'
+- eraseText: 32
+- tapOn:
+    point: '50%, 18%'
+
+# 並び替え
+- tapOn:
+    id: 'picker:closet-sort'
+- assertVisible: '並び替え'
+- tapOn:
+    text: 'カテゴリ順'
+- assertVisible: 'Closet'
+
+# カテゴリ chip フィルタ on/off (リスト挙動の簡易確認)
+- tapOn:
+    id: 'chip:category:t_shirt'
+- assertVisible:
+    id: 'card:item:.*'
+- tapOn:
+    id: 'chip:category:t_shirt'

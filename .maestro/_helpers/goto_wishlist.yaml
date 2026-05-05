@@ -1,0 +1,5 @@
+appId: com.sugarshin.seam
+---
+- tapOn:
+    id: 'tab:wishlist'
+- assertVisible: 'Wishlist'

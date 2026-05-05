@@ -1,0 +1,21 @@
+appId: com.sugarshin.seam
+name: reset
+tags:
+  - reset
+# CUJ-026: UI 経由でデータを全削除する (opt-in)。
+# default 実行 (`pnpm test:e2e`) からは tag: reset で除外される。
+# 明示的に `pnpm test:e2e:reset` で実行する。
+---
+- runFlow: '_helpers/launch.yaml'
+- runFlow: '_helpers/goto_settings.yaml'
+- tapOn:
+    id: 'btn:open-data-reset'
+- assertVisible: 'データを全削除'
+- tapOn:
+    id: 'btn:confirm-data-reset'
+- assertVisible: '本当に削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: '削除しました'
+- tapOn:
+    text: 'OK'

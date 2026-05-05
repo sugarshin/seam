@@ -64,8 +64,7 @@ eas.json.local
 # Drizzle
 drizzle/.snapshot/
 
-# Maestro
-.maestro/
+# Maestro — flows themselves are tracked; only debug output is ignored.
 maestro-debug-output/
 
 # Claude Code (local-only files)

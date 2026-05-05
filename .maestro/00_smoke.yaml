@@ -1,0 +1,32 @@
+appId: com.sugarshin.seam
+name: smoke
+tags:
+  - smoke
+  - regression
+# CUJ-001: アプリが起動し、全 6 タブにナビゲートできる。
+---
+- runFlow: '_helpers/launch.yaml'
+
+- tapOn:
+    id: 'tab:closet'
+- assertVisible: 'Closet'
+
+- tapOn:
+    id: 'tab:wishlist'
+- assertVisible: 'Wishlist'
+
+- tapOn:
+    id: 'tab:compare'
+- assertVisible: 'Compare'
+
+- tapOn:
+    id: 'tab:stats'
+- assertVisible: 'Stats'
+
+- tapOn:
+    id: 'tab:settings'
+- assertVisible: 'Settings'
+
+- tapOn:
+    id: 'tab:home'
+- assertVisible: 'Home'

@@ -1,0 +1,41 @@
+appId: com.sugarshin.seam
+name: compare_stats
+tags:
+  - regression
+# CUJ-020,021,022: Compare 表示 / Stats 表示 / Stats→Closet 売却モード遷移。
+# 前提: 別 flow で item / candidate が作られていること。
+# (10_item_lifecycle / 20_candidate_lifecycle / 15_item_sale を先に走らせる前提)
+---
+- runFlow: '_helpers/launch.yaml'
+
+# CUJ-020: Compare タブで candidate を選んでスコア / 差分セクションを表示
+- tapOn:
+    id: 'tab:compare'
+- assertVisible: 'Compare'
+- runFlow:
+    when:
+      visible:
+        id: 'picker:compare-candidate'
+    commands:
+      - tapOn:
+          id: 'picker:compare-candidate'
+      - assertVisible: '候補を選択'
+      - tapOn:
+          text: 'キャンセル'
+
+# CUJ-021: Stats タブが crash せず表示
+- tapOn:
+    id: 'tab:stats'
+- assertVisible: 'Stats'
+- assertVisible: 'ワードローブ概要|所有数'
+
+# CUJ-022: Stats → 売却済み StatCard → Closet (sold mode)
+- runFlow:
+    when:
+      visible:
+        id: 'stat:sold'
+    commands:
+      - tapOn:
+          id: 'stat:sold'
+      - assertVisible: 'Closet'
+      - assertVisible: '売却済み'

@@ -1,0 +1,9 @@
+appId: com.sugarshin.seam
+---
+# Cold start. DB migrations and Home tab visibility are awaited.
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: 'tab:home'
+    timeout: 30000
