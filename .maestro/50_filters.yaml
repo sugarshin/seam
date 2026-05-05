@@ -14,16 +14,14 @@ name: filters
 - tapOn:
     id: 'field:closet-search'
 - inputText: 'E_Filter_Probe'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - assertVisible: '.*E_Filter_Probe.*'
 
 # 検索クリア
 - tapOn:
     id: 'field:closet-search'
 - eraseText: 32
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 
 # 並び替え
 - tapOn:

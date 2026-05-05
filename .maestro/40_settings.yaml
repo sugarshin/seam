@@ -28,8 +28,7 @@ tags:
 - tapOn:
     id: 'field:rule-value'
 - inputText: '40'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - waitForAnimationToEnd:
     timeout: 1000
 - tapOn:
@@ -39,8 +38,7 @@ tags:
 - tapOn:
     id: 'field:rule-message'
 - inputText: 'E2E test rule'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:
@@ -81,8 +79,7 @@ tags:
 - tapOn:
     id: 'field:guide-title'
 - inputText: 'E2E ガイド'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:
@@ -106,8 +103,7 @@ tags:
     id: 'field:guide-title'
 - eraseText: 32
 - inputText: 'E2E ガイド (編集後)'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:

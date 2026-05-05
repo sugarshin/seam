@@ -35,16 +35,15 @@ tags:
     id: 'field:item-name'
 - eraseText: 32
 - inputText: 'E_Item_Lifecycle_Edited'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:
     element:
       id: 'btn:submit'
     direction: DOWN
-    timeout: 15000
-    speed: 80
+    timeout: 30000
+    speed: 40
     visibilityPercentage: 50
 - tapOn:
     id: 'btn:submit'

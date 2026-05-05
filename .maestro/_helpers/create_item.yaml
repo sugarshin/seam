@@ -13,17 +13,21 @@ appId: com.sugarshin.seam
 - tapOn:
     id: 'field:item-name'
 - inputText: ${itemName}
-# Tap a safe header-area spot to blur the input and dismiss the keyboard.
-- tapOn:
-    point: '50%, 18%'
+# Dismiss the keyboard so it doesn't occlude the submit button. hideKeyboard
+# is layout-independent (works regardless of Stack header presence) — unlike
+# the older `tapOn point: '50%, 18%'` blur which lands in the form area on
+# screens with a Stack header.
+- hideKeyboard
 - waitForAnimationToEnd:
     timeout: 1000
+# scrollDuration を 40 にして CI 上の accessibility tree 更新の遅さに耐え、
+# timeout も 30s に倍化。macos-26 runner では 15s では稀に間に合わない。
 - scrollUntilVisible:
     element:
       id: 'btn:submit'
     direction: DOWN
-    timeout: 15000
-    speed: 80
+    timeout: 30000
+    speed: 40
     visibilityPercentage: 50
 - tapOn:
     id: 'btn:submit'

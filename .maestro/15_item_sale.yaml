@@ -63,8 +63,7 @@ tags:
 - tapOn:
     id: 'modal:sale-info:field:price'
 - inputText: '5000'
-- tapOn:
-    point: '50%, 18%'
+- hideKeyboard
 - tapOn:
     id: 'modal:sale-info:submit'
 - extendedWaitUntil:
