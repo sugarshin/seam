@@ -1,0 +1,93 @@
+appId: com.sugarshin.seam
+name: item_lifecycle
+tags:
+  - core
+  - regression
+# CUJ-002,003,004,005,006,011: Owned Item の create → detail → edit → wear log
+# add → wear log delete → item delete までを 1 アイテムで通す。
+# 各 flow は累積 DB 前提。固定名 "E_Item_Lifecycle" を使う (再実行で重複 OK)。
+---
+- runFlow: '_helpers/launch.yaml'
+
+# CUJ-002: Item 新規作成
+- runFlow:
+    file: '_helpers/create_item.yaml'
+    env:
+      itemName: 'E_Item_Lifecycle'
+
+# CUJ-003: Item 詳細表示 (Closet にいる前提でカードを tap)
+- tapOn:
+    text: '.*E_Item_Lifecycle.*'
+- assertVisible: '.*E_Item_Lifecycle.*'
+- assertVisible: '詳細'
+
+# CUJ-004: Item 編集 (名前変更)
+- scrollUntilVisible:
+    element:
+      id: 'btn:edit'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:edit'
+- assertVisible: '編集'
+- tapOn:
+    id: 'field:item-name'
+- eraseText: 32
+- inputText: 'E_Item_Lifecycle_Edited'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 15000
+    speed: 80
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:submit'
+- assertVisible: '.*E_Item_Lifecycle_Edited.*'
+
+# CUJ-005: 着用記録 追加
+- tapOn:
+    id: 'btn:add-wear-log'
+- extendedWaitUntil:
+    visible:
+      id: 'modal:wear-log'
+    timeout: 5000
+- tapOn:
+    id: 'modal:wear-log:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:wear-log'
+    timeout: 5000
+- assertVisible: '着用回数'
+- assertVisible: '1 回'
+
+# CUJ-006: 着用記録 削除 (P2)
+- tapOn:
+    id: 'card:wear-log:.*:delete'
+- extendedWaitUntil:
+    visible: 'この記録を削除しますか？'
+    timeout: 5000
+- tapOn:
+    text: '削除する'
+- extendedWaitUntil:
+    visible: '未着用です'
+    timeout: 5000
+
+# CUJ-011: Item 削除 → 確認ダイアログ → Closet に戻り該当アイテムが消える
+- scrollUntilVisible:
+    element:
+      id: 'btn:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: 'Closet'

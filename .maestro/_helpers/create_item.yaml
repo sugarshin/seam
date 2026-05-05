@@ -1,0 +1,33 @@
+appId: com.sugarshin.seam
+# Required env: itemName
+# Closet タブ → FAB → 名前入力 → 保存。category は default 't_shirt' のまま、
+# status は default 'owned' のまま。
+# Self-contained: cold-start (launch) してから始めるので、呼び出し側の
+# 現在地に依存しない。
+---
+- runFlow: 'launch.yaml'
+- runFlow: 'goto_closet.yaml'
+- tapOn:
+    id: 'fab:add-item'
+- assertVisible: '新規アイテム'
+- tapOn:
+    id: 'field:item-name'
+- inputText: ${itemName}
+# Tap a safe header-area spot to blur the input and dismiss the keyboard.
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 15000
+    speed: 80
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:submit'
+- extendedWaitUntil:
+    visible:
+      id: 'card:item:.*'
+    timeout: 5000

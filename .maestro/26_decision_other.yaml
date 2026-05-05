@@ -1,0 +1,90 @@
+appId: com.sugarshin.seam
+name: decision_other
+tags:
+  - regression
+# CUJ-017,018,019: Watch / Skip / Lost Auction 決定の記録。
+# 3 つの candidate を作って各 decision を記録 (それぞれ別 row)。
+---
+- runFlow: '_helpers/launch.yaml'
+
+# === CUJ-017: Watch 決定 ===
+- runFlow:
+    file: '_helpers/create_candidate.yaml'
+    env:
+      candidateName: 'E_Watch_Decision'
+- tapOn:
+    text: '.*E_Watch_Decision.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:decision-watch'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:decision-watch'
+- extendedWaitUntil:
+    visible:
+      id: 'modal:decision-reason'
+    timeout: 5000
+- tapOn:
+    id: 'modal:decision-reason:field:reason'
+- inputText: '価格様子見'
+- tapOn:
+    id: 'modal:decision-reason:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:decision-reason'
+    timeout: 5000
+- assertVisible: 'Watch'
+
+# === CUJ-018: Skip 決定 ===
+- runFlow:
+    file: '_helpers/create_candidate.yaml'
+    env:
+      candidateName: 'E_Skip_Decision'
+- tapOn:
+    text: '.*E_Skip_Decision.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:decision-skip'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:decision-skip'
+- extendedWaitUntil:
+    visible:
+      id: 'modal:decision-reason'
+    timeout: 5000
+- tapOn:
+    id: 'modal:decision-reason:field:reason'
+- inputText: '被り懸念'
+- tapOn:
+    id: 'modal:decision-reason:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:decision-reason'
+    timeout: 5000
+- assertVisible: 'Skip'
+
+# === CUJ-019: Lost Auction 決定 (P2) ===
+- runFlow:
+    file: '_helpers/create_candidate.yaml'
+    env:
+      candidateName: 'E_Lost_Decision'
+- tapOn:
+    text: '.*E_Lost_Decision.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:decision-lost'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:decision-lost'
+- assertVisible: '落札失敗にする'
+- tapOn:
+    text: '変更'
+- extendedWaitUntil:
+    visible: '落札失敗'
+    timeout: 5000

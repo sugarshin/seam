@@ -1,0 +1,47 @@
+appId: com.sugarshin.seam
+name: decision_buy
+tags:
+  - core
+  - regression
+# CUJ-016: Buy 決定 → owned 昇格 → Closet に表示。
+---
+- runFlow: '_helpers/launch.yaml'
+
+# Setup: candidate を作成
+- runFlow:
+    file: '_helpers/create_candidate.yaml'
+    env:
+      candidateName: 'E_Buy_Decision'
+
+# CUJ-016: Buy 決定 → DecisionReasonModal → 記録 → Closet に owned で表示
+- tapOn:
+    text: '.*E_Buy_Decision.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:decision-buy'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:decision-buy'
+- extendedWaitUntil:
+    visible:
+      id: 'modal:decision-reason'
+    timeout: 5000
+- tapOn:
+    id: 'modal:decision-reason:field:reason'
+- inputText: 'サイズ良し / 価格妥当'
+- tapOn:
+    id: 'modal:decision-reason:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:decision-reason'
+    timeout: 5000
+
+# 昇格確認: 詳細画面で「所有中」chip が見えれば OK
+- assertVisible: '所有中'
+
+# Closet にも反映されるか確認 (cold restart で tab bar に戻る)
+- runFlow: '_helpers/launch.yaml'
+- runFlow: '_helpers/goto_closet.yaml'
+- assertVisible: '.*E_Buy_Decision.*'

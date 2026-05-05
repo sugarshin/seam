@@ -1,0 +1,91 @@
+appId: com.sugarshin.seam
+name: item_sale
+tags:
+  - regression
+# CUJ-007,008,009,010: 売却候補トグル / Sold にする / 売却取消 / 失敗ログ追加。
+---
+- runFlow: '_helpers/launch.yaml'
+
+- runFlow:
+    file: '_helpers/create_item.yaml'
+    env:
+      itemName: 'E_Item_Sale'
+
+- tapOn:
+    text: '.*E_Item_Sale.*'
+- assertVisible: '詳細'
+
+# CUJ-007: 売却候補トグル → 売却候補 chip 表示
+- scrollUntilVisible:
+    element:
+      id: 'btn:sell-candidate-toggle'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:sell-candidate-toggle'
+- assertVisible: '売却候補'
+
+# CUJ-010: 失敗ログ追加 (modal)
+- scrollUntilVisible:
+    element:
+      id: 'btn:add-failure-log'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:add-failure-log'
+- extendedWaitUntil:
+    visible:
+      id: 'modal:failure-log'
+    timeout: 5000
+- tapOn:
+    id: 'modal:failure-log:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:failure-log'
+    timeout: 5000
+- assertVisible: '失敗ログ'
+
+# CUJ-008: Sold にする → SaleInfoModal → 保存
+- scrollUntilVisible:
+    element:
+      id: 'btn:mark-sold'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:mark-sold'
+- extendedWaitUntil:
+    visible:
+      id: 'modal:sale-info'
+    timeout: 5000
+- tapOn:
+    id: 'modal:sale-info:field:price'
+- inputText: '5000'
+- tapOn:
+    point: '50%, 18%'
+- tapOn:
+    id: 'modal:sale-info:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:sale-info'
+    timeout: 5000
+- assertVisible: '売却日'
+
+# CUJ-009: 所有中に戻す
+- scrollUntilVisible:
+    element:
+      id: 'btn:unmark-sold'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:unmark-sold'
+- assertVisible: '所有中に戻す'
+- tapOn:
+    text: '戻す'
+- extendedWaitUntil:
+    visible:
+      id: 'btn:mark-sold'
+    timeout: 5000

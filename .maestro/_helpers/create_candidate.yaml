@@ -1,0 +1,31 @@
+appId: com.sugarshin.seam
+# Required env: candidateName
+# Wishlist タブ → FAB → 名前入力 → status を wishlist (default) のまま保存。
+# Self-contained: cold-start (launch) してから始めるので、呼び出し側の
+# 現在地に依存しない。
+---
+- runFlow: 'launch.yaml'
+- runFlow: 'goto_wishlist.yaml'
+- tapOn:
+    id: 'fab:add-candidate'
+- assertVisible: '購入候補を追加'
+- tapOn:
+    id: 'field:item-name'
+- inputText: ${candidateName}
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 15000
+    speed: 80
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:submit'
+- extendedWaitUntil:
+    visible:
+      id: 'card:candidate:.*'
+    timeout: 5000

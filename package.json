@@ -12,7 +12,15 @@
     "format:check": "biome format .",
     "dev": "pnpm -r --parallel dev",
     "clean": "pnpm -r clean && rm -rf node_modules",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "_e2e": "JAVA_HOME=/opt/homebrew/opt/openjdk@17 PATH=/opt/homebrew/opt/openjdk@17/bin:$PATH maestro",
+    "test:e2e:precheck": "node scripts/maestro-precheck.mjs",
+    "test:e2e": "pnpm test:e2e:precheck && pnpm _e2e test --exclude-tags=reset .maestro/",
+    "test:e2e:smoke": "pnpm test:e2e:precheck && pnpm _e2e test --include-tags=smoke .maestro/",
+    "test:e2e:core": "pnpm test:e2e:precheck && pnpm _e2e test --include-tags=core .maestro/",
+    "test:e2e:regression": "pnpm test:e2e:precheck && pnpm _e2e test --include-tags=regression .maestro/",
+    "test:e2e:reset": "pnpm test:e2e:precheck && pnpm _e2e test .maestro/05_reset.yaml",
+    "test:e2e:hierarchy": "pnpm _e2e hierarchy"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.14",
