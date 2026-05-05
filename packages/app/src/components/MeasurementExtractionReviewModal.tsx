@@ -17,7 +17,8 @@ import {
 } from '@seam/domain';
 import { Button } from './Button';
 import { TextField } from './TextField';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 type Props = {
   visible: boolean;
@@ -34,10 +35,15 @@ const CONFIDENCE_LABEL: Record<MeasurementExtractionResult['confidence'], string
   low: '低',
 };
 
-const CONFIDENCE_TONE: Record<MeasurementExtractionResult['confidence'], string> = {
-  high: colors.same,
-  medium: colors.different,
-  low: colors.warning,
+const confidenceTone = (c: MeasurementExtractionResult['confidence'], p: ColorPalette): string => {
+  switch (c) {
+    case 'high':
+      return p.same;
+    case 'medium':
+      return p.different;
+    case 'low':
+      return p.warning;
+  }
 };
 
 export const MeasurementExtractionReviewModal = ({
@@ -48,6 +54,8 @@ export const MeasurementExtractionReviewModal = ({
   onCancel,
   onAdopt,
 }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [text, setText] = useState(initialText);
   const [result, setResult] = useState<MeasurementExtractionResult | null>(null);
   const [adoptKeys, setAdoptKeys] = useState<Set<MeasurementKey>>(new Set());
@@ -88,8 +96,11 @@ export const MeasurementExtractionReviewModal = ({
         style={overlay}
       >
         <Pressable style={backdrop} onPress={onCancel} />
-        <View style={card}>
-          <Text style={title}>説明文から実寸を抽出</Text>
+        <View
+          style={[card, { backgroundColor: palette.bg }]}
+          testID={testIds.modal.measurementExtract}
+        >
+          <Text style={[title, { color: palette.text }]}>説明文から実寸を抽出</Text>
           <ScrollView style={scrollArea} keyboardShouldPersistTaps="handled">
             <TextField
               label="説明文"
@@ -98,18 +109,30 @@ export const MeasurementExtractionReviewModal = ({
               onChangeText={setText}
               placeholder="商品説明（実寸が含まれるテキスト）を貼り付け"
               hint="改行・全角・略号 (W32inch 等) も自動で吸収します。"
+              testID={testIds.modalField(testIds.modal.measurementExtract, 'text')}
             />
-            <Button label="抽出する" onPress={onExtract} variant="secondary" />
+            <Button
+              label="抽出する"
+              onPress={onExtract}
+              variant="secondary"
+              testID={`${testIds.modal.measurementExtract}:extract`}
+            />
 
             {result && (
               <View style={{ marginTop: space.lg, gap: space.sm }}>
                 <View style={summaryRow}>
-                  <Text style={summaryLabel}>信頼度</Text>
+                  <Text style={styles.muted}>信頼度</Text>
                   <View
-                    style={[confidenceBadge, { borderColor: CONFIDENCE_TONE[result.confidence] }]}
+                    style={[
+                      confidenceBadge,
+                      { borderColor: confidenceTone(result.confidence, palette) },
+                    ]}
                   >
                     <Text
-                      style={[confidenceBadgeText, { color: CONFIDENCE_TONE[result.confidence] }]}
+                      style={[
+                        confidenceBadgeText,
+                        { color: confidenceTone(result.confidence, palette) },
+                      ]}
                     >
                       {CONFIDENCE_LABEL[result.confidence]}
                     </Text>
@@ -117,7 +140,7 @@ export const MeasurementExtractionReviewModal = ({
                 </View>
 
                 {result.measurements.length === 0 ? (
-                  <Text style={muted}>抽出できる実寸が見つかりませんでした。</Text>
+                  <Text style={styles.muted}>抽出できる実寸が見つかりませんでした。</Text>
                 ) : (
                   <View style={{ gap: space.xs }}>
                     {result.measurements.map((m) => {
@@ -128,13 +151,16 @@ export const MeasurementExtractionReviewModal = ({
                           accessibilityRole="checkbox"
                           accessibilityState={{ checked }}
                           onPress={() => toggleAdopt(m.key)}
-                          style={({ pressed }) => [measurementRow, pressed && { opacity: 0.6 }]}
+                          style={({ pressed }) => [
+                            styles.measurementRow,
+                            pressed && { opacity: 0.6 },
+                          ]}
                         >
-                          <View style={[checkbox, checked && checkboxChecked]}>
-                            {checked && <Text style={checkmark}>✓</Text>}
+                          <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
+                            {checked && <Text style={styles.checkmark}>✓</Text>}
                           </View>
-                          <Text style={mKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
-                          <Text style={mValue}>
+                          <Text style={styles.mKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
+                          <Text style={styles.mValue}>
                             {m.value} {m.unit}
                           </Text>
                         </Pressable>
@@ -145,7 +171,7 @@ export const MeasurementExtractionReviewModal = ({
 
                 {result.unmatchedKeys.length > 0 && (
                   <View style={{ marginTop: space.sm }}>
-                    <Text style={muted}>
+                    <Text style={styles.muted}>
                       範囲外として除外:{' '}
                       {result.unmatchedKeys
                         .map((k) => MEASUREMENT_KEY_LABEL[k as MeasurementKey] ?? k)
@@ -158,12 +184,18 @@ export const MeasurementExtractionReviewModal = ({
           </ScrollView>
 
           <View style={actions}>
-            <Button label="キャンセル" variant="ghost" onPress={onCancel} />
+            <Button
+              label="キャンセル"
+              variant="ghost"
+              onPress={onCancel}
+              testID={testIds.modalCancel(testIds.modal.measurementExtract)}
+            />
             <Button
               label={`採用 (${adopted.length})`}
               onPress={() => onAdopt(adopted)}
               loading={submitting}
               disabled={adopted.length === 0}
+              testID={testIds.modalSubmit(testIds.modal.measurementExtract)}
             />
           </View>
         </View>
@@ -187,7 +219,6 @@ const backdrop: ViewStyle = {
 };
 
 const card: ViewStyle = {
-  backgroundColor: colors.bg,
   borderTopLeftRadius: radii.lg,
   borderTopRightRadius: radii.lg,
   padding: space.lg,
@@ -201,7 +232,6 @@ const scrollArea: ViewStyle = {
 const title = {
   fontSize: font.size.lg,
   fontWeight: font.weight.bold,
-  color: colors.text,
   marginBottom: space.md,
 } as const;
 
@@ -218,11 +248,6 @@ const summaryRow: ViewStyle = {
   gap: space.sm,
 };
 
-const summaryLabel = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
 const confidenceBadge: ViewStyle = {
   paddingHorizontal: space.sm,
   paddingVertical: 2,
@@ -236,53 +261,49 @@ const confidenceBadgeText = {
   letterSpacing: 0.5,
 } as const;
 
-const measurementRow: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: space.sm,
-  paddingVertical: space.sm,
-  paddingHorizontal: space.md,
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  backgroundColor: colors.surface,
-};
-
-const checkbox: ViewStyle = {
-  width: 22,
-  height: 22,
-  borderWidth: 1.5,
-  borderColor: colors.border,
-  borderRadius: radii.sm,
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: colors.bg,
-};
-
-const checkboxChecked: ViewStyle = {
-  backgroundColor: colors.bgInverse,
-  borderColor: colors.bgInverse,
-};
-
-const checkmark = {
-  color: colors.textInverse,
-  fontSize: font.size.sm,
-  fontWeight: font.weight.bold,
-} as const;
-
-const mKey = {
-  flex: 1,
-  fontSize: font.size.sm,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const mValue = {
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
-
-const muted = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  measurementRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: space.sm,
+    paddingVertical: space.sm,
+    paddingHorizontal: space.md,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    backgroundColor: p.surface,
+  } satisfies ViewStyle,
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 1.5,
+    borderColor: p.border,
+    borderRadius: radii.sm,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  checkboxChecked: {
+    backgroundColor: p.bgInverse,
+    borderColor: p.bgInverse,
+  } satisfies ViewStyle,
+  checkmark: {
+    color: p.textInverse,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.bold,
+  } as const,
+  mKey: {
+    flex: 1,
+    fontSize: font.size.sm,
+    color: p.text,
+    fontWeight: font.weight.semibold,
+  } as const,
+  mValue: {
+    fontSize: font.size.sm,
+    color: p.text,
+  } as const,
+  muted: {
+    color: p.textMuted,
+    fontSize: font.size.sm,
+  } as const,
+});

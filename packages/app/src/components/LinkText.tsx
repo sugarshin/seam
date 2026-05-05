@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Linking, type StyleProp, Text, type TextStyle } from 'react-native';
-import { colors, font } from '../theme';
+import { font, useThemeColors } from '../theme';
 
 type Props = {
   children: string;
@@ -45,7 +45,13 @@ const buildSegments = (input: string): readonly Segment[] => {
 };
 
 export const LinkText = ({ children, style, linkStyle, numberOfLines }: Props) => {
+  const palette = useThemeColors();
   const segments = useMemo(() => buildSegments(children), [children]);
+  const defaultLinkStyle: TextStyle = {
+    color: palette.accent,
+    textDecorationLine: 'underline',
+    fontWeight: font.weight.medium,
+  };
 
   return (
     <Text style={style} numberOfLines={numberOfLines}>
@@ -67,10 +73,4 @@ export const LinkText = ({ children, style, linkStyle, numberOfLines }: Props) =
       )}
     </Text>
   );
-};
-
-const defaultLinkStyle: TextStyle = {
-  color: colors.accent,
-  textDecorationLine: 'underline',
-  fontWeight: font.weight.medium,
 };

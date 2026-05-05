@@ -7,7 +7,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 type Props = Omit<TextInputProps, 'style'> & {
   label?: string;
@@ -22,29 +22,31 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
   { label, error, hint, required, containerStyle, multiline, ...inputProps },
   ref,
 ) {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   return (
     <View style={[wrapper, containerStyle]}>
       {label !== undefined && (
-        <Text style={labelStyle}>
+        <Text style={styles.label}>
           {label}
-          {required && <Text style={requiredMark}> *</Text>}
+          {required && <Text style={styles.requiredMark}> *</Text>}
         </Text>
       )}
       <TextInput
         ref={ref}
-        placeholderTextColor={colors.textMuted}
+        placeholderTextColor={palette.textMuted}
         multiline={multiline}
         style={[
-          inputStyle,
+          styles.input,
           multiline && { minHeight: 88, textAlignVertical: 'top' as const },
-          error !== undefined && error !== '' ? { borderColor: colors.warning } : null,
+          error !== undefined && error !== '' ? { borderColor: palette.warning } : null,
         ]}
         {...inputProps}
       />
       {error !== undefined && error !== '' ? (
-        <Text style={errorStyle}>{error}</Text>
+        <Text style={styles.error}>{error}</Text>
       ) : hint !== undefined && hint !== '' ? (
-        <Text style={hintStyle}>{hint}</Text>
+        <Text style={styles.hint}>{hint}</Text>
       ) : null}
     </View>
   );
@@ -54,36 +56,34 @@ const wrapper: ViewStyle = {
   marginBottom: space.md,
 };
 
-const labelStyle = {
-  fontSize: font.size.sm,
-  fontWeight: font.weight.medium,
-  color: colors.textMuted,
-  marginBottom: space.xs,
-} as const;
-
-const requiredMark = {
-  color: colors.warning,
-} as const;
-
-const inputStyle = {
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  paddingVertical: space.sm + 2,
-  paddingHorizontal: space.md,
-  fontSize: font.size.md,
-  color: colors.text,
-  backgroundColor: colors.bg,
-} as const;
-
-const errorStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.xs,
-  color: colors.warning,
-} as const;
-
-const hintStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  label: {
+    fontSize: font.size.sm,
+    fontWeight: font.weight.medium,
+    color: p.textMuted,
+    marginBottom: space.xs,
+  } as const,
+  requiredMark: {
+    color: p.warning,
+  } as const,
+  input: {
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    paddingVertical: space.sm + 2,
+    paddingHorizontal: space.md,
+    fontSize: font.size.md,
+    color: p.text,
+    backgroundColor: p.bg,
+  } as const,
+  error: {
+    marginTop: space.xs,
+    fontSize: font.size.xs,
+    color: p.warning,
+  } as const,
+  hint: {
+    marginTop: space.xs,
+    fontSize: font.size.xs,
+    color: p.textMuted,
+  } as const,
+});

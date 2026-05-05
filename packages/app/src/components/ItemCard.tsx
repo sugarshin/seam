@@ -2,7 +2,7 @@ import { Image, Pressable, Text, View, type ViewStyle } from 'react-native';
 import { CATEGORY_LABEL, ITEM_STATUS_LABEL, type GarmentItem, type SaleInfo } from '@seam/shared';
 import { Chip, type ChipTone } from './Chip';
 import { absolutePathFor } from '../photos/savePhoto';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 type Props = {
   item: GarmentItem;
@@ -18,6 +18,7 @@ type Props = {
   /** Right-aligned secondary label below `priceLabel`, e.g. auction end time. */
   endsLabel?: string;
   onPress?: () => void;
+  testID?: string;
 };
 
 const formatYen = (n?: number): string => (n !== undefined ? `¥${n.toLocaleString()}` : '—');
@@ -49,7 +50,10 @@ export const ItemCard = ({
   priceLabel,
   endsLabel,
   onPress,
+  testID,
 }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const isSold = item.status === 'sold';
   const subtitleParts = [item.brand, item.sizeLabel, CATEGORY_LABEL[item.category]].filter(
     (p): p is string => Boolean(p),
@@ -60,8 +64,8 @@ export const ItemCard = ({
   const soldMetaParts = [soldDate, saleInfo?.soldSource].filter((p): p is string => Boolean(p));
 
   const content = (
-    <View style={card}>
-      <View style={thumbBox}>
+    <View style={styles.card}>
+      <View style={styles.thumbBox}>
         {thumbnailRelativePath ? (
           <Image
             source={{ uri: absolutePathFor(thumbnailRelativePath) }}
@@ -70,23 +74,23 @@ export const ItemCard = ({
             accessibilityLabel={`${item.name} の写真`}
           />
         ) : (
-          <Text style={thumbPlaceholder}>—</Text>
+          <Text style={styles.thumbPlaceholder}>—</Text>
         )}
       </View>
       <View style={textBox}>
         <View style={headerRow}>
-          <Text style={nameStyle} numberOfLines={1}>
+          <Text style={styles.name} numberOfLines={1}>
             {item.name}
           </Text>
           {!isSold && item.isFitAnchor && <Chip label="Anchor" tone="inverse" />}
         </View>
         {subtitleParts.length > 0 && (
-          <Text style={subtitleStyle} numberOfLines={1}>
+          <Text style={styles.subtitle} numberOfLines={1}>
             {subtitleParts.join(' · ')}
           </Text>
         )}
         {isSold && soldMetaParts.length > 0 && (
-          <Text style={subtitleStyle} numberOfLines={1}>
+          <Text style={styles.subtitle} numberOfLines={1}>
             {soldMetaParts.join(' · ')}
           </Text>
         )}
@@ -115,9 +119,9 @@ export const ItemCard = ({
       </View>
       {(priceLabel !== undefined || endsLabel !== undefined) && (
         <View style={priceBox}>
-          {priceLabel !== undefined && <Text style={priceText}>{priceLabel}</Text>}
+          {priceLabel !== undefined && <Text style={styles.priceText}>{priceLabel}</Text>}
           {endsLabel !== undefined && (
-            <Text style={endsText} numberOfLines={1}>
+            <Text style={styles.endsText} numberOfLines={1}>
               {endsLabel}
             </Text>
           )}
@@ -126,11 +130,10 @@ export const ItemCard = ({
     </View>
   );
   if (onPress) {
-    const labelParts = [item.name, ...subtitleParts, ITEM_STATUS_LABEL[item.status]];
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={labelParts.join(', ')}
+        testID={testID}
         onPress={onPress}
         style={({ pressed }) => [pressed && { opacity: 0.7 }]}
       >
@@ -141,35 +144,10 @@ export const ItemCard = ({
   return content;
 };
 
-const card: ViewStyle = {
-  flexDirection: 'row',
-  paddingVertical: space.md,
-  paddingHorizontal: space.lg,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-  backgroundColor: colors.bg,
-  gap: space.md,
-};
-
-const thumbBox: ViewStyle = {
-  width: 72,
-  height: 72,
-  borderRadius: radii.md,
-  backgroundColor: colors.surface,
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-};
-
 const thumbImg = {
   width: '100%' as const,
   height: '100%' as const,
 };
-
-const thumbPlaceholder = {
-  color: colors.textMuted,
-  fontSize: font.size.lg,
-} as const;
 
 const textBox: ViewStyle = {
   flex: 1,
@@ -182,18 +160,6 @@ const headerRow: ViewStyle = {
   alignItems: 'center',
   gap: space.sm,
 };
-
-const nameStyle = {
-  flex: 1,
-  fontSize: font.size.md,
-  fontWeight: font.weight.semibold,
-  color: colors.text,
-} as const;
-
-const subtitleStyle = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
 
 const badgeRow: ViewStyle = {
   flexDirection: 'row',
@@ -209,13 +175,46 @@ const priceBox: ViewStyle = {
   marginLeft: space.sm,
 };
 
-const priceText = {
-  fontSize: font.size.lg,
-  fontWeight: font.weight.bold,
-  color: colors.text,
-} as const;
-
-const endsText = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  card: {
+    flexDirection: 'row' as const,
+    paddingVertical: space.md,
+    paddingHorizontal: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: p.border,
+    backgroundColor: p.bg,
+    gap: space.md,
+  } satisfies ViewStyle,
+  thumbBox: {
+    width: 72,
+    height: 72,
+    borderRadius: radii.md,
+    backgroundColor: p.surface,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    overflow: 'hidden' as const,
+  } satisfies ViewStyle,
+  thumbPlaceholder: {
+    color: p.textMuted,
+    fontSize: font.size.lg,
+  } as const,
+  name: {
+    flex: 1,
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    color: p.text,
+  } as const,
+  subtitle: {
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+  priceText: {
+    fontSize: font.size.lg,
+    fontWeight: font.weight.bold,
+    color: p.text,
+  } as const,
+  endsText: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+  } as const,
+});

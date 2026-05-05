@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { font, space } from '../theme';
+import { testIds } from '../utils/testIds';
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
@@ -97,6 +98,7 @@ export const ImageViewerModal = ({ visible, uris, initialIndex = 0, onRequestClo
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="閉じる"
+            testID={`${testIds.modal.imageViewer}:close`}
             onPress={onRequestClose}
             hitSlop={12}
             style={[closeBtn, { top: insets.top + space.sm }]}

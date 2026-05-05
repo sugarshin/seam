@@ -6,7 +6,7 @@ import { EmptyState } from '../../src/components/EmptyState';
 import { ItemCard } from '../../src/components/ItemCard';
 import { candidateInfoRepository, itemRepository, photoRepository } from '../../src/repositories';
 import { getMonthlyPurchaseSummary } from '../../src/stats';
-import { colors, font, space, useThemeColors } from '../../src/theme';
+import { type ColorPalette, font, space, useThemeColors } from '../../src/theme';
 
 const TOP_N = 5;
 
@@ -17,6 +17,7 @@ type CandidateCard = {
 
 export default function HomeScreen() {
   const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [recentOwned, setRecentOwned] = useState<GarmentItem[]>([]);
   const [recentWishlist, setRecentWishlist] = useState<GarmentItem[]>([]);
   const [endingToday, setEndingToday] = useState<CandidateCard[]>([]);
@@ -111,12 +112,38 @@ export default function HomeScreen() {
     router.push({ pathname: '/candidate/[id]', params: { id } });
   const goToOwned = (id: string) => router.push({ pathname: '/item/[id]', params: { id } });
 
+  const Section = ({
+    title,
+    onSeeAll,
+    tone,
+    children,
+  }: {
+    title: string;
+    onSeeAll?: () => void;
+    tone?: 'warning';
+    children: React.ReactNode;
+  }) => (
+    <View style={section}>
+      <View style={sectionHeader}>
+        <Text style={[styles.sectionTitle, tone === 'warning' ? { color: palette.warning } : null]}>
+          {title}
+        </Text>
+        {onSeeAll && (
+          <Text accessibilityRole="button" onPress={onSeeAll} style={styles.seeAllLink}>
+            すべて見る
+          </Text>
+        )}
+      </View>
+      {children}
+    </View>
+  );
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: palette.bg }}>
-      <View style={summaryCard}>
-        <Text style={summaryLabel}>今月の購入金額</Text>
-        <Text style={summaryValue}>¥{monthSpend.toLocaleString()}</Text>
-        <Text style={summarySub}>{monthCount} 点</Text>
+      <View style={styles.summaryCard}>
+        <Text style={styles.summaryLabel}>今月の購入金額</Text>
+        <Text style={styles.summaryValue}>¥{monthSpend.toLocaleString()}</Text>
+        <Text style={styles.summarySub}>{monthCount} 点</Text>
       </View>
 
       {endingToday.length > 0 && (
@@ -180,7 +207,7 @@ export default function HomeScreen() {
       <Section title="ウィッシュリスト" onSeeAll={() => router.push('/(tabs)/wishlist')}>
         {recentWishlist.length === 0 ? (
           <View style={{ paddingHorizontal: space.lg, paddingVertical: space.lg }}>
-            <Text style={{ color: colors.textMuted, fontSize: font.size.sm }}>
+            <Text style={{ color: palette.textMuted, fontSize: font.size.sm }}>
               気になっているアイテムはまだありません。
             </Text>
           </View>
@@ -199,60 +226,6 @@ export default function HomeScreen() {
   );
 }
 
-const Section = ({
-  title,
-  onSeeAll,
-  tone,
-  children,
-}: {
-  title: string;
-  onSeeAll?: () => void;
-  tone?: 'warning';
-  children: React.ReactNode;
-}) => (
-  <View style={section}>
-    <View style={sectionHeader}>
-      <Text style={[sectionTitle, tone === 'warning' ? { color: colors.warning } : null]}>
-        {title}
-      </Text>
-      {onSeeAll && (
-        <Text accessibilityRole="button" onPress={onSeeAll} style={seeAllLink}>
-          すべて見る
-        </Text>
-      )}
-    </View>
-    {children}
-  </View>
-);
-
-const summaryCard: ViewStyle = {
-  margin: space.lg,
-  padding: space.lg,
-  backgroundColor: colors.surface,
-  borderRadius: 12,
-};
-
-const summaryLabel = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  fontWeight: font.weight.semibold,
-  textTransform: 'uppercase' as const,
-  letterSpacing: 0.5,
-} as const;
-
-const summaryValue = {
-  marginTop: space.xs,
-  fontSize: font.size.xxl,
-  color: colors.text,
-  fontWeight: font.weight.bold,
-} as const;
-
-const summarySub = {
-  marginTop: space.xs,
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
-
 const section: ViewStyle = {
   paddingTop: space.md,
   paddingBottom: space.md,
@@ -266,14 +239,39 @@ const sectionHeader: ViewStyle = {
   paddingBottom: space.sm,
 };
 
-const sectionTitle = {
-  fontSize: font.size.md,
-  fontWeight: font.weight.semibold,
-  color: colors.text,
-} as const;
-
-const seeAllLink = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-  fontWeight: font.weight.medium,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  summaryCard: {
+    margin: space.lg,
+    padding: space.lg,
+    backgroundColor: p.surface,
+    borderRadius: 12,
+  } satisfies ViewStyle,
+  summaryLabel: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    fontWeight: font.weight.semibold,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+  } as const,
+  summaryValue: {
+    marginTop: space.xs,
+    fontSize: font.size.xxl,
+    color: p.text,
+    fontWeight: font.weight.bold,
+  } as const,
+  summarySub: {
+    marginTop: space.xs,
+    fontSize: font.size.xs,
+    color: p.textMuted,
+  } as const,
+  sectionTitle: {
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    color: p.text,
+  } as const,
+  seeAllLink: {
+    fontSize: font.size.sm,
+    color: p.textMuted,
+    fontWeight: font.weight.medium,
+  } as const,
+});

@@ -1,6 +1,6 @@
 import { Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SEVERITY_LABEL, type MeasurementDiffSeverity } from '@seam/shared';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 type Props = {
   severity: MeasurementDiffSeverity;
@@ -10,27 +10,36 @@ type Props = {
 };
 
 export const SeverityBadge = ({ severity, label, style }: Props) => {
-  const palette = paletteFor(severity);
+  const palette = useThemeColors();
+  const swatch = paletteFor(severity, palette);
   return (
-    <View style={[base, { backgroundColor: palette.bg, borderColor: palette.border }, style]}>
-      <Text style={[labelStyle, { color: palette.fg }]}>{label ?? SEVERITY_LABEL[severity]}</Text>
+    <View style={[base, { backgroundColor: swatch.bg, borderColor: swatch.border }, style]}>
+      <Text style={[labelStyle, { color: swatch.fg }]}>{label ?? SEVERITY_LABEL[severity]}</Text>
     </View>
   );
 };
 
-const paletteFor = (
-  severity: MeasurementDiffSeverity,
-): { bg: string; fg: string; border: string } => {
+// Background tints are derived from the semantic accent so dark mode keeps
+// adequate contrast without going fully saturated.
+const tintFor = (severity: MeasurementDiffSeverity, p: ColorPalette): string => {
   switch (severity) {
     case 'same':
-      return { bg: '#EAF4EC', fg: colors.same, border: colors.same };
+      return p.bg === '#0E0E0E' ? '#1B2A1F' : '#EAF4EC';
     case 'close':
-      return { bg: '#F0F5E8', fg: colors.close, border: colors.close };
+      return p.bg === '#0E0E0E' ? '#212B19' : '#F0F5E8';
     case 'different':
-      return { bg: '#FBF1DD', fg: colors.different, border: colors.different };
+      return p.bg === '#0E0E0E' ? '#2C2418' : '#FBF1DD';
     case 'warning':
-      return { bg: '#FBE7E7', fg: colors.warning, border: colors.warning };
+      return p.bg === '#0E0E0E' ? '#2C1A1A' : '#FBE7E7';
   }
+};
+
+const paletteFor = (
+  severity: MeasurementDiffSeverity,
+  p: ColorPalette,
+): { bg: string; fg: string; border: string } => {
+  const fg = p[severity];
+  return { bg: tintFor(severity, p), fg, border: fg };
 };
 
 const base: ViewStyle = {

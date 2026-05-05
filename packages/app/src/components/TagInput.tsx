@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Pressable, Text, View, type ViewStyle } from 'react-native';
 import { Chip } from './Chip';
 import { TextField } from './TextField';
-import { colors, font, space } from '../theme';
+import { font, space, useThemeColors } from '../theme';
 
 type Props = {
   label?: string;
@@ -12,6 +12,7 @@ type Props = {
 };
 
 export const TagInput = ({ label, values, suggestions = [], onChange }: Props) => {
+  const palette = useThemeColors();
   const [draft, setDraft] = useState('');
 
   const normalizedValues = useMemo(() => values.map((v) => v.toLowerCase()), [values]);
@@ -43,7 +44,9 @@ export const TagInput = ({ label, values, suggestions = [], onChange }: Props) =
 
   return (
     <View style={{ marginBottom: space.md }}>
-      {label !== undefined && <Text style={labelStyle}>{label}</Text>}
+      {label !== undefined && (
+        <Text style={[labelStyle, { color: palette.textMuted }]}>{label}</Text>
+      )}
       {values.length > 0 && (
         <View style={chipRow}>
           {values.map((v) => (
@@ -73,7 +76,7 @@ export const TagInput = ({ label, values, suggestions = [], onChange }: Props) =
           onPress={() => addTag(draft)}
           style={({ pressed }) => [addBtn, pressed && { opacity: 0.6 }]}
         >
-          <Text style={addBtnLabel}>「{draft.trim()}」を追加</Text>
+          <Text style={[addBtnLabel, { color: palette.text }]}>「{draft.trim()}」を追加</Text>
         </Pressable>
       )}
     </View>
@@ -83,7 +86,6 @@ export const TagInput = ({ label, values, suggestions = [], onChange }: Props) =
 const labelStyle = {
   fontSize: font.size.sm,
   fontWeight: font.weight.medium,
-  color: colors.textMuted,
   marginBottom: space.xs,
 } as const;
 
@@ -100,6 +102,5 @@ const addBtn: ViewStyle = {
 
 const addBtnLabel = {
   fontSize: font.size.sm,
-  color: colors.text,
   fontWeight: font.weight.medium,
 } as const;

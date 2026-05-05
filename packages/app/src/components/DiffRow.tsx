@@ -4,7 +4,7 @@ import {
   type MeasurementDiffSeverity,
   type MeasurementKey,
 } from '@seam/shared';
-import { colors, font, space } from '../theme';
+import { font, space, useThemeColors } from '../theme';
 import { SeverityBadge } from './SeverityBadge';
 
 type Props = {
@@ -38,30 +38,33 @@ export const DiffRow = ({
   severity,
   comparable,
 }: Props) => {
+  const palette = useThemeColors();
   return (
     <View style={row}>
       <View style={labelCol}>
-        <Text style={labelStyle}>{MEASUREMENT_KEY_LABEL[measurementKey]}</Text>
+        <Text style={[labelStyle, { color: palette.textMuted }]}>
+          {MEASUREMENT_KEY_LABEL[measurementKey]}
+        </Text>
       </View>
       <View style={valuesCol}>
-        <Text style={valuesText}>
+        <Text style={[valuesText, { color: palette.text }]}>
           <Text style={valueEmphasized}>{fmt(candidateValue)}</Text>
-          <Text style={valueDim}>{` ${unit}`}</Text>
-          <Text style={valueDim}>{' / '}</Text>
-          <Text style={valueDim}>{fmt(referenceValue)}</Text>
-          <Text style={valueDim}>{` ${unit}`}</Text>
+          <Text style={{ color: palette.textMuted }}>{` ${unit}`}</Text>
+          <Text style={{ color: palette.textMuted }}>{' / '}</Text>
+          <Text style={{ color: palette.textMuted }}>{fmt(referenceValue)}</Text>
+          <Text style={{ color: palette.textMuted }}>{` ${unit}`}</Text>
         </Text>
         {comparable ? (
-          <Text style={diffText}>{fmtDiff(diffCm)} cm</Text>
+          <Text style={[diffText, { color: palette.textMuted }]}>{fmtDiff(diffCm)} cm</Text>
         ) : (
-          <Text style={diffText}>—</Text>
+          <Text style={[diffText, { color: palette.textMuted }]}>—</Text>
         )}
       </View>
       <View style={badgeCol}>
         {comparable ? (
           <SeverityBadge severity={severity} />
         ) : (
-          <Text style={incompText}>単位違い</Text>
+          <Text style={[incompText, { color: palette.textMuted }]}>単位違い</Text>
         )}
       </View>
     </View>
@@ -90,29 +93,21 @@ const badgeCol: ViewStyle = {
 
 const labelStyle = {
   fontSize: font.size.sm,
-  color: colors.textMuted,
 } as const;
 
 const valuesText = {
   fontSize: font.size.md,
-  color: colors.text,
 } as const;
 
 const valueEmphasized = {
   fontWeight: font.weight.semibold,
 } as const;
 
-const valueDim = {
-  color: colors.textMuted,
-} as const;
-
 const diffText = {
   marginTop: 2,
   fontSize: font.size.xs,
-  color: colors.textMuted,
 } as const;
 
 const incompText = {
   fontSize: font.size.xs,
-  color: colors.textMuted,
 } as const;

@@ -3,9 +3,12 @@ import { Alert, ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { Button } from '../../src/components/Button';
 import { resetAllData } from '../../src/backup/dataReset';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 export default function DataResetScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [busy, setBusy] = useState(false);
 
   const onConfirm = (): void => {
@@ -44,25 +47,30 @@ export default function DataResetScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen options={{ title: 'データを全削除', headerShown: true }} />
       <ScrollView contentContainerStyle={{ padding: space.lg, gap: space.md }}>
-        <View style={warningCard}>
-          <Text style={warningTitle}>すべてのデータが消えます</Text>
-          <Text style={warningBody}>
+        <View style={styles.warningCard}>
+          <Text style={styles.warningTitle}>すべてのデータが消えます</Text>
+          <Text style={styles.warningBody}>
             この操作は取り消せません。実行する前に Settings → JSON エクスポートで
             バックアップを取ることを強く推奨します。
           </Text>
           <View style={{ height: space.md }} />
-          <Text style={warningBody}>削除対象:</Text>
-          <Text style={listItem}>• すべてのアイテム / 候補 / Fit Anchor</Text>
-          <Text style={listItem}>• 実寸 / 写真 / タグ</Text>
-          <Text style={listItem}>• 判定履歴 / 着用履歴 / 落札失敗履歴 / 価格履歴</Text>
-          <Text style={listItem}>• ブランドガイド / 個人ルール</Text>
-          <Text style={listItem}>• 通知リマインダー</Text>
+          <Text style={styles.warningBody}>削除対象:</Text>
+          <Text style={styles.listItem}>• すべてのアイテム / 候補 / Fit Anchor</Text>
+          <Text style={styles.listItem}>• 実寸 / 写真 / タグ</Text>
+          <Text style={styles.listItem}>• 判定履歴 / 着用履歴 / 落札失敗履歴 / 価格履歴</Text>
+          <Text style={styles.listItem}>• ブランドガイド / 個人ルール</Text>
+          <Text style={styles.listItem}>• 通知リマインダー</Text>
         </View>
 
-        <Button label={busy ? '削除中…' : 'すべて削除する'} onPress={onConfirm} loading={busy} />
+        <Button
+          label={busy ? '削除中…' : 'すべて削除する'}
+          onPress={onConfirm}
+          loading={busy}
+          testID={testIds.btn.confirmDataReset}
+        />
         <Button
           label="キャンセル"
           onPress={() => {
@@ -70,35 +78,35 @@ export default function DataResetScreen() {
             else router.replace('/(tabs)/settings');
           }}
           variant="ghost"
+          testID={testIds.btn.cancel}
         />
       </ScrollView>
     </View>
   );
 }
 
-const warningCard: ViewStyle = {
-  borderWidth: 1,
-  borderColor: colors.warning,
-  borderRadius: radii.md,
-  backgroundColor: colors.surface,
-  padding: space.lg,
-};
-
-const warningTitle = {
-  color: colors.warning,
-  fontSize: font.size.lg,
-  fontWeight: font.weight.bold,
-  marginBottom: space.sm,
-} as const;
-
-const warningBody = {
-  color: colors.text,
-  fontSize: font.size.sm,
-  lineHeight: 20,
-} as const;
-
-const listItem = {
-  color: colors.text,
-  fontSize: font.size.sm,
-  marginTop: space.xs,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  warningCard: {
+    borderWidth: 1,
+    borderColor: p.warning,
+    borderRadius: radii.md,
+    backgroundColor: p.surface,
+    padding: space.lg,
+  } satisfies ViewStyle,
+  warningTitle: {
+    color: p.warning,
+    fontSize: font.size.lg,
+    fontWeight: font.weight.bold,
+    marginBottom: space.sm,
+  } as const,
+  warningBody: {
+    color: p.text,
+    fontSize: font.size.sm,
+    lineHeight: 20,
+  } as const,
+  listItem: {
+    color: p.text,
+    fontSize: font.size.sm,
+    marginTop: space.xs,
+  } as const,
+});

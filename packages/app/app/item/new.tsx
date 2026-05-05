@@ -3,9 +3,10 @@ import { Alert, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { ItemForm, type ItemFormSubmit } from '../../src/forms/ItemForm';
 import { createItemWithDetails, tagRepository } from '../../src/repositories';
-import { colors } from '../../src/theme';
+import { useThemeColors } from '../../src/theme';
 
 export default function NewItemScreen() {
+  const palette = useThemeColors();
   const [submitting, setSubmitting] = useState(false);
   const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
 
@@ -35,7 +36,7 @@ export default function NewItemScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen options={{ title: '新規アイテム', headerShown: true }} />
       <ItemForm
         tagSuggestions={tagSuggestions}

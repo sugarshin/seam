@@ -24,7 +24,8 @@ import { Picker, type PickerOption } from '../../src/components/Picker';
 import { SegmentedControl } from '../../src/components/SegmentedControl';
 import { itemRepository, photoRepository, wearLogRepository } from '../../src/repositories';
 import type { ItemSort, SoldItem } from '../../src/repositories';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 type ClosetMode = 'owned' | 'sold';
 
@@ -85,6 +86,8 @@ const yearBounds = (year: number): { from: string; to: string } => ({
 });
 
 export default function ClosetScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const params = useLocalSearchParams<{ mode?: string }>();
   const initialMode: ClosetMode = params.mode === 'sold' ? 'sold' : 'owned';
 
@@ -231,6 +234,7 @@ export default function ClosetScreen() {
       item={item}
       thumbnailRelativePath={thumbnails[item.id]}
       wearCount={wearCounts[item.id]}
+      testID={testIds.cardItem(item.id)}
       onPress={() => router.push({ pathname: '/item/[id]', params: { id: item.id } })}
     />
   );
@@ -243,6 +247,7 @@ export default function ClosetScreen() {
         thumbnailRelativePath={thumbnails[item.id]}
         saleInfo={sale}
         recoveryRate={item.recoveryRate}
+        testID={testIds.cardItem(item.id)}
         onPress={() => router.push({ pathname: '/item/[id]', params: { id: item.id } })}
       />
     );
@@ -260,7 +265,7 @@ export default function ClosetScreen() {
   const yearLabel = soldYear !== undefined ? `${soldYear} 年` : '売却年';
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <View style={segmentWrap}>
         <SegmentedControl<ClosetMode>
           value={mode}
@@ -269,18 +274,20 @@ export default function ClosetScreen() {
             { value: 'sold', label: '売却済み', badge: counts.sold },
           ]}
           onChange={switchMode}
+          testID={testIds.seg.closetMode}
         />
       </View>
 
-      <View style={header}>
+      <View style={styles.header}>
         <TextInput
           value={search}
           onChangeText={setSearch}
           placeholder="検索"
-          placeholderTextColor={colors.textMuted}
-          style={searchInput}
+          placeholderTextColor={palette.textMuted}
+          style={styles.searchInput}
           autoCapitalize="none"
           returnKeyType="search"
+          testID={testIds.field.closetSearch}
         />
         <Picker<ItemSort>
           value={sortValue}
@@ -288,11 +295,12 @@ export default function ClosetScreen() {
           onChange={onSortChange}
           containerStyle={{ marginBottom: 0, flex: 1 }}
           modalTitle="並び替え"
+          testID={testIds.picker.closetSort}
         />
       </View>
 
       {mode === 'sold' && (
-        <View style={soldFilterRow}>
+        <View style={styles.soldFilterRow}>
           <Picker<string>
             value={soldYear !== undefined ? String(soldYear) : ''}
             options={yearOptions}
@@ -300,6 +308,7 @@ export default function ClosetScreen() {
             containerStyle={{ marginBottom: 0, flex: 1 }}
             placeholder={yearLabel}
             modalTitle="売却年"
+            testID={testIds.picker.closetSoldYear}
           />
           <Picker<RecoveryRangeKey>
             value={recoveryRange}
@@ -308,11 +317,12 @@ export default function ClosetScreen() {
             containerStyle={{ marginBottom: 0, flex: 1 }}
             placeholder={recoveryLabel}
             modalTitle="回収率"
+            testID={testIds.picker.closetRecovery}
           />
         </View>
       )}
 
-      <View style={chipScrollWrapper}>
+      <View style={styles.chipScrollWrapper}>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -327,6 +337,7 @@ export default function ClosetScreen() {
                   tone={anchorOnly ? 'inverse' : 'muted'}
                   onPress={() => setAnchorOnly((v) => !v)}
                   selected={anchorOnly}
+                  testID={testIds.chip.anchor}
                 />
               </View>
             ) : null
@@ -337,6 +348,7 @@ export default function ClosetScreen() {
               tone={categoryFilters.has(item) ? 'inverse' : 'muted'}
               selected={categoryFilters.has(item)}
               onPress={() => toggleCategory(item)}
+              testID={testIds.chipCategory(item)}
             />
           )}
         />
@@ -344,7 +356,7 @@ export default function ClosetScreen() {
 
       {loading && isEmpty ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: colors.textMuted }}>読み込み中…</Text>
+          <Text style={{ color: palette.textMuted }}>読み込み中…</Text>
         </View>
       ) : isEmpty ? (
         mode === 'owned' ? (
@@ -353,6 +365,7 @@ export default function ClosetScreen() {
             message="右下の + から登録してみましょう"
             actionLabel="新規登録"
             onAction={() => router.push('/item/new')}
+            actionTestID={testIds.btn.closetEmptyAdd}
           />
         ) : (
           <EmptyState
@@ -379,10 +392,12 @@ export default function ClosetScreen() {
       {mode === 'owned' && (
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel="アイテムを追加"
+          testID={testIds.fab.addItem}
           onPress={() => router.push('/item/new')}
-          style={({ pressed }) => [fab, pressed && { opacity: 0.85 }]}
+          style={({ pressed }) => [styles.fab, pressed && { opacity: 0.85 }]}
         >
-          <Text style={fabText}>＋</Text>
+          <Text style={styles.fabText}>＋</Text>
         </Pressable>
       )}
     </View>
@@ -394,63 +409,60 @@ const segmentWrap: ViewStyle = {
   paddingTop: space.md,
 };
 
-const header: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: space.lg,
-  paddingTop: space.md,
-  paddingBottom: space.sm,
-  gap: space.sm,
-  backgroundColor: colors.bg,
-};
-
-const soldFilterRow: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: space.lg,
-  paddingBottom: space.sm,
-  gap: space.sm,
-  backgroundColor: colors.bg,
-};
-
-const searchInput = {
-  flex: 1,
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  paddingHorizontal: space.md,
-  paddingVertical: space.sm + 2,
-  fontSize: font.size.md,
-  color: colors.text,
-  backgroundColor: colors.bg,
-} as const;
-
-const chipScrollWrapper: ViewStyle = {
-  paddingVertical: space.sm,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
-const fab: ViewStyle = {
-  position: 'absolute',
-  right: space.lg,
-  bottom: space.xl,
-  width: 56,
-  height: 56,
-  borderRadius: 28,
-  backgroundColor: colors.bgInverse,
-  alignItems: 'center',
-  justifyContent: 'center',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.2,
-  shadowRadius: 6,
-  elevation: 6,
-};
-
-const fabText = {
-  color: colors.textInverse,
-  fontSize: 28,
-  fontWeight: font.weight.bold,
-  lineHeight: 30,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  header: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+    paddingBottom: space.sm,
+    gap: space.sm,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  soldFilterRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: space.lg,
+    paddingBottom: space.sm,
+    gap: space.sm,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  searchInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm + 2,
+    fontSize: font.size.md,
+    color: p.text,
+    backgroundColor: p.bg,
+  } as const,
+  chipScrollWrapper: {
+    paddingVertical: space.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: p.border,
+  } satisfies ViewStyle,
+  fab: {
+    position: 'absolute' as const,
+    right: space.lg,
+    bottom: space.xl,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: p.bgInverse,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
+  } satisfies ViewStyle,
+  fabText: {
+    color: p.textInverse,
+    fontSize: 28,
+    fontWeight: font.weight.bold,
+    lineHeight: 30,
+  } as const,
+});

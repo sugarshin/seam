@@ -53,7 +53,8 @@ import {
   updateItemWithDetails,
   wearLogRepository,
 } from '../../src/repositories';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 type LoadedItem = {
   item: GarmentItem;
@@ -84,6 +85,8 @@ const formatCostPerWear = (n: number | null): string => {
 };
 
 export default function ItemDetailScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const { id } = useLocalSearchParams<{ id: string }>();
   const itemId = typeof id === 'string' ? id : undefined;
   const insets = useSafeAreaInsets();
@@ -200,7 +203,7 @@ export default function ItemDetailScreen() {
     Alert.alert('削除しますか？', 'この操作は元に戻せません。', [
       { text: 'キャンセル', style: 'cancel' },
       {
-        text: '削除',
+        text: '削除する',
         style: 'destructive',
         onPress: () => {
           void (async () => {
@@ -243,7 +246,7 @@ export default function ItemDetailScreen() {
       Alert.alert('着用記録を削除', 'この記録を削除しますか？', [
         { text: 'キャンセル', style: 'cancel' },
         {
-          text: '削除',
+          text: '削除する',
           style: 'destructive',
           onPress: () => {
             void (async () => {
@@ -288,7 +291,7 @@ export default function ItemDetailScreen() {
       Alert.alert('失敗ログを削除', 'この記録を削除しますか？', [
         { text: 'キャンセル', style: 'cancel' },
         {
-          text: '削除',
+          text: '削除する',
           style: 'destructive',
           onPress: () => {
             void (async () => {
@@ -365,25 +368,32 @@ export default function ItemDetailScreen() {
     ]);
   }, [itemId, refresh]);
 
+  const Kv = ({ k, v }: { k: string; v: string }) => (
+    <View style={kvRow}>
+      <Text style={styles.kvKey}>{k}</Text>
+      <LinkText style={styles.kvVal}>{v}</LinkText>
+    </View>
+  );
+
   if (!itemId) {
     return (
-      <View style={center}>
-        <Text style={muted}>不正な ID です</Text>
+      <View style={styles.center}>
+        <Text style={styles.muted}>不正な ID です</Text>
       </View>
     );
   }
 
   if (!loaded) {
     return (
-      <View style={center}>
-        <ActivityIndicator />
+      <View style={styles.center}>
+        <ActivityIndicator color={palette.text} />
       </View>
     );
   }
 
   if (editing) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={{ flex: 1, backgroundColor: palette.bg }}>
         <Stack.Screen options={{ title: '編集', headerShown: true, headerRight: () => null }} />
         <ItemForm
           itemId={itemId}
@@ -458,13 +468,17 @@ export default function ItemDetailScreen() {
   const recentWearLogs = loaded.wearLogs.slice(0, 5);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen
         options={{
           title: loaded.item.name,
           headerShown: true,
           headerRight: () => (
-            <Text accessibilityRole="button" onPress={() => setEditing(true)} style={editLink}>
+            <Text
+              accessibilityRole="button"
+              onPress={() => setEditing(true)}
+              style={styles.editLink}
+            >
               編集
             </Text>
           ),
@@ -489,15 +503,15 @@ export default function ItemDetailScreen() {
           </ScrollView>
         ) : (
           <View style={[photoStrip, { paddingHorizontal: space.lg }]}>
-            <View style={photoPlaceholder}>
-              <Text style={muted}>写真なし</Text>
+            <View style={styles.photoPlaceholder}>
+              <Text style={styles.muted}>写真なし</Text>
             </View>
           </View>
         )}
 
-        <View style={section}>
-          <Text style={titleStyle}>{loaded.item.name}</Text>
-          {subtitle.length > 0 && <Text style={subtitleStyle}>{subtitle}</Text>}
+        <View style={styles.section}>
+          <Text style={styles.title}>{loaded.item.name}</Text>
+          {subtitle.length > 0 && <Text style={styles.subtitle}>{subtitle}</Text>}
           <View style={chipRow}>
             <Chip label={ITEM_STATUS_LABEL[loaded.item.status]} tone="muted" />
             {loaded.item.isFitAnchor && <Chip label="Fit Anchor" tone="inverse" />}
@@ -506,12 +520,12 @@ export default function ItemDetailScreen() {
         </View>
 
         {loaded.measurements.length > 0 && (
-          <View style={section}>
-            <Text style={sectionTitle}>実寸</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>実寸</Text>
             {loaded.measurements.map((m) => (
               <View key={m.id} style={kvRow}>
-                <Text style={kvKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
-                <Text style={kvVal}>
+                <Text style={styles.kvKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
+                <Text style={styles.kvVal}>
                   {m.value} {m.unit}
                 </Text>
               </View>
@@ -519,8 +533,8 @@ export default function ItemDetailScreen() {
           </View>
         )}
 
-        <View style={section}>
-          <Text style={sectionTitle}>詳細</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>詳細</Text>
           {loaded.item.color && <Kv k="色" v={loaded.item.color} />}
           {loaded.item.sizeLabel && <Kv k="サイズ表記" v={loaded.item.sizeLabel} />}
           {loaded.item.conditionRank && (
@@ -550,8 +564,8 @@ export default function ItemDetailScreen() {
         </View>
 
         {loaded.tags.length > 0 && (
-          <View style={section}>
-            <Text style={sectionTitle}>タグ</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>タグ</Text>
             <View style={chipRow}>
               {loaded.tags.map((t) => (
                 <Chip key={t.id} label={t.name} />
@@ -561,22 +575,23 @@ export default function ItemDetailScreen() {
         )}
 
         {loaded.anchor && (
-          <View style={section}>
-            <Text style={sectionTitle}>Fit Anchor</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Fit Anchor</Text>
             <Kv k="Anchor 名" v={loaded.anchor.name} />
             {loaded.anchor.notes && <Kv k="メモ" v={loaded.anchor.notes} />}
           </View>
         )}
 
         {showAfterPurchase && (
-          <View style={section}>
+          <View style={styles.section}>
             <View style={sectionHeader}>
-              <Text style={sectionTitle}>着用情報</Text>
+              <Text style={styles.sectionTitle}>着用情報</Text>
               {isOwned && (
                 <Text
                   accessibilityRole="button"
+                  testID={testIds.btn.addWearLog}
                   onPress={() => setWearModalOpen(true)}
-                  style={addLink}
+                  style={styles.addLink}
                 >
                   ＋着用を記録
                 </Text>
@@ -587,7 +602,7 @@ export default function ItemDetailScreen() {
             <Kv k="Cost / Wear" v={formatCostPerWear(cpw)} />
             {isSold && <Kv k="Net / Wear" v={formatCostPerWear(netCpw)} />}
             {loaded.wearCount === 0 && isOwned && (
-              <Text style={[muted, { marginTop: space.sm }]}>未着用です</Text>
+              <Text style={[styles.muted, { marginTop: space.sm }]}>未着用です</Text>
             )}
             {recentWearLogs.length > 0 && (
               <View style={{ marginTop: space.sm }}>
@@ -599,7 +614,7 @@ export default function ItemDetailScreen() {
                   />
                 ))}
                 {loaded.wearLogs.length > recentWearLogs.length && (
-                  <Text style={[muted, { marginTop: space.xs }]}>
+                  <Text style={[styles.muted, { marginTop: space.xs }]}>
                     他 {loaded.wearLogs.length - recentWearLogs.length} 件
                   </Text>
                 )}
@@ -609,19 +624,20 @@ export default function ItemDetailScreen() {
         )}
 
         {showAfterPurchase && (
-          <View style={section}>
+          <View style={styles.section}>
             <View style={sectionHeader}>
-              <Text style={sectionTitle}>失敗ログ</Text>
+              <Text style={styles.sectionTitle}>失敗ログ</Text>
               <Text
                 accessibilityRole="button"
+                testID={testIds.btn.addFailureLog}
                 onPress={() => setFailureModalOpen(true)}
-                style={addLink}
+                style={styles.addLink}
               >
                 ＋振り返りを追加
               </Text>
             </View>
             {loaded.failureLogs.length === 0 ? (
-              <Text style={muted}>まだ記録がありません。</Text>
+              <Text style={styles.muted}>まだ記録がありません。</Text>
             ) : (
               loaded.failureLogs.map((log) => (
                 <FailureLogEntry key={log.id} log={log} onDelete={deleteFailureLog} />
@@ -631,15 +647,16 @@ export default function ItemDetailScreen() {
         )}
 
         {showAfterPurchase && (
-          <View style={section}>
-            <Text style={sectionTitle}>売却</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>売却</Text>
             {isOwned && (
               <View style={switchRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={switchLabel}>売却候補にする</Text>
-                  <Text style={muted}>処分検討中の目印として使えます。</Text>
+                  <Text style={styles.switchLabel}>売却候補にする</Text>
+                  <Text style={styles.muted}>処分検討中の目印として使えます。</Text>
                 </View>
                 <Switch
+                  testID={testIds.btn.sellCandidateToggle}
                   value={loaded.item.isSellCandidate}
                   onValueChange={(v) => void toggleSellCandidate(v)}
                   disabled={sellCandidateBusy}
@@ -655,24 +672,36 @@ export default function ItemDetailScreen() {
               </View>
             )}
             <View style={{ marginTop: space.md, gap: space.sm }}>
-              {isOwned && <Button label="Sold にする" onPress={() => setSaleModalOpen(true)} />}
+              {isOwned && (
+                <Button
+                  label="Sold にする"
+                  onPress={() => setSaleModalOpen(true)}
+                  testID={testIds.btn.markSold}
+                />
+              )}
               {isSold && (
                 <>
                   <Button
                     label="売却情報を編集"
                     onPress={() => setSaleModalOpen(true)}
                     variant="secondary"
+                    testID={testIds.btn.editSaleInfo}
                   />
-                  <Button label="所有中に戻す" onPress={onUnmarkSold} variant="ghost" />
+                  <Button
+                    label="所有中に戻す"
+                    onPress={onUnmarkSold}
+                    variant="ghost"
+                    testID={testIds.btn.unmarkSold}
+                  />
                 </>
               )}
             </View>
           </View>
         )}
 
-        <View style={[section, { gap: space.sm }]}>
-          <Button label="編集" onPress={() => setEditing(true)} />
-          <Button label="削除" onPress={onDelete} variant="ghost" />
+        <View style={[styles.section, { gap: space.sm }]}>
+          <Button label="編集" onPress={() => setEditing(true)} testID={testIds.btn.edit} />
+          <Button label="削除" onPress={onDelete} variant="ghost" testID={testIds.btn.delete} />
         </View>
       </ScrollView>
 
@@ -708,26 +737,6 @@ export default function ItemDetailScreen() {
   );
 }
 
-const Kv = ({ k, v }: { k: string; v: string }) => (
-  <View style={kvRow}>
-    <Text style={kvKey}>{k}</Text>
-    <LinkText style={kvVal}>{v}</LinkText>
-  </View>
-);
-
-const center: ViewStyle = {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: space.xl,
-  backgroundColor: colors.bg,
-};
-
-const muted = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
-
 const photoStrip: ViewStyle = {
   paddingVertical: space.md,
 };
@@ -739,49 +748,12 @@ const photoLarge = {
   borderRadius: radii.md,
 } as const;
 
-const photoPlaceholder: ViewStyle = {
-  width: 240,
-  height: 240,
-  backgroundColor: colors.surface,
-  borderRadius: radii.md,
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const section: ViewStyle = {
-  paddingHorizontal: space.lg,
-  paddingVertical: space.lg,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
 const sectionHeader: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   marginBottom: space.sm,
 };
-
-const titleStyle = {
-  fontSize: font.size.xl,
-  fontWeight: font.weight.bold,
-  color: colors.text,
-} as const;
-
-const subtitleStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const sectionTitle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  fontWeight: font.weight.semibold,
-  textTransform: 'uppercase' as const,
-  letterSpacing: 0.5,
-  marginBottom: space.sm,
-} as const;
 
 const chipRow: ViewStyle = {
   flexDirection: 'row',
@@ -797,31 +769,6 @@ const kvRow: ViewStyle = {
   gap: space.md,
 };
 
-const kvKey = {
-  width: 96,
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const kvVal = {
-  flex: 1,
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
-
-const editLink = {
-  color: colors.text,
-  fontSize: font.size.md,
-  fontWeight: font.weight.semibold,
-  paddingHorizontal: space.md,
-} as const;
-
-const addLink = {
-  color: colors.text,
-  fontSize: font.size.sm,
-  fontWeight: font.weight.semibold,
-} as const;
-
 const switchRow: ViewStyle = {
   flexDirection: 'row',
   alignItems: 'center',
@@ -830,8 +777,74 @@ const switchRow: ViewStyle = {
   paddingVertical: space.sm,
 };
 
-const switchLabel = {
-  fontSize: font.size.sm,
-  color: colors.text,
-  fontWeight: font.weight.medium,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  center: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    padding: space.xl,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  muted: {
+    color: p.textMuted,
+    fontSize: font.size.sm,
+  } as const,
+  photoPlaceholder: {
+    width: 240,
+    height: 240,
+    backgroundColor: p.surface,
+    borderRadius: radii.md,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  } satisfies ViewStyle,
+  section: {
+    paddingHorizontal: space.lg,
+    paddingVertical: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: p.border,
+  } satisfies ViewStyle,
+  title: {
+    fontSize: font.size.xl,
+    fontWeight: font.weight.bold,
+    color: p.text,
+  } as const,
+  subtitle: {
+    marginTop: space.xs,
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+  sectionTitle: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    fontWeight: font.weight.semibold,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginBottom: space.sm,
+  } as const,
+  kvKey: {
+    width: 96,
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+  kvVal: {
+    flex: 1,
+    fontSize: font.size.sm,
+    color: p.text,
+  } as const,
+  editLink: {
+    color: p.text,
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    paddingHorizontal: space.md,
+  } as const,
+  addLink: {
+    color: p.text,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+  } as const,
+  switchLabel: {
+    fontSize: font.size.sm,
+    color: p.text,
+    fontWeight: font.weight.medium,
+  } as const,
+});

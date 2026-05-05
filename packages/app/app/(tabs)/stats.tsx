@@ -4,9 +4,12 @@ import { useFocusEffect, router } from 'expo-router';
 import { CATEGORY_LABEL } from '@seam/shared';
 import { BarList, RankingList, StatCard, type BarListItem } from '../../src/components';
 import { aggregateStats, type StatsSnapshot } from '../../src/stats';
-import { colors, font, space } from '../../src/theme';
+import { type ColorPalette, font, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 export default function StatsScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [snapshot, setSnapshot] = useState<StatsSnapshot | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,13 +35,13 @@ export default function StatsScreen() {
 
   if (snapshot === null) {
     return (
-      <View style={loadingWrap}>
+      <View style={styles.loadingWrap}>
         {loading ? (
-          <ActivityIndicator color={colors.text} />
+          <ActivityIndicator color={palette.text} />
         ) : error !== null ? (
-          <Text style={errorStyle}>集計に失敗しました: {error}</Text>
+          <Text style={styles.error}>集計に失敗しました: {error}</Text>
         ) : (
-          <Text style={mutedStyle}>—</Text>
+          <Text style={styles.muted}>—</Text>
         )}
       </View>
     );
@@ -91,9 +94,27 @@ export default function StatsScreen() {
     valueLabel: `¥${m.amount.toLocaleString()}`,
   }));
 
+  const Section = ({
+    title,
+    subtitle,
+    children,
+  }: {
+    title: string;
+    subtitle?: string;
+    children: React.ReactNode;
+  }) => (
+    <View style={{ gap: space.sm }}>
+      <View>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        {subtitle !== undefined && <Text style={styles.sectionSubtitle}>{subtitle}</Text>}
+      </View>
+      {children}
+    </View>
+  );
+
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.bg }}
+      style={{ flex: 1, backgroundColor: palette.bg }}
       contentContainerStyle={{ padding: space.lg, gap: space.xl, paddingBottom: space.xxl }}
       refreshControl={undefined}
     >
@@ -109,6 +130,7 @@ export default function StatsScreen() {
           <StatCard
             title="売却済み"
             value={totals.sold}
+            testID={testIds.stat.sold}
             onPress={
               totals.sold > 0
                 ? () => router.push({ pathname: '/(tabs)/closet', params: { mode: 'sold' } })
@@ -213,57 +235,37 @@ export default function StatsScreen() {
   );
 }
 
-const Section = ({
-  title,
-  subtitle,
-  children,
-}: {
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-}) => (
-  <View style={{ gap: space.sm }}>
-    <View>
-      <Text style={sectionTitle}>{title}</Text>
-      {subtitle !== undefined && <Text style={sectionSubtitle}>{subtitle}</Text>}
-    </View>
-    {children}
-  </View>
-);
-
 const cardsRow: ViewStyle = {
   flexDirection: 'row',
   flexWrap: 'wrap',
   gap: space.sm,
 };
 
-const loadingWrap: ViewStyle = {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: colors.bg,
-};
-
-const sectionTitle = {
-  fontSize: font.size.lg,
-  fontWeight: font.weight.bold,
-  color: colors.text,
-} as const;
-
-const sectionSubtitle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  marginTop: 2,
-} as const;
-
-const mutedStyle = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
-
-const errorStyle = {
-  color: colors.warning,
-  fontSize: font.size.sm,
-  paddingHorizontal: space.lg,
-  textAlign: 'center' as const,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  loadingWrap: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  sectionTitle: {
+    fontSize: font.size.lg,
+    fontWeight: font.weight.bold,
+    color: p.text,
+  } as const,
+  sectionSubtitle: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    marginTop: 2,
+  } as const,
+  muted: {
+    color: p.textMuted,
+    fontSize: font.size.sm,
+  } as const,
+  error: {
+    color: p.warning,
+    fontSize: font.size.sm,
+    paddingHorizontal: space.lg,
+    textAlign: 'center' as const,
+  } as const,
+});

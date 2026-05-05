@@ -1,5 +1,5 @@
 import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 export type ChipTone = 'default' | 'inverse' | 'muted' | 'warning';
 
@@ -10,6 +10,7 @@ type Props = {
   onPress?: () => void;
   onRemove?: () => void;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 };
 
 export const Chip = ({
@@ -19,11 +20,14 @@ export const Chip = ({
   onPress,
   onRemove,
   style,
+  testID,
 }: Props) => {
-  const palette = tonePalette[selected ? 'inverse' : tone];
+  const palette = useThemeColors();
+  const tonePalette = tonePaletteFor(palette);
+  const swatch = tonePalette[selected ? 'inverse' : tone];
   const content = (
-    <View style={[base, { backgroundColor: palette.bg, borderColor: palette.border }, style]}>
-      <Text style={[labelStyle, { color: palette.fg }]} numberOfLines={1}>
+    <View style={[base, { backgroundColor: swatch.bg, borderColor: swatch.border }, style]}>
+      <Text style={[labelStyle, { color: swatch.fg }]} numberOfLines={1}>
         {label}
       </Text>
       {onRemove && (
@@ -33,7 +37,7 @@ export const Chip = ({
           hitSlop={8}
           style={({ pressed }) => [removeBtn, pressed && { opacity: 0.6 }]}
         >
-          <Text style={[removeMark, { color: palette.fg }]}>×</Text>
+          <Text style={[removeMark, { color: swatch.fg }]}>×</Text>
         </Pressable>
       )}
     </View>
@@ -42,6 +46,7 @@ export const Chip = ({
     return (
       <Pressable
         accessibilityRole="button"
+        testID={testID}
         onPress={onPress}
         style={({ pressed }) => [pressed && { opacity: 0.7 }]}
       >
@@ -76,9 +81,11 @@ const removeMark = {
   fontWeight: font.weight.bold,
 } as const;
 
-const tonePalette: Record<ChipTone, { bg: string; fg: string; border: string }> = {
-  default: { bg: colors.surface, fg: colors.text, border: colors.border },
-  inverse: { bg: colors.bgInverse, fg: colors.textInverse, border: colors.bgInverse },
-  muted: { bg: colors.bg, fg: colors.textMuted, border: colors.border },
-  warning: { bg: colors.bg, fg: colors.warning, border: colors.warning },
-};
+const tonePaletteFor = (
+  p: ColorPalette,
+): Record<ChipTone, { bg: string; fg: string; border: string }> => ({
+  default: { bg: p.surface, fg: p.text, border: p.border },
+  inverse: { bg: p.bgInverse, fg: p.textInverse, border: p.bgInverse },
+  muted: { bg: p.bg, fg: p.textMuted, border: p.border },
+  warning: { bg: p.bg, fg: p.warning, border: p.warning },
+});

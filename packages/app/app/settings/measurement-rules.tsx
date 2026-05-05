@@ -14,7 +14,8 @@ import { Button } from '../../src/components/Button';
 import { Picker, type PickerOption } from '../../src/components/Picker';
 import { TextField } from '../../src/components/TextField';
 import { measurementRuleRepository } from '../../src/repositories';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 type Operator = MeasurementRule['operator'];
 type Severity = MeasurementRule['severity'];
@@ -41,10 +42,11 @@ const opLabel = (op: Operator): string => OPERATOR_OPTIONS.find((o) => o.value =
 const sevLabel = (s: Severity): string => SEVERITY_OPTIONS.find((o) => o.value === s)?.label ?? s;
 
 export default function MeasurementRulesScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [rules, setRules] = useState<MeasurementRule[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // form state
   const [category, setCategory] = useState<GarmentCategory | undefined>(undefined);
   const [measurementKey, setMeasurementKey] = useState<MeasurementKey | undefined>(undefined);
   const [operator, setOperator] = useState<Operator | undefined>(undefined);
@@ -126,7 +128,7 @@ export default function MeasurementRulesScreen() {
         [
           { text: 'キャンセル', style: 'cancel' },
           {
-            text: '削除',
+            text: '削除する',
             style: 'destructive',
             onPress: () => {
               void (async () => {
@@ -146,11 +148,11 @@ export default function MeasurementRulesScreen() {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen options={{ title: '個人ルール', headerShown: true }} />
       <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
-        <View style={section}>
-          <Text style={sectionTitle}>新規追加</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>新規追加</Text>
           <Picker<GarmentCategory>
             label="カテゴリ"
             value={category}
@@ -161,6 +163,7 @@ export default function MeasurementRulesScreen() {
             }}
             modalTitle="カテゴリ"
             required
+            testID={testIds.picker.ruleCategory}
           />
           <Picker<MeasurementKey>
             label="実寸キー"
@@ -169,6 +172,7 @@ export default function MeasurementRulesScreen() {
             onChange={setMeasurementKey}
             modalTitle="実寸キー"
             required
+            testID={testIds.picker.ruleMeasurementKey}
           />
           <Picker<Operator>
             label="演算子"
@@ -177,6 +181,7 @@ export default function MeasurementRulesScreen() {
             onChange={setOperator}
             modalTitle="演算子"
             required
+            testID={testIds.picker.ruleOperator}
           />
           <TextField
             label="値 (cm or サイズ)"
@@ -184,6 +189,7 @@ export default function MeasurementRulesScreen() {
             onChangeText={setValueStr}
             keyboardType="decimal-pad"
             required
+            testID={testIds.field.ruleValue}
           />
           <Picker<Severity>
             label="重要度"
@@ -192,6 +198,7 @@ export default function MeasurementRulesScreen() {
             onChange={setSeverity}
             modalTitle="重要度"
             required
+            testID={testIds.picker.ruleSeverity}
           />
           <TextField
             label="メッセージ"
@@ -199,34 +206,41 @@ export default function MeasurementRulesScreen() {
             onChangeText={setMessage}
             placeholder="例: 肩幅が狭すぎる"
             required
+            testID={testIds.field.ruleMessage}
           />
-          <Button label="ルールを追加" onPress={onSubmit} loading={submitting} />
+          <Button
+            label="ルールを追加"
+            onPress={onSubmit}
+            loading={submitting}
+            testID={testIds.btn.addRule}
+          />
         </View>
 
-        <View style={section}>
-          <Text style={sectionTitle}>登録済み</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>登録済み</Text>
           {loading ? (
-            <Text style={muted}>読み込み中…</Text>
+            <Text style={styles.muted}>読み込み中…</Text>
           ) : rules.length === 0 ? (
-            <Text style={muted}>まだルールがありません。</Text>
+            <Text style={styles.muted}>まだルールがありません。</Text>
           ) : (
             rules.map((r) => (
-              <View key={r.id} style={ruleCard}>
+              <View key={r.id} style={styles.ruleCard} testID={testIds.cardRule(r.id)}>
                 <View style={{ flex: 1 }}>
-                  <Text style={ruleTitle}>
+                  <Text style={styles.ruleTitle}>
                     {CATEGORY_LABEL[r.category]} · {MEASUREMENT_KEY_LABEL[r.measurementKey]}
                   </Text>
-                  <Text style={ruleBody}>
+                  <Text style={styles.ruleBody}>
                     {opLabel(r.operator)} {r.value} → {sevLabel(r.severity)}
                   </Text>
-                  <Text style={ruleMessage}>{r.message}</Text>
+                  <Text style={styles.ruleMessage}>{r.message}</Text>
                 </View>
                 <Pressable
                   accessibilityRole="button"
+                  testID={`${testIds.cardRule(r.id)}:delete`}
                   onPress={() => onDelete(r)}
                   style={({ pressed }) => [deleteBtn, pressed && { opacity: 0.6 }]}
                 >
-                  <Text style={deleteLabel}>削除</Text>
+                  <Text style={styles.deleteLabel}>削除</Text>
                 </Pressable>
               </View>
             ))
@@ -237,65 +251,60 @@ export default function MeasurementRulesScreen() {
   );
 }
 
-const section: ViewStyle = {
-  paddingHorizontal: space.lg,
-  paddingVertical: space.lg,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
-const sectionTitle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  fontWeight: font.weight.semibold,
-  textTransform: 'uppercase' as const,
-  letterSpacing: 0.5,
-  marginBottom: space.md,
-} as const;
-
-const muted = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
-
-const ruleCard: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: space.md,
-  paddingVertical: space.md,
-  paddingHorizontal: space.md,
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  marginBottom: space.sm,
-  backgroundColor: colors.surface,
-};
-
-const ruleTitle = {
-  fontSize: font.size.sm,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const ruleBody = {
-  fontSize: font.size.sm,
-  color: colors.text,
-  marginTop: 2,
-} as const;
-
-const ruleMessage = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  marginTop: 2,
-} as const;
-
 const deleteBtn: ViewStyle = {
   paddingVertical: space.sm,
   paddingHorizontal: space.md,
 };
 
-const deleteLabel = {
-  fontSize: font.size.sm,
-  color: colors.warning,
-  fontWeight: font.weight.semibold,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  section: {
+    paddingHorizontal: space.lg,
+    paddingVertical: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: p.border,
+  } satisfies ViewStyle,
+  sectionTitle: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    fontWeight: font.weight.semibold,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginBottom: space.md,
+  } as const,
+  muted: {
+    color: p.textMuted,
+    fontSize: font.size.sm,
+  } as const,
+  ruleCard: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: space.md,
+    paddingVertical: space.md,
+    paddingHorizontal: space.md,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    marginBottom: space.sm,
+    backgroundColor: p.surface,
+  } satisfies ViewStyle,
+  ruleTitle: {
+    fontSize: font.size.sm,
+    color: p.text,
+    fontWeight: font.weight.semibold,
+  } as const,
+  ruleBody: {
+    fontSize: font.size.sm,
+    color: p.text,
+    marginTop: 2,
+  } as const,
+  ruleMessage: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    marginTop: 2,
+  } as const,
+  deleteLabel: {
+    fontSize: font.size.sm,
+    color: p.warning,
+    fontWeight: font.weight.semibold,
+  } as const,
+});

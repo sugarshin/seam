@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { ALL_LEAD_TIMES, leadTimeLabel, type ReminderLeadTime } from '../notifications';
 import { Button } from './Button';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 export type ReminderSettingsResult = {
   enabled: boolean;
@@ -43,6 +44,8 @@ export const ReminderSettingsModal = ({
   onCancel,
   onSubmit,
 }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [enabled, setEnabled] = useState<boolean>(initial.enabled);
   const [selected, setSelected] = useState<Set<ReminderLeadTime>>(() => new Set(initial.leadTimes));
 
@@ -79,12 +82,16 @@ export const ReminderSettingsModal = ({
         style={overlay}
       >
         <Pressable style={backdrop} onPress={onCancel} accessibilityLabel="閉じる" />
-        <View style={card} accessibilityViewIsModal>
-          <Text style={title}>終了通知設定</Text>
-          <Text style={muted}>終了日時: {formatEnd(auctionEndsAt)}</Text>
+        <View
+          style={[card, { backgroundColor: palette.bg }]}
+          accessibilityViewIsModal
+          testID={testIds.modal.reminderSettings}
+        >
+          <Text style={styles.title}>終了通知設定</Text>
+          <Text style={styles.muted}>終了日時: {formatEnd(auctionEndsAt)}</Text>
 
-          <View style={row}>
-            <Text style={rowLabel}>通知を有効にする</Text>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>通知を有効にする</Text>
             <Switch
               value={enabled}
               onValueChange={setEnabled}
@@ -92,7 +99,9 @@ export const ReminderSettingsModal = ({
             />
           </View>
 
-          <Text style={[muted, { marginTop: space.md }]}>終了の何分前に通知を受け取りますか？</Text>
+          <Text style={[styles.muted, { marginTop: space.md }]}>
+            終了の何分前に通知を受け取りますか？
+          </Text>
           <View style={chipWrap}>
             {ALL_LEAD_TIMES.map((lt) => {
               const isOn = selected.has(lt);
@@ -106,12 +115,12 @@ export const ReminderSettingsModal = ({
                   accessibilityLabel={`${leadTimeLabel(lt)} ${isOn ? '選択中' : '未選択'}`}
                   style={({ pressed }) => [
                     chipBase,
-                    isOn ? chipOn : chipOff,
+                    isOn ? styles.chipOn : styles.chipOff,
                     !enabled && { opacity: 0.4 },
                     pressed && { opacity: 0.7 },
                   ]}
                 >
-                  <Text style={[chipLabel, isOn ? chipLabelOn : chipLabelOff]}>
+                  <Text style={[chipLabel, { color: isOn ? palette.textInverse : palette.text }]}>
                     {leadTimeLabel(lt)}
                   </Text>
                 </Pressable>
@@ -120,12 +129,18 @@ export const ReminderSettingsModal = ({
           </View>
 
           <View style={actions}>
-            <Button label="キャンセル" variant="ghost" onPress={onCancel} />
+            <Button
+              label="キャンセル"
+              variant="ghost"
+              onPress={onCancel}
+              testID={testIds.modalCancel(testIds.modal.reminderSettings)}
+            />
             <Button
               label="保存"
               onPress={() => onSubmit(result)}
               loading={submitting}
               disabled={!canSubmit}
+              testID={testIds.modalSubmit(testIds.modal.reminderSettings)}
             />
           </View>
         </View>
@@ -149,40 +164,11 @@ const backdrop: ViewStyle = {
 };
 
 const card: ViewStyle = {
-  backgroundColor: colors.bg,
   borderTopLeftRadius: radii.lg,
   borderTopRightRadius: radii.lg,
   padding: space.lg,
   gap: space.sm,
 };
-
-const title = {
-  fontSize: font.size.lg,
-  fontWeight: font.weight.bold,
-  color: colors.text,
-  marginBottom: space.xs,
-} as const;
-
-const muted = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const row: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingVertical: space.sm,
-  borderTopWidth: 1,
-  borderTopColor: colors.border,
-  marginTop: space.md,
-};
-
-const rowLabel = {
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-} as const;
 
 const chipWrap: ViewStyle = {
   flexDirection: 'row',
@@ -201,23 +187,10 @@ const chipBase: ViewStyle = {
   justifyContent: 'center',
 };
 
-const chipOn: ViewStyle = {
-  backgroundColor: colors.bgInverse,
-  borderColor: colors.bgInverse,
-};
-
-const chipOff: ViewStyle = {
-  backgroundColor: colors.surface,
-  borderColor: colors.border,
-};
-
 const chipLabel = {
   fontSize: font.size.sm,
   fontWeight: font.weight.semibold,
 } as const;
-
-const chipLabelOn = { color: colors.textInverse } as const;
-const chipLabelOff = { color: colors.text } as const;
 
 const actions: ViewStyle = {
   flexDirection: 'row',
@@ -225,3 +198,38 @@ const actions: ViewStyle = {
   gap: space.sm,
   marginTop: space.lg,
 };
+
+const makeStyles = (p: ColorPalette) => ({
+  title: {
+    fontSize: font.size.lg,
+    fontWeight: font.weight.bold,
+    color: p.text,
+    marginBottom: space.xs,
+  } as const,
+  muted: {
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+  row: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingVertical: space.sm,
+    borderTopWidth: 1,
+    borderTopColor: p.border,
+    marginTop: space.md,
+  } satisfies ViewStyle,
+  rowLabel: {
+    fontSize: font.size.md,
+    color: p.text,
+    fontWeight: font.weight.semibold,
+  } as const,
+  chipOn: {
+    backgroundColor: p.bgInverse,
+    borderColor: p.bgInverse,
+  } satisfies ViewStyle,
+  chipOff: {
+    backgroundColor: p.surface,
+    borderColor: p.border,
+  } satisfies ViewStyle,
+});

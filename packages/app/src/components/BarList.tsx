@@ -1,5 +1,5 @@
 import { Text, View, type ViewStyle } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 export type BarListItem = {
   label: string;
@@ -19,8 +19,10 @@ type Props = {
 const MIN_BAR_PCT = 2; // so even tiny values are visible
 
 export const BarList = ({ items, maxOverride, emptyMessage = 'データがありません' }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   if (items.length === 0) {
-    return <Text style={emptyStyle}>{emptyMessage}</Text>;
+    return <Text style={styles.empty}>{emptyMessage}</Text>;
   }
   const max = Math.max(maxOverride ?? 0, ...items.map((i) => i.value), 1);
   return (
@@ -31,17 +33,17 @@ export const BarList = ({ items, maxOverride, emptyMessage = 'データがあり
         return (
           <View key={it.label} style={row}>
             <View style={labelCol}>
-              <Text style={labelStyle} numberOfLines={1}>
+              <Text style={styles.label} numberOfLines={1}>
                 {it.label}
               </Text>
             </View>
             <View style={barCol}>
-              <View style={trackStyle}>
-                <View style={[fillStyle, { width: `${pct}%` }]} />
+              <View style={styles.track}>
+                <View style={[styles.fill, { width: `${pct}%` }]} />
               </View>
             </View>
             <View style={valueCol}>
-              <Text style={valueStyle}>{valueText}</Text>
+              <Text style={styles.value}>{valueText}</Text>
             </View>
           </View>
         );
@@ -64,25 +66,8 @@ const labelCol: ViewStyle = {
   width: 96,
 };
 
-const labelStyle = {
-  fontSize: font.size.xs,
-  color: colors.text,
-} as const;
-
 const barCol: ViewStyle = {
   flex: 1,
-};
-
-const trackStyle: ViewStyle = {
-  height: 10,
-  backgroundColor: colors.surface,
-  borderRadius: radii.sm,
-  overflow: 'hidden',
-};
-
-const fillStyle: ViewStyle = {
-  height: '100%',
-  backgroundColor: colors.bgInverse,
 };
 
 const valueCol: ViewStyle = {
@@ -90,13 +75,28 @@ const valueCol: ViewStyle = {
   alignItems: 'flex-end',
 };
 
-const valueStyle = {
-  fontSize: font.size.xs,
-  fontWeight: font.weight.semibold,
-  color: colors.text,
-} as const;
-
-const emptyStyle = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  label: {
+    fontSize: font.size.xs,
+    color: p.text,
+  } as const,
+  track: {
+    height: 10,
+    backgroundColor: p.surface,
+    borderRadius: radii.sm,
+    overflow: 'hidden' as const,
+  } satisfies ViewStyle,
+  fill: {
+    height: '100%' as const,
+    backgroundColor: p.bgInverse,
+  } satisfies ViewStyle,
+  value: {
+    fontSize: font.size.xs,
+    fontWeight: font.weight.semibold,
+    color: p.text,
+  } as const,
+  empty: {
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+});
