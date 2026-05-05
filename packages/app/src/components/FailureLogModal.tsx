@@ -12,7 +12,8 @@ import { FAILURE_REASON_LABEL, type FailureLog, type FailureReason } from '@seam
 import { Button } from './Button';
 import { Picker, type PickerOption } from './Picker';
 import { TextField } from './TextField';
-import { colors, font, radii, space } from '../theme';
+import { font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 export type FailureLogDraft = {
   result: FailureLog['result'];
@@ -38,6 +39,7 @@ const REASON_OPTIONS: readonly PickerOption<FailureReason>[] = (
 ).map(([value, label]) => ({ value, label }));
 
 export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Props) => {
+  const palette = useThemeColors();
   const [result, setResult] = useState<FailureLog['result']>('failure');
   const [reason, setReason] = useState<FailureReason>('other');
   const [notes, setNotes] = useState('');
@@ -57,8 +59,8 @@ export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Pro
         style={overlay}
       >
         <Pressable style={backdrop} onPress={onCancel} />
-        <View style={card}>
-          <Text style={title}>結果を振り返る</Text>
+        <View style={[card, { backgroundColor: palette.bg }]} testID={testIds.modal.failureLog}>
+          <Text style={[title, { color: palette.text }]}>結果を振り返る</Text>
           <Picker<FailureLog['result']>
             label="結果"
             value={result}
@@ -66,6 +68,7 @@ export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Pro
             onChange={setResult}
             modalTitle="結果"
             required
+            testID={`${testIds.modal.failureLog}:picker:result`}
           />
           <Picker<FailureReason>
             label="主な理由"
@@ -74,6 +77,7 @@ export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Pro
             onChange={setReason}
             modalTitle="理由"
             required
+            testID={`${testIds.modal.failureLog}:picker:reason`}
           />
           <TextField
             label="メモ（任意）"
@@ -81,9 +85,15 @@ export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Pro
             placeholder="次の購入で気をつけたい点など"
             value={notes}
             onChangeText={setNotes}
+            testID={testIds.modalField(testIds.modal.failureLog, 'notes')}
           />
           <View style={actions}>
-            <Button label="キャンセル" variant="ghost" onPress={onCancel} />
+            <Button
+              label="キャンセル"
+              variant="ghost"
+              onPress={onCancel}
+              testID={testIds.modalCancel(testIds.modal.failureLog)}
+            />
             <Button
               label="記録する"
               onPress={() => {
@@ -95,6 +105,7 @@ export const FailureLogModal = ({ visible, submitting, onCancel, onSubmit }: Pro
                 });
               }}
               loading={submitting}
+              testID={testIds.modalSubmit(testIds.modal.failureLog)}
             />
           </View>
         </View>
@@ -118,7 +129,6 @@ const backdrop: ViewStyle = {
 };
 
 const card: ViewStyle = {
-  backgroundColor: colors.bg,
   borderTopLeftRadius: radii.lg,
   borderTopRightRadius: radii.lg,
   padding: space.lg,
@@ -128,7 +138,6 @@ const card: ViewStyle = {
 const title = {
   fontSize: font.size.lg,
   fontWeight: font.weight.bold,
-  color: colors.text,
   marginBottom: space.sm,
 } as const;
 

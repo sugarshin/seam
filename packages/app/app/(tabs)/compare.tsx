@@ -29,7 +29,8 @@ import {
   recordDecision,
   type ComputeCandidateScoreResult,
 } from '../../src/scoring';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 type CandidateLite = {
   item: GarmentItem;
@@ -48,6 +49,8 @@ type OwnedLite = {
 };
 
 export default function CompareScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const params = useLocalSearchParams<{ candidateId?: string }>();
   const initialCandidateId =
     typeof params.candidateId === 'string' ? params.candidateId : undefined;
@@ -182,8 +185,8 @@ export default function CompareScreen() {
   // ─── render ─────────────────────────────────────────────────────────────
   if (loading && !candidate) {
     return (
-      <View style={center}>
-        <Text style={muted}>読み込み中…</Text>
+      <View style={styles.center}>
+        <Text style={styles.muted}>読み込み中…</Text>
       </View>
     );
   }
@@ -199,24 +202,25 @@ export default function CompareScreen() {
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.bg }}
+      style={{ flex: 1, backgroundColor: palette.bg }}
       contentContainerStyle={{ paddingBottom: space.xxl }}
     >
-      <View style={section}>
+      <View style={styles.section}>
         <Picker<string>
           label="比較する候補"
           value={selectedCandidateId}
           options={candidateOptions}
           onChange={setSelectedCandidateId}
           modalTitle="候補を選択"
+          testID={testIds.picker.compareCandidate}
         />
       </View>
 
       {candidate && (
         <>
-          <View style={section}>
-            <Text style={titleStyle}>{candidate.item.name}</Text>
-            <Text style={subtitleStyle}>
+          <View style={styles.section}>
+            <Text style={styles.title}>{candidate.item.name}</Text>
+            <Text style={styles.subtitle}>
               {[candidate.item.brand, CATEGORY_LABEL[candidate.item.category]]
                 .filter((s): s is string => Boolean(s))
                 .join(' · ')}
@@ -230,15 +234,15 @@ export default function CompareScreen() {
           </View>
 
           {violations.length > 0 && (
-            <View style={[section, ngBox]}>
-              <Text style={ngTitle}>個人ルール違反</Text>
+            <View style={[styles.section, styles.ngBox]}>
+              <Text style={styles.ngTitle}>個人ルール違反</Text>
               {violations.map((v) => (
                 <View key={v.ruleId} style={ngRow}>
                   <SeverityBadge
                     severity={v.severity === 'ng' ? 'warning' : 'different'}
                     label={v.severity === 'ng' ? 'NG' : 'WARN'}
                   />
-                  <Text style={ngMessage}>
+                  <Text style={styles.ngMessage}>
                     {MEASUREMENT_KEY_LABEL[v.measurementKey]}: {v.message}
                   </Text>
                 </View>
@@ -246,15 +250,15 @@ export default function CompareScreen() {
             </View>
           )}
 
-          <View style={section}>
-            <Text style={sectionTitle}>候補の実寸</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>候補の実寸</Text>
             {candidate.measurements.length === 0 ? (
-              <Text style={muted}>実寸が登録されていません。</Text>
+              <Text style={styles.muted}>実寸が登録されていません。</Text>
             ) : (
               candidate.measurements.map((m) => (
                 <View key={m.id} style={kvRow}>
-                  <Text style={kvKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
-                  <Text style={kvVal}>
+                  <Text style={styles.kvKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
+                  <Text style={styles.kvVal}>
                     {m.value} {m.unit}
                   </Text>
                 </View>
@@ -262,10 +266,10 @@ export default function CompareScreen() {
             )}
           </View>
 
-          <View style={section}>
-            <Text style={sectionTitle}>Fit Anchor との差分</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Fit Anchor との差分</Text>
             {anchors.length === 0 ? (
-              <Text style={muted}>同カテゴリの Fit Anchor がありません。</Text>
+              <Text style={styles.muted}>同カテゴリの Fit Anchor がありません。</Text>
             ) : (
               anchors.map((a) => (
                 <DiffsBlock
@@ -278,15 +282,16 @@ export default function CompareScreen() {
                     candidate.item.category,
                   )}
                   category={candidate.item.category}
+                  palette={palette}
                 />
               ))
             )}
           </View>
 
-          <View style={section}>
-            <Text style={sectionTitle}>所有アイテムとの差分</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>所有アイテムとの差分</Text>
             {ownedSameCategory.length === 0 ? (
-              <Text style={muted}>同カテゴリの所有アイテムがありません。</Text>
+              <Text style={styles.muted}>同カテゴリの所有アイテムがありません。</Text>
             ) : (
               ownedSameCategory.map((o) => {
                 const expanded = expandedOwnedId === o.item.id;
@@ -296,22 +301,22 @@ export default function CompareScreen() {
                   candidate.item.category,
                 );
                 return (
-                  <View key={o.item.id} style={ownedItemBox}>
+                  <View key={o.item.id} style={styles.ownedItemBox}>
                     <Pressable
                       accessibilityRole="button"
                       onPress={() => setExpandedOwnedId(expanded ? null : o.item.id)}
-                      style={({ pressed }) => [ownedHeader, pressed && { opacity: 0.7 }]}
+                      style={({ pressed }) => [styles.ownedHeader, pressed && { opacity: 0.7 }]}
                     >
                       <View style={{ flex: 1 }}>
-                        <Text style={ownedName}>{o.item.name}</Text>
-                        {o.item.brand && <Text style={ownedSubtitle}>{o.item.brand}</Text>}
+                        <Text style={styles.ownedName}>{o.item.name}</Text>
+                        {o.item.brand && <Text style={styles.ownedSubtitle}>{o.item.brand}</Text>}
                       </View>
-                      <Text style={chevron}>{expanded ? '▾' : '▸'}</Text>
+                      <Text style={styles.chevron}>{expanded ? '▾' : '▸'}</Text>
                     </Pressable>
                     {expanded && (
                       <View style={ownedBody}>
                         {diffs.length === 0 ? (
-                          <Text style={muted}>共通する実寸がありません。</Text>
+                          <Text style={styles.muted}>共通する実寸がありません。</Text>
                         ) : (
                           diffs.map((d) => (
                             <DiffRow
@@ -335,10 +340,10 @@ export default function CompareScreen() {
           </View>
 
           {similar.length > 0 && (
-            <View style={section}>
-              <Text style={sectionTitle}>似ているアイテム</Text>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>似ているアイテム</Text>
               {similar.map((s) => (
-                <Text key={s.id} style={similarItem}>
+                <Text key={s.id} style={styles.similarItem}>
                   {s.name}
                   {s.brand ? ` · ${s.brand}` : ''}
                 </Text>
@@ -346,14 +351,24 @@ export default function CompareScreen() {
             </View>
           )}
 
-          <View style={[section, { gap: space.sm }]}>
-            <Button label="Buy として記録" onPress={() => setDecisionDraft('buy')} />
+          <View style={[styles.section, { gap: space.sm }]}>
+            <Button
+              label="Buy として記録"
+              onPress={() => setDecisionDraft('buy')}
+              testID={testIds.btn.decisionBuy}
+            />
             <Button
               label="Watch にする"
               onPress={() => setDecisionDraft('watch')}
               variant="secondary"
+              testID={testIds.btn.decisionWatch}
             />
-            <Button label="Skip にする" onPress={() => setDecisionDraft('skip')} variant="ghost" />
+            <Button
+              label="Skip にする"
+              onPress={() => setDecisionDraft('skip')}
+              variant="ghost"
+              testID={testIds.btn.decisionSkip}
+            />
           </View>
         </>
       )}
@@ -377,20 +392,23 @@ const DiffsBlock = ({
   subtitle,
   diffs,
   category,
+  palette,
 }: {
   title: string;
   subtitle?: string;
   diffs: MeasurementDiff[];
   category: GarmentItem['category'];
+  palette: ColorPalette;
 }) => {
+  const styles = makeStyles(palette);
   return (
-    <View style={diffsBlock}>
+    <View style={styles.diffsBlock}>
       <View style={diffsHeader}>
-        <Text style={diffsTitle}>{title}</Text>
-        {subtitle && <Text style={diffsSubtitle}>{subtitle}</Text>}
+        <Text style={styles.diffsTitle}>{title}</Text>
+        {subtitle && <Text style={styles.diffsSubtitle}>{subtitle}</Text>}
       </View>
       {diffs.length === 0 ? (
-        <Text style={muted}>共通する実寸がありません。</Text>
+        <Text style={styles.muted}>共通する実寸がありません。</Text>
       ) : (
         diffs.map((d) => (
           <DiffRow
@@ -409,71 +427,12 @@ const DiffsBlock = ({
   );
 };
 
-// ─── styles ────────────────────────────────────────────────────────────────
-const center: ViewStyle = {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: space.xl,
-  backgroundColor: colors.bg,
-};
-
-const muted = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
-
-const section: ViewStyle = {
-  paddingHorizontal: space.lg,
-  paddingVertical: space.lg,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
-const titleStyle = {
-  fontSize: font.size.xl,
-  fontWeight: font.weight.bold,
-  color: colors.text,
-} as const;
-
-const subtitleStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const sectionTitle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  fontWeight: font.weight.semibold,
-  textTransform: 'uppercase' as const,
-  letterSpacing: 0.5,
-  marginBottom: space.sm,
-} as const;
-
-const ngBox: ViewStyle = {
-  backgroundColor: '#FBE7E7',
-};
-
-const ngTitle = {
-  fontSize: font.size.sm,
-  color: colors.warning,
-  fontWeight: font.weight.bold,
-  marginBottom: space.sm,
-} as const;
-
 const ngRow: ViewStyle = {
   flexDirection: 'row',
   alignItems: 'center',
   gap: space.sm,
   paddingVertical: space.xs,
 };
-
-const ngMessage = {
-  flex: 1,
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
 
 const kvRow: ViewStyle = {
   flexDirection: 'row',
@@ -482,80 +441,124 @@ const kvRow: ViewStyle = {
   gap: space.md,
 };
 
-const kvKey = {
-  width: 96,
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const kvVal = {
-  flex: 1,
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
-
-const diffsBlock: ViewStyle = {
-  marginTop: space.md,
-  paddingTop: space.md,
-  borderTopWidth: 1,
-  borderTopColor: colors.border,
-};
-
 const diffsHeader: ViewStyle = {
   marginBottom: space.sm,
 };
-
-const diffsTitle = {
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const diffsSubtitle = {
-  marginTop: 2,
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
-
-const ownedItemBox: ViewStyle = {
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  marginBottom: space.sm,
-  overflow: 'hidden',
-};
-
-const ownedHeader: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: space.md,
-  paddingVertical: space.sm,
-  backgroundColor: colors.surface,
-};
-
-const ownedName = {
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const ownedSubtitle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
 
 const ownedBody: ViewStyle = {
   paddingHorizontal: space.md,
   paddingVertical: space.sm,
 };
 
-const chevron = {
-  fontSize: font.size.lg,
-  color: colors.textMuted,
-} as const;
-
-const similarItem = {
-  paddingVertical: space.xs,
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
+const makeStyles = (p: ColorPalette) => {
+  const isDark = p.bg === '#0E0E0E';
+  return {
+    center: {
+      flex: 1,
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+      padding: space.xl,
+      backgroundColor: p.bg,
+    } satisfies ViewStyle,
+    muted: {
+      color: p.textMuted,
+      fontSize: font.size.sm,
+    } as const,
+    section: {
+      paddingHorizontal: space.lg,
+      paddingVertical: space.lg,
+      borderBottomWidth: 1,
+      borderBottomColor: p.border,
+    } satisfies ViewStyle,
+    title: {
+      fontSize: font.size.xl,
+      fontWeight: font.weight.bold,
+      color: p.text,
+    } as const,
+    subtitle: {
+      marginTop: space.xs,
+      fontSize: font.size.sm,
+      color: p.textMuted,
+    } as const,
+    sectionTitle: {
+      fontSize: font.size.xs,
+      color: p.textMuted,
+      fontWeight: font.weight.semibold,
+      textTransform: 'uppercase' as const,
+      letterSpacing: 0.5,
+      marginBottom: space.sm,
+    } as const,
+    ngBox: {
+      backgroundColor: isDark ? '#2C1A1A' : '#FBE7E7',
+    } satisfies ViewStyle,
+    ngTitle: {
+      fontSize: font.size.sm,
+      color: p.warning,
+      fontWeight: font.weight.bold,
+      marginBottom: space.sm,
+    } as const,
+    ngMessage: {
+      flex: 1,
+      fontSize: font.size.sm,
+      color: p.text,
+    } as const,
+    kvKey: {
+      width: 96,
+      fontSize: font.size.sm,
+      color: p.textMuted,
+    } as const,
+    kvVal: {
+      flex: 1,
+      fontSize: font.size.sm,
+      color: p.text,
+    } as const,
+    diffsBlock: {
+      marginTop: space.md,
+      paddingTop: space.md,
+      borderTopWidth: 1,
+      borderTopColor: p.border,
+    } satisfies ViewStyle,
+    diffsTitle: {
+      fontSize: font.size.md,
+      color: p.text,
+      fontWeight: font.weight.semibold,
+    } as const,
+    diffsSubtitle: {
+      marginTop: 2,
+      fontSize: font.size.xs,
+      color: p.textMuted,
+    } as const,
+    ownedItemBox: {
+      borderWidth: 1,
+      borderColor: p.border,
+      borderRadius: radii.md,
+      marginBottom: space.sm,
+      overflow: 'hidden' as const,
+    } satisfies ViewStyle,
+    ownedHeader: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      paddingHorizontal: space.md,
+      paddingVertical: space.sm,
+      backgroundColor: p.surface,
+    } satisfies ViewStyle,
+    ownedName: {
+      fontSize: font.size.md,
+      color: p.text,
+      fontWeight: font.weight.semibold,
+    } as const,
+    ownedSubtitle: {
+      fontSize: font.size.xs,
+      color: p.textMuted,
+    } as const,
+    chevron: {
+      fontSize: font.size.lg,
+      color: p.textMuted,
+    } as const,
+    similarItem: {
+      paddingVertical: space.xs,
+      fontSize: font.size.sm,
+      color: p.text,
+    } as const,
+  };
+};

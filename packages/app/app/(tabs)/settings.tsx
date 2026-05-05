@@ -18,7 +18,8 @@ import {
 } from '../../src/backup/lastExportTracker';
 import { shareExportFile } from '../../src/backup/shareExport';
 import { nowIso } from '../../src/utils/dates';
-import { colors, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
 
 const formatLastExport = (iso: string | null): string => {
   if (iso === null) return '未実施';
@@ -32,6 +33,7 @@ const formatLastExport = (iso: string | null): string => {
 
 export default function SettingsScreen() {
   const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [busy, setBusy] = useState(false);
   const [lastExport, setLastExport] = useState<string | null>(null);
   const [stale, setStale] = useState<boolean>(false);
@@ -158,6 +160,7 @@ export default function SettingsScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="JSON エクスポート"
+          testID={testIds.btn.exportJson}
           disabled={busy}
           onPress={onExport}
           style={({ pressed }) => [styles.btn, (pressed || busy) && { opacity: 0.6 }]}
@@ -169,6 +172,7 @@ export default function SettingsScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="CSV エクスポート"
+          testID={testIds.btn.exportCsv}
           disabled={busy}
           onPress={onExportCsv}
           style={({ pressed }) => [styles.btnSecondary, (pressed || busy) && { opacity: 0.6 }]}
@@ -179,6 +183,7 @@ export default function SettingsScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="JSON インポート"
+          testID={testIds.btn.importJson}
           disabled={busy}
           onPress={() => {
             void onImport();
@@ -197,6 +202,7 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>個人ルール</Text>
         <Pressable
           accessibilityRole="button"
+          testID={testIds.btn.openMeasurementRules}
           onPress={() => router.push('/settings/measurement-rules')}
           style={({ pressed }) => [styles.btn, pressed && { opacity: 0.6 }]}
         >
@@ -211,6 +217,7 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>ブランドガイド</Text>
         <Pressable
           accessibilityRole="button"
+          testID={testIds.btn.openBrandGuides}
           onPress={() => router.push('/settings/brand-guides')}
           style={({ pressed }) => [styles.btn, pressed && { opacity: 0.6 }]}
         >
@@ -226,6 +233,7 @@ export default function SettingsScreen() {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="データを全削除"
+          testID={testIds.btn.openDataReset}
           disabled={busy}
           onPress={() => router.push('/settings/data-reset')}
           style={({ pressed }) => [styles.btnDestructive, (pressed || busy) && { opacity: 0.6 }]}
@@ -252,94 +260,94 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = {
+const makeStyles = (p: ColorPalette) => ({
   warningBanner: {
     paddingHorizontal: space.lg,
     paddingVertical: space.md,
-    backgroundColor: colors.surface,
+    backgroundColor: p.surface,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: p.border,
     gap: space.sm,
-  },
+  } as const,
   warningHint: {
     fontSize: font.size.xs,
-    color: colors.textMuted,
+    color: p.textMuted,
     lineHeight: 16,
-  },
+  } as const,
   section: {
     paddingHorizontal: space.lg,
     paddingVertical: space.lg,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
+    borderBottomColor: p.border,
+  } as const,
   sectionTitle: {
     fontSize: font.size.sm,
-    color: colors.textMuted,
+    color: p.textMuted,
     fontWeight: font.weight.semibold,
     textTransform: 'uppercase' as const,
     marginBottom: space.md,
     letterSpacing: 0.5,
-  },
+  } as const,
   btn: {
-    backgroundColor: colors.bgInverse,
+    backgroundColor: p.bgInverse,
     paddingVertical: space.md,
     paddingHorizontal: space.lg,
     borderRadius: radii.md,
     alignItems: 'center' as const,
-  },
+  } as const,
   btnLabel: {
-    color: colors.textInverse,
+    color: p.textInverse,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
-  },
+  } as const,
   btnSecondary: {
-    backgroundColor: colors.surface,
+    backgroundColor: p.surface,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: p.border,
     paddingVertical: space.md,
     paddingHorizontal: space.lg,
     borderRadius: radii.md,
     alignItems: 'center' as const,
-  },
+  } as const,
   btnSecondaryLabel: {
-    color: colors.text,
+    color: p.text,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
-  },
+  } as const,
   btnDestructive: {
-    backgroundColor: colors.warning,
+    backgroundColor: p.warning,
     paddingVertical: space.md,
     paddingHorizontal: space.lg,
     borderRadius: radii.md,
     alignItems: 'center' as const,
-  },
+  } as const,
   btnDestructiveLabel: {
-    color: colors.textInverse,
+    color: p.textInverse,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
-  },
+  } as const,
   hint: {
     marginTop: space.md,
     fontSize: font.size.xs,
-    color: colors.textMuted,
+    color: p.textMuted,
     lineHeight: 16,
-  },
+  } as const,
   kvMuted: {
     marginTop: space.sm,
     fontSize: font.size.xs,
-    color: colors.textMuted,
-  },
+    color: p.textMuted,
+  } as const,
   brandFooter: {
     alignItems: 'center' as const,
     paddingVertical: space.xxl,
     gap: space.xs,
-  },
+  } as const,
   brandLogo: {
     width: 96,
     height: 32,
-  },
+  } as const,
   brandVersion: {
     fontSize: font.size.xs,
     letterSpacing: 0.5,
-  },
-};
+  } as const,
+});

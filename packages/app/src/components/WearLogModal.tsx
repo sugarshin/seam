@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { Button } from './Button';
 import { TextField } from './TextField';
-import { colors, font, radii, space } from '../theme';
+import { font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 export type WearLogDraft = {
   wornAt: string;
@@ -40,6 +41,7 @@ const isValidDate = (s: string): boolean => {
 };
 
 export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props) => {
+  const palette = useThemeColors();
   const [wornAt, setWornAt] = useState(todayIsoDate());
   const [notes, setNotes] = useState('');
 
@@ -59,8 +61,8 @@ export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props)
         style={overlay}
       >
         <Pressable style={backdrop} onPress={onCancel} />
-        <View style={card}>
-          <Text style={title}>着用記録</Text>
+        <View style={[card, { backgroundColor: palette.bg }]} testID={testIds.modal.wearLog}>
+          <Text style={[title, { color: palette.text }]}>着用記録</Text>
           <TextField
             label="着用日"
             placeholder="2026-04-26"
@@ -69,6 +71,7 @@ export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props)
             autoCapitalize="none"
             error={dateValid ? undefined : '日付の形式が不正です'}
             hint="例: 2026-04-26"
+            testID={testIds.modalField(testIds.modal.wearLog, 'date')}
           />
           <TextField
             label="メモ（任意）"
@@ -76,9 +79,15 @@ export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props)
             placeholder="シーン・コーデ・天気など"
             value={notes}
             onChangeText={setNotes}
+            testID={testIds.modalField(testIds.modal.wearLog, 'notes')}
           />
           <View style={actions}>
-            <Button label="キャンセル" variant="ghost" onPress={onCancel} />
+            <Button
+              label="キャンセル"
+              variant="ghost"
+              onPress={onCancel}
+              testID={testIds.modalCancel(testIds.modal.wearLog)}
+            />
             <Button
               label="記録する"
               onPress={() => {
@@ -90,6 +99,7 @@ export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props)
               }}
               disabled={!dateValid}
               loading={submitting}
+              testID={testIds.modalSubmit(testIds.modal.wearLog)}
             />
           </View>
         </View>
@@ -113,7 +123,6 @@ const backdrop: ViewStyle = {
 };
 
 const card: ViewStyle = {
-  backgroundColor: colors.bg,
   borderTopLeftRadius: radii.lg,
   borderTopRightRadius: radii.lg,
   padding: space.lg,
@@ -123,7 +132,6 @@ const card: ViewStyle = {
 const title = {
   fontSize: font.size.lg,
   fontWeight: font.weight.bold,
-  color: colors.text,
   marginBottom: space.sm,
 } as const;
 

@@ -76,7 +76,8 @@ import {
   recordDecision,
   type ComputeCandidateScoreResult,
 } from '../../src/scoring';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 type LoadedCandidate = {
   item: GarmentItem;
@@ -103,12 +104,6 @@ const LEAD_TIME_MS_LOOKUP: Record<ReminderLeadTime, number> = {
 
 const ALL_LEAD_TIMES_TUPLE: readonly ReminderLeadTime[] = ['10m', '30m', '1h', '3h', '1d'];
 
-/**
- * Recover the lead-time labels currently configured by inspecting how many
- * milliseconds before `auctionEndsAt` each reminder is set to fire. Reminders
- * that don't match any known lead-time bucket are ignored — the UI normalises
- * to the predefined bucket set.
- */
 const deriveLeadTimes = (
   reminders: readonly Reminder[],
   auctionEndsAt: string | undefined,
@@ -121,7 +116,6 @@ const deriveLeadTimes = (
     const target = endMs - LEAD_TIME_MS_LOOKUP[lt];
     const match = reminders.find((r) => {
       const rMs = new Date(r.remindAt).getTime();
-      // Allow a 30 second tolerance to account for round-trips through the DB.
       return Math.abs(rMs - target) < 30 * 1000;
     });
     if (match) out.push(lt);
@@ -136,11 +130,17 @@ const DECISION_LABEL: Record<DecisionLog['decision'], string> = {
   lost_auction: 'Lost Auction',
 };
 
-const DECISION_TONE: Record<DecisionLog['decision'], string> = {
-  buy: colors.same,
-  watch: colors.different,
-  skip: colors.warning,
-  lost_auction: colors.textMuted,
+const decisionTone = (decision: DecisionLog['decision'], p: ColorPalette): string => {
+  switch (decision) {
+    case 'buy':
+      return p.same;
+    case 'watch':
+      return p.different;
+    case 'skip':
+      return p.warning;
+    case 'lost_auction':
+      return p.textMuted;
+  }
 };
 
 const formatYen = (n?: number): string => (n !== undefined ? `¥${n.toLocaleString()}` : '—');
@@ -153,6 +153,8 @@ const formatDate = (iso?: string): string => {
 };
 
 export default function CandidateDetailScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const { id } = useLocalSearchParams<{ id: string }>();
   const itemId = typeof id === 'string' ? id : undefined;
   const insets = useSafeAreaInsets();
@@ -247,7 +249,6 @@ export default function CandidateDetailScreen() {
           candidateInfo: input.candidateInfo,
         });
 
-        // Reconcile photos (same logic as item/[id])
         const existing = await photoRepository.listByItem(itemId);
         const formIds = new Set(input.photos.map((p) => p.id));
         for (const e of existing) {
@@ -279,7 +280,7 @@ export default function CandidateDetailScreen() {
     Alert.alert('削除しますか？', 'この操作は元に戻せません。', [
       { text: 'キャンセル', style: 'cancel' },
       {
-        text: '削除',
+        text: '削除する',
         style: 'destructive',
         onPress: () => {
           void (async () => {
@@ -314,8 +315,6 @@ export default function CandidateDetailScreen() {
   const openDecision = useCallback(
     (decision: ScoreDecision) => {
       if (!itemId) return;
-      // Compute a fresh score so we can persist a CandidateEvaluation snapshot
-      // alongside the DecisionLog. Failure here should not block the dialog.
       void (async () => {
         try {
           const computed = await computeCandidateScore(itemId);
@@ -366,8 +365,6 @@ export default function CandidateDetailScreen() {
       setExtractionSubmitting(true);
       void (async () => {
         try {
-          // Merge: keep any existing keys that the user did NOT extract, and
-          // overwrite the keys present in `adopted` with the new values.
           const adoptedKeys = new Set(adopted.map((m) => m.key));
           const kept: MeasurementInput[] = loaded.measurements
             .filter((m) => !adoptedKeys.has(m.key))
@@ -417,8 +414,6 @@ export default function CandidateDetailScreen() {
       setReminderSubmitting(true);
       void (async () => {
         try {
-          // First, cancel + delete any existing reminders so we never leak a
-          // scheduled OS notification when the user changes the configuration.
           const existing = await reminderRepository.listByItem(itemId);
           const existingIds = existing
             .map((r) => r.notificationId)
@@ -427,7 +422,7 @@ export default function CandidateDetailScreen() {
             try {
               await cancelReminders(existingIds);
             } catch {
-              // Best-effort: continue even if some IDs are stale.
+              // Best-effort
             }
           }
           await reminderRepository.deleteByItem(itemId);
@@ -500,18 +495,32 @@ export default function CandidateDetailScreen() {
     ]);
   }, [itemId, refresh]);
 
+  const Kv = ({ k, v, emphasize }: { k: string; v: string; emphasize?: boolean }) => (
+    <View style={kvRow}>
+      <Text style={styles.kvKey}>{k}</Text>
+      <LinkText
+        style={[
+          styles.kvVal,
+          emphasize ? { color: palette.warning, fontWeight: font.weight.bold } : null,
+        ]}
+      >
+        {v}
+      </LinkText>
+    </View>
+  );
+
   if (!itemId) {
     return (
-      <View style={center}>
-        <Text style={muted}>不正な ID です</Text>
+      <View style={styles.center}>
+        <Text style={styles.muted}>不正な ID です</Text>
       </View>
     );
   }
 
   if (!loaded) {
     return (
-      <View style={center}>
-        <ActivityIndicator />
+      <View style={styles.center}>
+        <ActivityIndicator color={palette.text} />
       </View>
     );
   }
@@ -519,7 +528,7 @@ export default function CandidateDetailScreen() {
   if (editing) {
     const c = loaded.candidate;
     return (
-      <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={{ flex: 1, backgroundColor: palette.bg }}>
         <Stack.Screen options={{ title: '編集', headerShown: true, headerRight: () => null }} />
         <ItemForm
           itemId={itemId}
@@ -595,13 +604,18 @@ export default function CandidateDetailScreen() {
     c?.totalPrice !== undefined && c.maxBidPrice !== undefined && c.totalPrice > c.maxBidPrice;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen
         options={{
           title: loaded.item.name,
           headerShown: true,
           headerRight: () => (
-            <Text accessibilityRole="button" onPress={() => setEditing(true)} style={editLink}>
+            <Text
+              accessibilityRole="button"
+              testID={testIds.btn.edit}
+              onPress={() => setEditing(true)}
+              style={styles.editLink}
+            >
               編集
             </Text>
           ),
@@ -626,15 +640,15 @@ export default function CandidateDetailScreen() {
           </ScrollView>
         ) : (
           <View style={[photoStrip, { paddingHorizontal: space.lg }]}>
-            <View style={photoPlaceholder}>
-              <Text style={muted}>写真なし</Text>
+            <View style={styles.photoPlaceholder}>
+              <Text style={styles.muted}>写真なし</Text>
             </View>
           </View>
         )}
 
-        <View style={section}>
-          <Text style={titleStyle}>{loaded.item.name}</Text>
-          {subtitle.length > 0 && <Text style={subtitleStyle}>{subtitle}</Text>}
+        <View style={styles.section}>
+          <Text style={styles.title}>{loaded.item.name}</Text>
+          {subtitle.length > 0 && <Text style={styles.subtitle}>{subtitle}</Text>}
           <View style={chipRow}>
             <Chip label={ITEM_STATUS_LABEL[loaded.item.status]} tone="muted" />
             {c?.sourceType && <Chip label={SOURCE_TYPE_LABEL[c.sourceType]} />}
@@ -649,22 +663,24 @@ export default function CandidateDetailScreen() {
         </View>
 
         {loaded.latestEvaluation && (
-          <View style={section}>
-            <Text style={sectionTitle}>最新スコア</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>最新スコア</Text>
             <View style={{ gap: space.md }}>
               <ScoreBadge
                 totalScore={loaded.latestEvaluation.totalScore}
                 decision={loaded.latestEvaluation.decision}
               />
               <ScoreBreakdown breakdown={breakdownFromEvaluation(loaded.latestEvaluation)} />
-              <Text style={muted}>記録日時: {formatDate(loaded.latestEvaluation.createdAt)}</Text>
+              <Text style={styles.muted}>
+                記録日時: {formatDate(loaded.latestEvaluation.createdAt)}
+              </Text>
             </View>
           </View>
         )}
 
         {c && (
-          <View style={section}>
-            <Text style={sectionTitle}>販売情報</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>販売情報</Text>
             <Kv k="現在価格" v={formatYen(c.currentPrice)} />
             <Kv k="送料" v={formatYen(c.shippingFee)} />
             <Kv k="合計" v={formatYen(c.totalPrice)} emphasize={overBudget} />
@@ -675,53 +691,55 @@ export default function CandidateDetailScreen() {
             {c.sellerName && <Kv k="出品者" v={c.sellerName} />}
             {loaded.item.productUrl && <Kv k="URL" v={loaded.item.productUrl} />}
             {c.listingDescription && <Kv k="説明" v={c.listingDescription} />}
-            {overBudget && <Text style={warning}>合計が上限価格を超えています</Text>}
+            {overBudget && <Text style={styles.warning}>合計が上限価格を超えています</Text>}
           </View>
         )}
 
-        <View style={section}>
+        <View style={styles.section}>
           <View style={snapshotsHeader}>
-            <Text style={sectionTitle}>価格スナップショット</Text>
+            <Text style={styles.sectionTitle}>価格スナップショット</Text>
             <Text
               accessibilityRole="button"
+              testID={testIds.btn.recordPrice}
               onPress={() => void recordCurrentPrice()}
-              style={addLink}
+              style={styles.addLink}
             >
               ＋現在価格を記録
             </Text>
           </View>
           {loaded.snapshots.length === 0 ? (
-            <Text style={muted}>まだ記録がありません。</Text>
+            <Text style={styles.muted}>まだ記録がありません。</Text>
           ) : (
             loaded.snapshots.map((s) => (
               <View key={s.id} style={kvRow}>
-                <Text style={kvKey}>{formatDate(s.recordedAt)}</Text>
-                <Text style={kvVal}>{formatYen(s.totalPrice ?? s.price)}</Text>
+                <Text style={styles.kvKey}>{formatDate(s.recordedAt)}</Text>
+                <Text style={styles.kvVal}>{formatYen(s.totalPrice ?? s.price)}</Text>
               </View>
             ))
           )}
         </View>
 
-        <View style={section}>
+        <View style={styles.section}>
           <View style={snapshotsHeader}>
-            <Text style={sectionTitle}>実寸</Text>
+            <Text style={styles.sectionTitle}>実寸</Text>
             {c?.listingDescription && (
               <Text
                 accessibilityRole="button"
+                testID={testIds.btn.extractMeasurements}
                 onPress={() => setExtractionVisible(true)}
-                style={addLink}
+                style={styles.addLink}
               >
                 ＋説明文から抽出
               </Text>
             )}
           </View>
           {loaded.measurements.length === 0 ? (
-            <Text style={muted}>まだ実寸が登録されていません。</Text>
+            <Text style={styles.muted}>まだ実寸が登録されていません。</Text>
           ) : (
             loaded.measurements.map((m) => (
               <View key={m.id} style={kvRow}>
-                <Text style={kvKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
-                <Text style={kvVal}>
+                <Text style={styles.kvKey}>{MEASUREMENT_KEY_LABEL[m.key]}</Text>
+                <Text style={styles.kvVal}>
                   {m.value} {m.unit}
                 </Text>
               </View>
@@ -730,12 +748,12 @@ export default function CandidateDetailScreen() {
         </View>
 
         {loaded.brandGuides.length > 0 && (
-          <View style={section}>
-            <Text style={sectionTitle}>ブランドガイド</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>ブランドガイド</Text>
             {loaded.brandGuides.map((g) => (
-              <View key={g.id} style={brandGuideCard}>
-                <Text style={brandGuideTitle}>{g.title}</Text>
-                {g.notes.length > 0 && <Text style={brandGuideNotes}>{g.notes}</Text>}
+              <View key={g.id} style={styles.brandGuideCard}>
+                <Text style={styles.brandGuideTitle}>{g.title}</Text>
+                {g.notes.length > 0 && <Text style={styles.brandGuideNotes}>{g.notes}</Text>}
                 <View style={{ marginTop: space.sm }}>
                   <BrandChecklist
                     guide={g}
@@ -753,8 +771,8 @@ export default function CandidateDetailScreen() {
           loaded.item.sizeLabel ||
           loaded.item.conditionNotes ||
           loaded.item.notes) && (
-          <View style={section}>
-            <Text style={sectionTitle}>詳細</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>詳細</Text>
             {loaded.item.color && <Kv k="色" v={loaded.item.color} />}
             {loaded.item.sizeLabel && <Kv k="サイズ表記" v={loaded.item.sizeLabel} />}
             {loaded.item.conditionNotes && <Kv k="ダメージ" v={loaded.item.conditionNotes} />}
@@ -763,8 +781,8 @@ export default function CandidateDetailScreen() {
         )}
 
         {loaded.tags.length > 0 && (
-          <View style={section}>
-            <Text style={sectionTitle}>タグ</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>タグ</Text>
             <View style={chipRow}>
               {loaded.tags.map((t) => (
                 <Chip key={t.id} label={t.name} />
@@ -774,22 +792,22 @@ export default function CandidateDetailScreen() {
         )}
 
         {loaded.anchor && (
-          <View style={section}>
-            <Text style={sectionTitle}>Fit Anchor</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Fit Anchor</Text>
             <Kv k="Anchor 名" v={loaded.anchor.name} />
             {loaded.anchor.notes && <Kv k="メモ" v={loaded.anchor.notes} />}
           </View>
         )}
 
-        <View style={section}>
-          <Text style={sectionTitle}>終了通知</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>終了通知</Text>
           {(() => {
             const auctionEndsAt = loaded.candidate?.auctionEndsAt;
             const activeReminders = loaded.reminders.filter((r) => r.isEnabled);
             const lts = deriveLeadTimes(activeReminders, auctionEndsAt);
             if (!auctionEndsAt) {
               return (
-                <Text style={muted}>
+                <Text style={styles.muted}>
                   終了日時を「販売情報」に登録すると、リマインダーを設定できます。
                 </Text>
               );
@@ -797,7 +815,7 @@ export default function CandidateDetailScreen() {
             return (
               <View style={{ gap: space.sm }}>
                 {lts.length === 0 ? (
-                  <Text style={muted}>未設定</Text>
+                  <Text style={styles.muted}>未設定</Text>
                 ) : (
                   <View style={chipRow}>
                     {lts.map((lt) => (
@@ -809,29 +827,30 @@ export default function CandidateDetailScreen() {
                   label={lts.length === 0 ? '通知を設定する' : '通知設定を変更'}
                   onPress={() => setReminderModalVisible(true)}
                   variant="secondary"
+                  testID={testIds.btn.reminderSettings}
                 />
               </View>
             );
           })()}
         </View>
 
-        <View style={section}>
-          <Text style={sectionTitle}>判定履歴</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>判定履歴</Text>
           {loaded.decisionLogs.length === 0 ? (
-            <Text style={muted}>まだ判定が記録されていません。</Text>
+            <Text style={styles.muted}>まだ判定が記録されていません。</Text>
           ) : (
             loaded.decisionLogs.map((d) => (
-              <View key={d.id} style={decisionLogRow}>
-                <View style={[decisionBadge, { borderColor: DECISION_TONE[d.decision] }]}>
-                  <Text style={[decisionBadgeText, { color: DECISION_TONE[d.decision] }]}>
+              <View key={d.id} style={styles.decisionLogRow}>
+                <View style={[decisionBadge, { borderColor: decisionTone(d.decision, palette) }]}>
+                  <Text style={[decisionBadgeText, { color: decisionTone(d.decision, palette) }]}>
                     {DECISION_LABEL[d.decision]}
                   </Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={decisionDateText}>{formatDate(d.createdAt)}</Text>
-                  <Text style={decisionReasonText}>{d.reason}</Text>
+                  <Text style={styles.decisionDateText}>{formatDate(d.createdAt)}</Text>
+                  <Text style={styles.decisionReasonText}>{d.reason}</Text>
                   {d.priceAtDecision !== undefined && (
-                    <Text style={muted}>判定時の価格: {formatYen(d.priceAtDecision)}</Text>
+                    <Text style={styles.muted}>判定時の価格: {formatYen(d.priceAtDecision)}</Text>
                   )}
                 </View>
               </View>
@@ -839,7 +858,7 @@ export default function CandidateDetailScreen() {
           )}
         </View>
 
-        <View style={[section, { gap: space.sm }]}>
+        <View style={[styles.section, { gap: space.sm }]}>
           <Button
             label="サイズ比較で判定"
             onPress={() =>
@@ -849,13 +868,38 @@ export default function CandidateDetailScreen() {
               })
             }
             variant="secondary"
+            testID={testIds.btn.openCompare}
           />
-          <Button label="Buy として記録" onPress={() => openDecision('buy')} />
-          <Button label="Watch にする" onPress={() => openDecision('watch')} variant="secondary" />
-          <Button label="Skip にする" onPress={() => openDecision('skip')} variant="ghost" />
-          <Button label="Lost Auction にする" onPress={markLostAuction} variant="ghost" />
-          <Button label="編集" onPress={() => setEditing(true)} variant="ghost" />
-          <Button label="削除" onPress={onDelete} variant="ghost" />
+          <Button
+            label="Buy として記録"
+            onPress={() => openDecision('buy')}
+            testID={testIds.btn.decisionBuy}
+          />
+          <Button
+            label="Watch にする"
+            onPress={() => openDecision('watch')}
+            variant="secondary"
+            testID={testIds.btn.decisionWatch}
+          />
+          <Button
+            label="Skip にする"
+            onPress={() => openDecision('skip')}
+            variant="ghost"
+            testID={testIds.btn.decisionSkip}
+          />
+          <Button
+            label="Lost Auction にする"
+            onPress={markLostAuction}
+            variant="ghost"
+            testID={testIds.btn.decisionLost}
+          />
+          <Button
+            label="編集"
+            onPress={() => setEditing(true)}
+            variant="ghost"
+            testID={testIds.btn.edit}
+          />
+          <Button label="削除" onPress={onDelete} variant="ghost" testID={testIds.btn.delete} />
         </View>
       </ScrollView>
 
@@ -904,30 +948,6 @@ export default function CandidateDetailScreen() {
   );
 }
 
-const Kv = ({ k, v, emphasize }: { k: string; v: string; emphasize?: boolean }) => (
-  <View style={kvRow}>
-    <Text style={kvKey}>{k}</Text>
-    <LinkText
-      style={[kvVal, emphasize ? { color: colors.warning, fontWeight: font.weight.bold } : null]}
-    >
-      {v}
-    </LinkText>
-  </View>
-);
-
-const center: ViewStyle = {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: space.xl,
-  backgroundColor: colors.bg,
-};
-
-const muted = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
-
 const photoStrip: ViewStyle = {
   paddingVertical: space.md,
 };
@@ -939,49 +959,12 @@ const photoLarge = {
   borderRadius: radii.md,
 } as const;
 
-const photoPlaceholder: ViewStyle = {
-  width: 240,
-  height: 240,
-  backgroundColor: colors.surface,
-  borderRadius: radii.md,
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const section: ViewStyle = {
-  paddingHorizontal: space.lg,
-  paddingVertical: space.lg,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
 const snapshotsHeader: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   marginBottom: space.sm,
 };
-
-const titleStyle = {
-  fontSize: font.size.xl,
-  fontWeight: font.weight.bold,
-  color: colors.text,
-} as const;
-
-const subtitleStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const sectionTitle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  fontWeight: font.weight.semibold,
-  textTransform: 'uppercase' as const,
-  letterSpacing: 0.5,
-  marginBottom: space.sm,
-} as const;
 
 const chipRow: ViewStyle = {
   flexDirection: 'row',
@@ -995,47 +978,6 @@ const kvRow: ViewStyle = {
   alignItems: 'flex-start',
   paddingVertical: space.xs,
   gap: space.md,
-};
-
-const kvKey = {
-  width: 96,
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-} as const;
-
-const kvVal = {
-  flex: 1,
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
-
-const editLink = {
-  color: colors.text,
-  fontSize: font.size.md,
-  fontWeight: font.weight.semibold,
-  paddingHorizontal: space.md,
-} as const;
-
-const addLink = {
-  color: colors.text,
-  fontSize: font.size.sm,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const warning = {
-  marginTop: space.sm,
-  color: colors.warning,
-  fontSize: font.size.sm,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const decisionLogRow: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  gap: space.sm,
-  paddingVertical: space.sm,
-  borderTopWidth: 1,
-  borderTopColor: colors.border,
 };
 
 const decisionBadge: ViewStyle = {
@@ -1054,36 +996,112 @@ const decisionBadgeText = {
   letterSpacing: 0.5,
 } as const;
 
-const decisionDateText = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
-
-const decisionReasonText = {
-  marginTop: 2,
-  fontSize: font.size.sm,
-  color: colors.text,
-} as const;
-
-const brandGuideCard: ViewStyle = {
-  paddingHorizontal: space.md,
-  paddingVertical: space.md,
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  backgroundColor: colors.surface,
-  marginBottom: space.sm,
-};
-
-const brandGuideTitle = {
-  fontSize: font.size.sm,
-  fontWeight: font.weight.semibold,
-  color: colors.text,
-} as const;
-
-const brandGuideNotes = {
-  marginTop: space.xs,
-  fontSize: font.size.sm,
-  color: colors.text,
-  lineHeight: 20,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  center: {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    padding: space.xl,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  muted: {
+    color: p.textMuted,
+    fontSize: font.size.sm,
+  } as const,
+  photoPlaceholder: {
+    width: 240,
+    height: 240,
+    backgroundColor: p.surface,
+    borderRadius: radii.md,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  } satisfies ViewStyle,
+  section: {
+    paddingHorizontal: space.lg,
+    paddingVertical: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: p.border,
+  } satisfies ViewStyle,
+  title: {
+    fontSize: font.size.xl,
+    fontWeight: font.weight.bold,
+    color: p.text,
+  } as const,
+  subtitle: {
+    marginTop: space.xs,
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+  sectionTitle: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    fontWeight: font.weight.semibold,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginBottom: space.sm,
+  } as const,
+  kvKey: {
+    width: 96,
+    fontSize: font.size.sm,
+    color: p.textMuted,
+  } as const,
+  kvVal: {
+    flex: 1,
+    fontSize: font.size.sm,
+    color: p.text,
+  } as const,
+  editLink: {
+    color: p.text,
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    paddingHorizontal: space.md,
+  } as const,
+  addLink: {
+    color: p.text,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+  } as const,
+  warning: {
+    marginTop: space.sm,
+    color: p.warning,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+  } as const,
+  decisionLogRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    gap: space.sm,
+    paddingVertical: space.sm,
+    borderTopWidth: 1,
+    borderTopColor: p.border,
+  } satisfies ViewStyle,
+  decisionDateText: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+  } as const,
+  decisionReasonText: {
+    marginTop: 2,
+    fontSize: font.size.sm,
+    color: p.text,
+  } as const,
+  brandGuideCard: {
+    paddingHorizontal: space.md,
+    paddingVertical: space.md,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    backgroundColor: p.surface,
+    marginBottom: space.sm,
+  } satisfies ViewStyle,
+  brandGuideTitle: {
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+    color: p.text,
+  } as const,
+  brandGuideNotes: {
+    marginTop: space.xs,
+    fontSize: font.size.sm,
+    color: p.text,
+    lineHeight: 20,
+  } as const,
+});

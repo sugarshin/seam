@@ -12,7 +12,8 @@ import {
 import type { SaleInfo } from '@seam/shared';
 import { Button } from './Button';
 import { TextField } from './TextField';
-import { colors, font, radii, space } from '../theme';
+import { font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 export type SaleInfoDraft = Omit<SaleInfo, 'itemId'>;
 
@@ -46,6 +47,7 @@ const parsePriceInput = (raw: string): number | undefined => {
 };
 
 export const SaleInfoModal = ({ visible, submitting, initial, onCancel, onSubmit }: Props) => {
+  const palette = useThemeColors();
   const [soldPrice, setSoldPrice] = useState('');
   const [soldAt, setSoldAt] = useState('');
   const [soldSource, setSoldSource] = useState('');
@@ -88,8 +90,8 @@ export const SaleInfoModal = ({ visible, submitting, initial, onCancel, onSubmit
         style={overlay}
       >
         <Pressable style={backdrop} onPress={onCancel} />
-        <View style={card}>
-          <Text style={title}>売却情報</Text>
+        <View style={[card, { backgroundColor: palette.bg }]} testID={testIds.modal.saleInfo}>
+          <Text style={[title, { color: palette.text }]}>売却情報</Text>
           <ScrollView keyboardShouldPersistTaps="handled" style={{ maxHeight: 460 }}>
             <TextField
               label="売却価格（円）"
@@ -101,6 +103,7 @@ export const SaleInfoModal = ({ visible, submitting, initial, onCancel, onSubmit
               }}
               keyboardType="number-pad"
               error={priceError}
+              testID={testIds.modalField(testIds.modal.saleInfo, 'price')}
             />
             <TextField
               label="売却日"
@@ -110,12 +113,14 @@ export const SaleInfoModal = ({ visible, submitting, initial, onCancel, onSubmit
               autoCapitalize="none"
               error={dateValid ? undefined : '日付の形式が不正です'}
               hint="例: 2026-04-26（空欄も可）"
+              testID={testIds.modalField(testIds.modal.saleInfo, 'date')}
             />
             <TextField
               label="販売元"
               placeholder="メルカリ / 古着屋 / 友人 など"
               value={soldSource}
               onChangeText={setSoldSource}
+              testID={testIds.modalField(testIds.modal.saleInfo, 'source')}
             />
             <TextField
               label="メモ（任意）"
@@ -123,11 +128,22 @@ export const SaleInfoModal = ({ visible, submitting, initial, onCancel, onSubmit
               placeholder="購入者・状態・送料負担など"
               value={notes}
               onChangeText={setNotes}
+              testID={testIds.modalField(testIds.modal.saleInfo, 'notes')}
             />
           </ScrollView>
           <View style={actions}>
-            <Button label="キャンセル" variant="ghost" onPress={onCancel} />
-            <Button label="保存" onPress={handleSubmit} loading={submitting} />
+            <Button
+              label="キャンセル"
+              variant="ghost"
+              onPress={onCancel}
+              testID={testIds.modalCancel(testIds.modal.saleInfo)}
+            />
+            <Button
+              label="保存"
+              onPress={handleSubmit}
+              loading={submitting}
+              testID={testIds.modalSubmit(testIds.modal.saleInfo)}
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -150,7 +166,6 @@ const backdrop: ViewStyle = {
 };
 
 const card: ViewStyle = {
-  backgroundColor: colors.bg,
   borderTopLeftRadius: radii.lg,
   borderTopRightRadius: radii.lg,
   padding: space.lg,
@@ -160,7 +175,6 @@ const card: ViewStyle = {
 const title = {
   fontSize: font.size.lg,
   fontWeight: font.weight.bold,
-  color: colors.text,
   marginBottom: space.sm,
 } as const;
 

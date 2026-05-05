@@ -24,7 +24,8 @@ import { EmptyState } from '../../src/components/EmptyState';
 import { ItemCard } from '../../src/components/ItemCard';
 import { Picker, type PickerOption } from '../../src/components/Picker';
 import { candidateInfoRepository, itemRepository, photoRepository } from '../../src/repositories';
-import { colors, font, radii, space } from '../../src/theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 const formatAuctionEnds = (iso: string): string => {
   const d = new Date(iso);
@@ -88,6 +89,8 @@ const compareItems = (a: WishItem, b: WishItem, sort: WishSort): number => {
 };
 
 export default function WishlistScreen() {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [rows, setRows] = useState<WishItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<WishSort>('auctionEndsAt_asc');
@@ -143,23 +146,25 @@ export default function WishlistScreen() {
         thumbnailRelativePath={item.thumbnail}
         priceLabel={total !== undefined ? `¥${total.toLocaleString()}` : undefined}
         endsLabel={ends ? formatAuctionEnds(ends) : undefined}
+        testID={testIds.cardCandidate(item.item.id)}
         onPress={() => router.push({ pathname: '/candidate/[id]', params: { id: item.item.id } })}
       />
     );
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <View style={header}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
+      <View style={styles.header}>
         <Picker<WishSort>
           value={sort}
           options={SORT_OPTIONS}
           onChange={setSort}
           containerStyle={{ marginBottom: 0, flex: 1 }}
           modalTitle="並び替え"
+          testID={testIds.picker.wishlistSort}
         />
       </View>
-      <View style={chipScrollWrapper}>
+      <View style={styles.chipScrollWrapper}>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -172,11 +177,12 @@ export default function WishlistScreen() {
               tone={statusFilter === opt.value ? 'inverse' : 'muted'}
               selected={statusFilter === opt.value}
               onPress={() => setStatusFilter(opt.value)}
+              testID={`chip:wishlist-status:${opt.value}`}
             />
           )}
         />
       </View>
-      <View style={chipScrollWrapper}>
+      <View style={styles.chipScrollWrapper}>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -189,6 +195,7 @@ export default function WishlistScreen() {
               tone={sourceFilter === opt.value ? 'inverse' : 'muted'}
               selected={sourceFilter === opt.value}
               onPress={() => setSourceFilter(opt.value)}
+              testID={`chip:wishlist-source:${opt.value}`}
             />
           )}
         />
@@ -196,7 +203,7 @@ export default function WishlistScreen() {
 
       {loading && filteredSorted.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: colors.textMuted }}>読み込み中…</Text>
+          <Text style={{ color: palette.textMuted }}>読み込み中…</Text>
         </View>
       ) : filteredSorted.length === 0 ? (
         <EmptyState
@@ -204,6 +211,7 @@ export default function WishlistScreen() {
           message="右下の + から候補を追加してみましょう"
           actionLabel="新規追加"
           onAction={() => router.push('/candidate/new')}
+          actionTestID={testIds.btn.wishlistEmptyAdd}
         />
       ) : (
         <FlatList
@@ -216,51 +224,52 @@ export default function WishlistScreen() {
 
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel="候補を追加"
+        testID={testIds.fab.addCandidate}
         onPress={() => router.push('/candidate/new')}
-        style={({ pressed }) => [fab, pressed && { opacity: 0.85 }]}
+        style={({ pressed }) => [styles.fab, pressed && { opacity: 0.85 }]}
       >
-        <Text style={fabText}>＋</Text>
+        <Text style={styles.fabText}>＋</Text>
       </Pressable>
     </View>
   );
 }
 
-const header: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: space.lg,
-  paddingTop: space.md,
-  paddingBottom: space.sm,
-  gap: space.sm,
-  backgroundColor: colors.bg,
-};
-
-const chipScrollWrapper: ViewStyle = {
-  paddingVertical: space.sm,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.border,
-};
-
-const fab: ViewStyle = {
-  position: 'absolute',
-  right: space.lg,
-  bottom: space.xl,
-  width: 56,
-  height: 56,
-  borderRadius: radii.lg + 16,
-  backgroundColor: colors.bgInverse,
-  alignItems: 'center',
-  justifyContent: 'center',
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.2,
-  shadowRadius: 6,
-  elevation: 6,
-};
-
-const fabText = {
-  color: colors.textInverse,
-  fontSize: 28,
-  fontWeight: font.weight.bold,
-  lineHeight: 30,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  header: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+    paddingBottom: space.sm,
+    gap: space.sm,
+    backgroundColor: p.bg,
+  } satisfies ViewStyle,
+  chipScrollWrapper: {
+    paddingVertical: space.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: p.border,
+  } satisfies ViewStyle,
+  fab: {
+    position: 'absolute' as const,
+    right: space.lg,
+    bottom: space.xl,
+    width: 56,
+    height: 56,
+    borderRadius: radii.lg + 16,
+    backgroundColor: p.bgInverse,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
+  } satisfies ViewStyle,
+  fabText: {
+    color: p.textInverse,
+    fontSize: 28,
+    fontWeight: font.weight.bold,
+    lineHeight: 30,
+  } as const,
+});

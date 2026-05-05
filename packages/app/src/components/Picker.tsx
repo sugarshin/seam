@@ -9,7 +9,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 export type PickerOption<T extends string> = {
   value: T;
@@ -27,6 +27,17 @@ type Props<T extends string> = {
   required?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   modalTitle?: string;
+  /**
+   * testID for the trigger field. Option rows derive `option:<name>:<value>`
+   * (where `<name>` is `testID` with a `picker:` prefix stripped). Cancel
+   * button derives `<testID>:cancel`.
+   */
+  testID?: string;
+};
+
+const optionTestIdFor = (rootId: string, value: string): string => {
+  const stripped = rootId.startsWith('picker:') ? rootId.slice('picker:'.length) : rootId;
+  return `option:${stripped}:${value}`;
 };
 
 export function Picker<T extends string>({
@@ -39,7 +50,10 @@ export function Picker<T extends string>({
   required,
   containerStyle,
   modalTitle,
+  testID,
 }: Props<T>) {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [open, setOpen] = useState(false);
   const current = options.find((o) => o.value === value);
 
@@ -48,25 +62,26 @@ export function Picker<T extends string>({
     return (
       <Pressable
         accessibilityRole="button"
+        testID={testID !== undefined ? optionTestIdFor(testID, item.value) : undefined}
         onPress={() => {
           onChange(item.value);
           setOpen(false);
         }}
         style={({ pressed }) => [
           rowStyle,
-          selected && { backgroundColor: colors.surface },
+          selected && { backgroundColor: palette.surface },
           pressed && { opacity: 0.6 },
         ]}
       >
         <View style={rowTextWrap}>
-          <Text style={[rowLabel, selected && { fontWeight: font.weight.semibold }]}>
+          <Text style={[styles.rowLabel, selected && { fontWeight: font.weight.semibold }]}>
             {item.label}
           </Text>
           {item.description !== undefined && item.description !== '' && (
-            <Text style={rowDescription}>{item.description}</Text>
+            <Text style={styles.rowDescription}>{item.description}</Text>
           )}
         </View>
-        {selected && <Text style={checkMark}>✓</Text>}
+        {selected && <Text style={styles.checkMark}>✓</Text>}
       </Pressable>
     );
   };
@@ -74,43 +89,45 @@ export function Picker<T extends string>({
   return (
     <View style={[wrapper, containerStyle]}>
       {label !== undefined && (
-        <Text style={labelStyle}>
+        <Text style={styles.label}>
           {label}
-          {required && <Text style={requiredMark}> *</Text>}
+          {required && <Text style={styles.requiredMark}> *</Text>}
         </Text>
       )}
       <Pressable
         accessibilityRole="button"
+        testID={testID}
         onPress={() => setOpen(true)}
         style={({ pressed }) => [
-          fieldStyle,
+          styles.field,
           pressed && { opacity: 0.7 },
-          error !== undefined && error !== '' ? { borderColor: colors.warning } : null,
+          error !== undefined && error !== '' ? { borderColor: palette.warning } : null,
         ]}
       >
-        <Text style={current ? valueStyle : placeholderStyle}>
+        <Text style={current ? styles.value : styles.placeholder}>
           {current ? current.label : placeholder}
         </Text>
-        <Text style={chevron}>›</Text>
+        <Text style={styles.chevron}>›</Text>
       </Pressable>
-      {error !== undefined && error !== '' ? <Text style={errorStyle}>{error}</Text> : null}
+      {error !== undefined && error !== '' ? <Text style={styles.error}>{error}</Text> : null}
 
       <Modal visible={open} transparent animationType="slide" onRequestClose={() => setOpen(false)}>
         <Pressable style={backdrop} onPress={() => setOpen(false)} />
-        <View style={sheet}>
-          {modalTitle !== undefined && <Text style={sheetTitle}>{modalTitle}</Text>}
+        <View style={styles.sheet}>
+          {modalTitle !== undefined && <Text style={styles.sheetTitle}>{modalTitle}</Text>}
           <FlatList
             data={[...options]}
             keyExtractor={(item) => item.value}
             renderItem={renderRow}
-            ItemSeparatorComponent={() => <View style={separator} />}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
           <Pressable
             accessibilityRole="button"
+            testID={testID !== undefined ? `${testID}:cancel` : undefined}
             onPress={() => setOpen(false)}
-            style={({ pressed }) => [cancelBtn, pressed && { opacity: 0.7 }]}
+            style={({ pressed }) => [styles.cancelBtn, pressed && { opacity: 0.7 }]}
           >
-            <Text style={cancelLabel}>キャンセル</Text>
+            <Text style={styles.cancelLabel}>キャンセル</Text>
           </Pressable>
         </View>
       </Modal>
@@ -121,73 +138,6 @@ export function Picker<T extends string>({
 const wrapper: ViewStyle = {
   marginBottom: space.md,
 };
-
-const labelStyle = {
-  fontSize: font.size.sm,
-  fontWeight: font.weight.medium,
-  color: colors.textMuted,
-  marginBottom: space.xs,
-} as const;
-
-const requiredMark = { color: colors.warning } as const;
-
-const fieldStyle: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  paddingVertical: space.sm + 2,
-  paddingHorizontal: space.md,
-  backgroundColor: colors.bg,
-  minHeight: 44,
-};
-
-const valueStyle = {
-  flex: 1,
-  fontSize: font.size.md,
-  color: colors.text,
-} as const;
-
-const placeholderStyle = {
-  flex: 1,
-  fontSize: font.size.md,
-  color: colors.textMuted,
-} as const;
-
-const chevron = {
-  fontSize: font.size.lg,
-  color: colors.textMuted,
-  transform: [{ rotate: '90deg' }],
-} as const;
-
-const errorStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.xs,
-  color: colors.warning,
-} as const;
-
-const backdrop: ViewStyle = {
-  flex: 1,
-  backgroundColor: 'rgba(0,0,0,0.35)',
-};
-
-const sheet: ViewStyle = {
-  backgroundColor: colors.bg,
-  borderTopLeftRadius: radii.lg,
-  borderTopRightRadius: radii.lg,
-  paddingTop: space.md,
-  paddingBottom: space.xl,
-  maxHeight: '70%',
-};
-
-const sheetTitle = {
-  fontSize: font.size.md,
-  fontWeight: font.weight.semibold,
-  color: colors.text,
-  paddingHorizontal: space.lg,
-  paddingBottom: space.md,
-} as const;
 
 const rowStyle: ViewStyle = {
   flexDirection: 'row',
@@ -200,41 +150,96 @@ const rowTextWrap: ViewStyle = {
   flex: 1,
 };
 
-const rowLabel = {
-  fontSize: font.size.md,
-  color: colors.text,
-} as const;
-
-const rowDescription = {
-  marginTop: 2,
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  lineHeight: font.size.xs * 1.4,
-} as const;
-
-const checkMark = {
-  fontSize: font.size.md,
-  color: colors.text,
-} as const;
-
-const separator: ViewStyle = {
-  height: 1,
-  backgroundColor: colors.border,
-  marginHorizontal: space.lg,
+const backdrop: ViewStyle = {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.35)',
 };
 
-const cancelBtn: ViewStyle = {
-  marginTop: space.md,
-  marginHorizontal: space.lg,
-  paddingVertical: space.md,
-  alignItems: 'center',
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-};
-
-const cancelLabel = {
-  fontSize: font.size.md,
-  fontWeight: font.weight.semibold,
-  color: colors.text,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  label: {
+    fontSize: font.size.sm,
+    fontWeight: font.weight.medium,
+    color: p.textMuted,
+    marginBottom: space.xs,
+  } as const,
+  requiredMark: { color: p.warning } as const,
+  field: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    paddingVertical: space.sm + 2,
+    paddingHorizontal: space.md,
+    backgroundColor: p.bg,
+    minHeight: 44,
+  } satisfies ViewStyle,
+  value: {
+    flex: 1,
+    fontSize: font.size.md,
+    color: p.text,
+  } as const,
+  placeholder: {
+    flex: 1,
+    fontSize: font.size.md,
+    color: p.textMuted,
+  } as const,
+  chevron: {
+    fontSize: font.size.lg,
+    color: p.textMuted,
+    transform: [{ rotate: '90deg' as const }],
+  } as const,
+  error: {
+    marginTop: space.xs,
+    fontSize: font.size.xs,
+    color: p.warning,
+  } as const,
+  sheet: {
+    backgroundColor: p.bg,
+    borderTopLeftRadius: radii.lg,
+    borderTopRightRadius: radii.lg,
+    paddingTop: space.md,
+    paddingBottom: space.xl,
+    maxHeight: '70%' as const,
+  } satisfies ViewStyle,
+  sheetTitle: {
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    color: p.text,
+    paddingHorizontal: space.lg,
+    paddingBottom: space.md,
+  } as const,
+  rowLabel: {
+    fontSize: font.size.md,
+    color: p.text,
+  } as const,
+  rowDescription: {
+    marginTop: 2,
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    lineHeight: font.size.xs * 1.4,
+  } as const,
+  checkMark: {
+    fontSize: font.size.md,
+    color: p.text,
+  } as const,
+  separator: {
+    height: 1,
+    backgroundColor: p.border,
+    marginHorizontal: space.lg,
+  } satisfies ViewStyle,
+  cancelBtn: {
+    marginTop: space.md,
+    marginHorizontal: space.lg,
+    paddingVertical: space.md,
+    alignItems: 'center' as const,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+  } satisfies ViewStyle,
+  cancelLabel: {
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    color: p.text,
+  } as const,
+});

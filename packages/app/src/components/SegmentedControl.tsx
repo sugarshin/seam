@@ -1,5 +1,5 @@
 import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 export type SegmentOption<T extends string> = {
   value: T;
@@ -13,6 +13,10 @@ type Props<T extends string> = {
   options: readonly SegmentOption<T>[];
   onChange: (value: T) => void;
   style?: StyleProp<ViewStyle>;
+  /**
+   * testID for the control. Each segment gets `<testID>:<value>` derived.
+   */
+  testID?: string;
 };
 
 /**
@@ -24,9 +28,12 @@ export const SegmentedControl = <T extends string>({
   options,
   onChange,
   style,
+  testID,
 }: Props<T>) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   return (
-    <View style={[wrapper, style]} accessibilityRole="tablist">
+    <View style={[styles.wrapper, style]} accessibilityRole="tablist">
       {options.map((opt) => {
         const selected = opt.value === value;
         return (
@@ -39,24 +46,25 @@ export const SegmentedControl = <T extends string>({
                 ? `${opt.label} (${opt.badge})`
                 : opt.label
             }
+            testID={testID !== undefined ? `${testID}:${opt.value}` : undefined}
             onPress={() => {
               if (!selected) onChange(opt.value);
             }}
             style={({ pressed }) => [
               segment,
-              selected ? segmentSelected : segmentUnselected,
+              selected ? styles.segmentSelected : styles.segmentUnselected,
               pressed && { opacity: 0.7 },
             ]}
           >
             <Text
-              style={[label, { color: selected ? colors.textInverse : colors.textMuted }]}
+              style={[label, { color: selected ? palette.textInverse : palette.textMuted }]}
               numberOfLines={1}
             >
               {opt.label}
             </Text>
             {opt.badge !== undefined && opt.badge !== '' && (
               <Text
-                style={[badge, { color: selected ? colors.textInverse : colors.textMuted }]}
+                style={[badge, { color: selected ? palette.textInverse : palette.textMuted }]}
                 numberOfLines={1}
               >
                 {opt.badge}
@@ -67,14 +75,6 @@ export const SegmentedControl = <T extends string>({
       })}
     </View>
   );
-};
-
-const wrapper: ViewStyle = {
-  flexDirection: 'row',
-  backgroundColor: colors.surface,
-  borderRadius: radii.lg,
-  padding: 2,
-  gap: 2,
 };
 
 const segment: ViewStyle = {
@@ -88,14 +88,6 @@ const segment: ViewStyle = {
   borderRadius: radii.md,
 };
 
-const segmentSelected: ViewStyle = {
-  backgroundColor: colors.bgInverse,
-};
-
-const segmentUnselected: ViewStyle = {
-  backgroundColor: 'transparent',
-};
-
 const label = {
   fontSize: font.size.sm,
   fontWeight: font.weight.semibold,
@@ -106,3 +98,19 @@ const badge = {
   fontWeight: font.weight.medium,
   opacity: 0.85,
 } as const;
+
+const makeStyles = (p: ColorPalette) => ({
+  wrapper: {
+    flexDirection: 'row' as const,
+    backgroundColor: p.surface,
+    borderRadius: radii.lg,
+    padding: 2,
+    gap: 2,
+  },
+  segmentSelected: {
+    backgroundColor: p.bgInverse,
+  } satisfies ViewStyle,
+  segmentUnselected: {
+    backgroundColor: 'transparent',
+  } satisfies ViewStyle,
+});

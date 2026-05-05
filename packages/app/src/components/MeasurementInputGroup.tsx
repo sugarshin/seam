@@ -12,7 +12,7 @@ import {
   type MeasurementUnit,
 } from '@seam/shared';
 import { TextField } from './TextField';
-import { colors, font, space } from '../theme';
+import { font, space, useThemeColors } from '../theme';
 
 type Props = {
   category: GarmentCategory;
@@ -33,6 +33,7 @@ const formatPersisted = (value: number): string => {
 };
 
 export const MeasurementInputGroup = ({ category, itemId, values, onChange }: Props) => {
+  const palette = useThemeColors();
   const keys = useMemo<readonly MeasurementKey[]>(() => measurementKeysFor(category), [category]);
   const group = measurementGroupOf(category);
 
@@ -62,8 +63,10 @@ export const MeasurementInputGroup = ({ category, itemId, values, onChange }: Pr
 
   if (group === 'none' || keys.length === 0) {
     return (
-      <View style={emptyBox}>
-        <Text style={emptyText}>{CATEGORY_LABEL[category]} は実寸入力なし</Text>
+      <View style={[emptyBox, { borderColor: palette.border, backgroundColor: palette.surface }]}>
+        <Text style={[emptyText, { color: palette.textMuted }]}>
+          {CATEGORY_LABEL[category]} は実寸入力なし
+        </Text>
       </View>
     );
   }
@@ -124,12 +127,9 @@ const emptyBox: ViewStyle = {
   paddingVertical: space.md,
   paddingHorizontal: space.md,
   borderWidth: 1,
-  borderColor: colors.border,
   borderRadius: 8,
-  backgroundColor: colors.surface,
 };
 
 const emptyText = {
   fontSize: font.size.sm,
-  color: colors.textMuted,
 } as const;

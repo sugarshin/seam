@@ -30,7 +30,8 @@ import { Picker, type PickerOption } from '../components/Picker';
 import { TagInput } from '../components/TagInput';
 import { TextField } from '../components/TextField';
 import type { SavedPhoto } from '../photos/savePhoto';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 const FAVORITE_SCORE_VALUES = [1, 2, 3, 4, 5] as const;
 type FavoriteScore = (typeof FAVORITE_SCORE_VALUES)[number];
@@ -173,6 +174,8 @@ export const ItemForm = ({
   onCancel,
   submitting = false,
 }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const insets = useSafeAreaInsets();
   const [measurements, setMeasurements] = useState<MeasurementInput[]>(
     defaults?.measurements ?? [],
@@ -315,9 +318,13 @@ export const ItemForm = ({
     });
   });
 
+  const SectionTitle = ({ children }: { children: string }) => (
+    <Text style={styles.sectionTitle}>{children}</Text>
+  );
+
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.bg }}
+      style={{ flex: 1, backgroundColor: palette.bg }}
       contentContainerStyle={{
         padding: space.lg,
         paddingBottom: space.xxl + insets.bottom,
@@ -338,6 +345,7 @@ export const ItemForm = ({
             onBlur={field.onBlur}
             error={errors.name?.message}
             placeholder="例: Champion Reverse Weave"
+            testID={testIds.field.itemName}
           />
         )}
       />
@@ -351,6 +359,7 @@ export const ItemForm = ({
             value={field.value ?? ''}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
+            testID={testIds.field.itemBrand}
           />
         )}
       />
@@ -364,6 +373,7 @@ export const ItemForm = ({
             value={field.value ?? ''}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
+            testID={testIds.field.itemModel}
           />
         )}
       />
@@ -380,6 +390,7 @@ export const ItemForm = ({
             onChange={field.onChange}
             modalTitle="カテゴリを選択"
             error={errors.category?.message}
+            testID={testIds.picker.category}
           />
         )}
       />
@@ -395,6 +406,7 @@ export const ItemForm = ({
             options={STATUS_OPTIONS}
             onChange={field.onChange}
             modalTitle="ステータスを選択"
+            testID={testIds.picker.status}
           />
         )}
       />
@@ -410,6 +422,7 @@ export const ItemForm = ({
                 value={field.value ?? ''}
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
+                testID={testIds.field.itemColor}
               />
             )}
           />
@@ -425,6 +438,7 @@ export const ItemForm = ({
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
                 placeholder="L / 32"
+                testID={testIds.field.itemSize}
               />
             )}
           />
@@ -432,7 +446,7 @@ export const ItemForm = ({
       </View>
 
       <SectionTitle>写真</SectionTitle>
-      <PhotoPicker photos={photos} onChange={setPhotos} />
+      <PhotoPicker photos={photos} onChange={setPhotos} testID="photo-picker" />
 
       <SectionTitle>実寸</SectionTitle>
       <MeasurementInputGroup
@@ -454,6 +468,7 @@ export const ItemForm = ({
             options={CONDITION_OPTIONS}
             onChange={field.onChange}
             modalTitle="コンディション"
+            testID={testIds.picker.condition}
           />
         )}
       />
@@ -468,6 +483,7 @@ export const ItemForm = ({
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             multiline
+            testID={testIds.field.itemConditionNotes}
           />
         )}
       />
@@ -482,6 +498,7 @@ export const ItemForm = ({
             options={FIT_RATING_OPTIONS}
             onChange={field.onChange}
             modalTitle="フィット感"
+            testID={testIds.picker.fitRating}
           />
         )}
       />
@@ -496,6 +513,7 @@ export const ItemForm = ({
             options={FAVORITE_SCORE_OPTIONS}
             onChange={(v) => field.onChange(Number(v))}
             modalTitle="お気に入り度"
+            testID={testIds.picker.favoriteScore}
           />
         )}
       />
@@ -514,6 +532,7 @@ export const ItemForm = ({
                 options={SOURCE_TYPE_OPTIONS}
                 onChange={field.onChange}
                 modalTitle="出品元を選択"
+                testID={testIds.picker.sourceType}
               />
             )}
           />
@@ -531,6 +550,7 @@ export const ItemForm = ({
                 keyboardType="url"
                 autoCapitalize="none"
                 placeholder="https://jp.mercari.com/item/..."
+                testID={testIds.field.itemProductUrl}
               />
             )}
           />
@@ -547,6 +567,7 @@ export const ItemForm = ({
                     onChangeText={field.onChange}
                     onBlur={field.onBlur}
                     keyboardType="number-pad"
+                    testID={testIds.field.candidateCurrentPrice}
                   />
                 )}
               />
@@ -562,15 +583,16 @@ export const ItemForm = ({
                     onChangeText={field.onChange}
                     onBlur={field.onBlur}
                     keyboardType="number-pad"
+                    testID={testIds.field.candidateShippingFee}
                   />
                 )}
               />
             </View>
           </View>
 
-          <View style={readonlyRow}>
-            <Text style={readonlyLabel}>合計 (自動計算)</Text>
-            <Text style={readonlyValue}>
+          <View style={styles.readonlyRow}>
+            <Text style={styles.readonlyLabel}>合計 (自動計算)</Text>
+            <Text style={styles.readonlyValue}>
               {candidateTotalPreview !== undefined
                 ? `¥${candidateTotalPreview.toLocaleString()}`
                 : '—'}
@@ -589,6 +611,7 @@ export const ItemForm = ({
                 placeholder="2026-04-30T22:00"
                 autoCapitalize="none"
                 hint="ISO 8601 表記。例: 2026-04-30T22:00"
+                testID={testIds.field.auctionEndsAt}
               />
             )}
           />
@@ -606,6 +629,7 @@ export const ItemForm = ({
                     onBlur={field.onBlur}
                     keyboardType="number-pad"
                     hint="この値段ならすぐ買う"
+                    testID={testIds.field.easyBuyPrice}
                   />
                 )}
               />
@@ -622,6 +646,7 @@ export const ItemForm = ({
                     onBlur={field.onBlur}
                     keyboardType="number-pad"
                     hint="この値段なら検討"
+                    testID={testIds.field.acceptablePrice}
                   />
                 )}
               />
@@ -639,6 +664,7 @@ export const ItemForm = ({
                 onBlur={field.onBlur}
                 keyboardType="number-pad"
                 hint="絶対に超えない上限"
+                testID={testIds.field.maxBidPrice}
               />
             )}
           />
@@ -652,6 +678,7 @@ export const ItemForm = ({
                 value={field.value ?? ''}
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
+                testID={testIds.field.sellerName}
               />
             )}
           />
@@ -666,6 +693,7 @@ export const ItemForm = ({
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
                 multiline
+                testID={testIds.field.listingDescription}
               />
             )}
           />
@@ -688,6 +716,7 @@ export const ItemForm = ({
                     onChangeText={field.onChange}
                     onBlur={field.onBlur}
                     keyboardType="number-pad"
+                    testID={testIds.field.itemPurchasePrice}
                   />
                 )}
               />
@@ -703,6 +732,7 @@ export const ItemForm = ({
                     onChangeText={field.onChange}
                     onBlur={field.onBlur}
                     keyboardType="number-pad"
+                    testID={testIds.field.itemShippingFee}
                   />
                 )}
               />
@@ -720,6 +750,7 @@ export const ItemForm = ({
                 onBlur={field.onBlur}
                 placeholder="2026-04-26"
                 autoCapitalize="none"
+                testID={testIds.field.itemPurchaseDate}
               />
             )}
           />
@@ -734,6 +765,7 @@ export const ItemForm = ({
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
                 placeholder="ヤフオク / メルカリ / etc."
+                testID={testIds.field.itemPurchaseSource}
               />
             )}
           />
@@ -750,6 +782,7 @@ export const ItemForm = ({
                 error={errors.productUrl?.message}
                 keyboardType="url"
                 autoCapitalize="none"
+                testID={testIds.field.itemProductUrl}
               />
             )}
           />
@@ -771,6 +804,7 @@ export const ItemForm = ({
                 error={errors.productUrl?.message}
                 keyboardType="url"
                 autoCapitalize="none"
+                testID={testIds.field.itemProductUrl}
               />
             )}
           />
@@ -785,8 +819,8 @@ export const ItemForm = ({
         control={control}
         name="isFitAnchor"
         render={({ field }) => (
-          <View style={anchorRow}>
-            <Text style={anchorLabel}>Fit Anchor として登録</Text>
+          <View style={styles.anchorRow}>
+            <Text style={styles.anchorLabel}>Fit Anchor として登録</Text>
             <Switch value={field.value} onValueChange={field.onChange} />
           </View>
         )}
@@ -804,6 +838,7 @@ export const ItemForm = ({
                 onBlur={field.onBlur}
                 placeholder="例: ベスト パーカー / 基準"
                 hint="未入力ならアイテム名が使われます"
+                testID={testIds.field.fitAnchorName}
               />
             )}
           />
@@ -817,6 +852,7 @@ export const ItemForm = ({
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
                 multiline
+                testID={testIds.field.fitAnchorNotes}
               />
             )}
           />
@@ -833,76 +869,82 @@ export const ItemForm = ({
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             multiline
+            testID={testIds.field.itemNotes}
           />
         )}
       />
 
       <View style={{ marginTop: space.lg, gap: space.sm }}>
-        <Button label={submitLabel} onPress={() => void submit()} loading={submitting} />
-        {onCancel && <Button label="キャンセル" onPress={onCancel} variant="ghost" />}
+        <Button
+          label={submitLabel}
+          onPress={() => void submit()}
+          loading={submitting}
+          testID={testIds.btn.submit}
+        />
+        {onCancel && (
+          <Button
+            label="キャンセル"
+            onPress={onCancel}
+            variant="ghost"
+            testID={testIds.btn.cancel}
+          />
+        )}
       </View>
     </ScrollView>
   );
 };
-
-const SectionTitle = ({ children }: { children: string }) => (
-  <Text style={sectionTitleStyle}>{children}</Text>
-);
-
-const sectionTitleStyle = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  fontWeight: font.weight.semibold,
-  textTransform: 'uppercase' as const,
-  letterSpacing: 0.5,
-  marginTop: space.lg,
-  marginBottom: space.md,
-} as const;
 
 const twoColumn: ViewStyle = {
   flexDirection: 'row',
   gap: space.md,
 };
 
-const anchorRow: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingVertical: space.sm,
-  paddingHorizontal: space.md,
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  marginBottom: space.md,
-};
-
-const anchorLabel = {
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.medium,
-} as const;
-
-const readonlyRow: ViewStyle = {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingVertical: space.sm,
-  paddingHorizontal: space.md,
-  borderWidth: 1,
-  borderColor: colors.border,
-  borderRadius: radii.md,
-  marginBottom: space.md,
-  backgroundColor: colors.surface,
-};
-
-const readonlyLabel = {
-  fontSize: font.size.sm,
-  color: colors.textMuted,
-  fontWeight: font.weight.medium,
-} as const;
-
-const readonlyValue = {
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  sectionTitle: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    fontWeight: font.weight.semibold,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginTop: space.lg,
+    marginBottom: space.md,
+  } as const,
+  anchorRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingVertical: space.sm,
+    paddingHorizontal: space.md,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    marginBottom: space.md,
+  } satisfies ViewStyle,
+  anchorLabel: {
+    fontSize: font.size.md,
+    color: p.text,
+    fontWeight: font.weight.medium,
+  } as const,
+  readonlyRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    paddingVertical: space.sm,
+    paddingHorizontal: space.md,
+    borderWidth: 1,
+    borderColor: p.border,
+    borderRadius: radii.md,
+    marginBottom: space.md,
+    backgroundColor: p.surface,
+  } satisfies ViewStyle,
+  readonlyLabel: {
+    fontSize: font.size.sm,
+    color: p.textMuted,
+    fontWeight: font.weight.medium,
+  } as const,
+  readonlyValue: {
+    fontSize: font.size.md,
+    color: p.text,
+    fontWeight: font.weight.semibold,
+  } as const,
+});

@@ -3,15 +3,21 @@ import { Alert, Image, Pressable, Text, View, type ViewStyle } from 'react-nativ
 import * as ImagePicker from 'expo-image-picker';
 import { Button } from './Button';
 import { absolutePathFor, deletePhotoFiles, savePhoto, type SavedPhoto } from '../photos/savePhoto';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 type Props = {
   photos: SavedPhoto[];
   onChange: (photos: SavedPhoto[]) => void;
   max?: number;
+  /**
+   * testID for the picker. Children derive `<testID>:library` / `:camera` / `:remove:<photoId>`.
+   */
+  testID?: string;
 };
 
-export const PhotoPicker = ({ photos, onChange, max = 8 }: Props) => {
+export const PhotoPicker = ({ photos, onChange, max = 8, testID }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const [busy, setBusy] = useState(false);
 
   const ensureLibraryPermission = async (): Promise<boolean> => {
@@ -93,20 +99,21 @@ export const PhotoPicker = ({ photos, onChange, max = 8 }: Props) => {
     <View>
       <View style={grid}>
         {photos.map((p) => (
-          <View key={p.id} style={cell}>
+          <View key={p.id} style={styles.cell}>
             <Image
               source={{ uri: absolutePathFor(p.thumbnailRelativePath ?? p.relativePath) }}
               style={img}
             />
             <Pressable
               accessibilityRole="button"
+              testID={testID !== undefined ? `${testID}:remove:${p.id}` : undefined}
               onPress={() => {
                 void handleRemove(p);
               }}
               style={({ pressed }) => [removeBtn, pressed && { opacity: 0.6 }]}
               hitSlop={6}
             >
-              <Text style={removeMark}>×</Text>
+              <Text style={styles.removeMark}>×</Text>
             </Pressable>
           </View>
         ))}
@@ -121,6 +128,7 @@ export const PhotoPicker = ({ photos, onChange, max = 8 }: Props) => {
               }}
               variant="secondary"
               disabled={busy}
+              testID={testID !== undefined ? `${testID}:library` : undefined}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -131,11 +139,12 @@ export const PhotoPicker = ({ photos, onChange, max = 8 }: Props) => {
               }}
               variant="secondary"
               disabled={busy}
+              testID={testID !== undefined ? `${testID}:camera` : undefined}
             />
           </View>
         </View>
       ) : (
-        <Text style={limitText}>最大 {max} 枚まで</Text>
+        <Text style={styles.limitText}>最大 {max} 枚まで</Text>
       )}
     </View>
   );
@@ -146,15 +155,6 @@ const grid: ViewStyle = {
   flexWrap: 'wrap',
   gap: space.sm,
   marginBottom: space.sm,
-};
-
-const cell: ViewStyle = {
-  width: 92,
-  height: 92,
-  borderRadius: radii.md,
-  overflow: 'hidden',
-  backgroundColor: colors.surface,
-  position: 'relative',
 };
 
 const img = {
@@ -174,21 +174,30 @@ const removeBtn: ViewStyle = {
   justifyContent: 'center',
 };
 
-const removeMark = {
-  color: colors.textInverse,
-  fontSize: font.size.md,
-  fontWeight: font.weight.bold,
-  lineHeight: font.size.md + 2,
-} as const;
-
 const btnRow: ViewStyle = {
   flexDirection: 'row',
   gap: space.sm,
 };
 
-const limitText = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-  textAlign: 'center' as const,
-  paddingVertical: space.sm,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  cell: {
+    width: 92,
+    height: 92,
+    borderRadius: radii.md,
+    overflow: 'hidden' as const,
+    backgroundColor: p.surface,
+    position: 'relative' as const,
+  } satisfies ViewStyle,
+  removeMark: {
+    color: p.textInverse,
+    fontSize: font.size.md,
+    fontWeight: font.weight.bold,
+    lineHeight: font.size.md + 2,
+  } as const,
+  limitText: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+    textAlign: 'center' as const,
+    paddingVertical: space.sm,
+  } as const,
+});

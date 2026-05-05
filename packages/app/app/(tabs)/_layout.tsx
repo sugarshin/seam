@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { useThemeColors } from '../../src/theme';
+import { testIds } from '../../src/utils/testIds';
 
 export default function TabsLayout() {
   const palette = useThemeColors();
@@ -17,29 +18,26 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: palette.textMuted,
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{ title: 'Home', tabBarAccessibilityLabel: 'Home タブ' }}
-      />
+      <Tabs.Screen name="index" options={{ title: 'Home', tabBarButtonTestID: testIds.tab.home }} />
       <Tabs.Screen
         name="closet"
-        options={{ title: 'Closet', tabBarAccessibilityLabel: 'Closet タブ' }}
+        options={{ title: 'Closet', tabBarButtonTestID: testIds.tab.closet }}
       />
       <Tabs.Screen
         name="wishlist"
-        options={{ title: 'Wishlist', tabBarAccessibilityLabel: 'Wishlist タブ' }}
+        options={{ title: 'Wishlist', tabBarButtonTestID: testIds.tab.wishlist }}
       />
       <Tabs.Screen
         name="compare"
-        options={{ title: 'Compare', tabBarAccessibilityLabel: 'Compare タブ' }}
+        options={{ title: 'Compare', tabBarButtonTestID: testIds.tab.compare }}
       />
       <Tabs.Screen
         name="stats"
-        options={{ title: 'Stats', tabBarAccessibilityLabel: 'Stats タブ' }}
+        options={{ title: 'Stats', tabBarButtonTestID: testIds.tab.stats }}
       />
       <Tabs.Screen
         name="settings"
-        options={{ title: 'Settings', tabBarAccessibilityLabel: 'Settings タブ' }}
+        options={{ title: 'Settings', tabBarButtonTestID: testIds.tab.settings }}
       />
     </Tabs>
   );

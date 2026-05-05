@@ -11,7 +11,8 @@ import {
 import type { ScoreDecision } from '@seam/shared';
 import { Button } from './Button';
 import { TextField } from './TextField';
-import { colors, font, radii, space } from '../theme';
+import { font, radii, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 type Props = {
   visible: boolean;
@@ -40,6 +41,7 @@ export const DecisionReasonModal = ({
   onCancel,
   onSubmit,
 }: Props) => {
+  const palette = useThemeColors();
   const [reason, setReason] = useState('');
 
   useEffect(() => {
@@ -55,8 +57,8 @@ export const DecisionReasonModal = ({
         style={overlay}
       >
         <Pressable style={backdrop} onPress={onCancel} />
-        <View style={card}>
-          <Text style={title}>{DECISION_TITLE[decision]}</Text>
+        <View style={[card, { backgroundColor: palette.bg }]} testID={testIds.modal.decisionReason}>
+          <Text style={[title, { color: palette.text }]}>{DECISION_TITLE[decision]}</Text>
           <TextField
             label="理由"
             multiline
@@ -64,14 +66,21 @@ export const DecisionReasonModal = ({
             value={reason}
             onChangeText={setReason}
             hint="後から振り返れる短いメモを残しましょう。"
+            testID={testIds.modalField(testIds.modal.decisionReason, 'reason')}
           />
           <View style={actions}>
-            <Button label="キャンセル" variant="ghost" onPress={onCancel} />
+            <Button
+              label="キャンセル"
+              variant="ghost"
+              onPress={onCancel}
+              testID={testIds.modalCancel(testIds.modal.decisionReason)}
+            />
             <Button
               label="記録する"
               onPress={() => onSubmit(reason.trim())}
               disabled={reason.trim().length === 0}
               loading={submitting}
+              testID={testIds.modalSubmit(testIds.modal.decisionReason)}
             />
           </View>
         </View>
@@ -95,7 +104,6 @@ const backdrop: ViewStyle = {
 };
 
 const card: ViewStyle = {
-  backgroundColor: colors.bg,
   borderTopLeftRadius: radii.lg,
   borderTopRightRadius: radii.lg,
   padding: space.lg,
@@ -105,7 +113,6 @@ const card: ViewStyle = {
 const title = {
   fontSize: font.size.lg,
   fontWeight: font.weight.bold,
-  color: colors.text,
   marginBottom: space.sm,
 } as const;
 

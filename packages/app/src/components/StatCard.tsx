@@ -1,5 +1,5 @@
 import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { font, radii, space, useThemeColors } from '../theme';
 
 type Props = {
   /** Section title displayed at the top in muted style. */
@@ -13,20 +13,43 @@ type Props = {
   /** When provided, the card becomes pressable and shows a chevron affordance. */
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
+  /** testID forwarded to the Pressable when `onPress` is provided. */
+  testID?: string;
 };
 
-export const StatCard = ({ title, value, subtext, tone = 'default', onPress, style }: Props) => {
-  const accent = tone === 'warning' ? colors.warning : tone === 'good' ? colors.same : colors.text;
+export const StatCard = ({
+  title,
+  value,
+  subtext,
+  tone = 'default',
+  onPress,
+  style,
+  testID,
+}: Props) => {
+  const palette = useThemeColors();
+  const accent =
+    tone === 'warning' ? palette.warning : tone === 'good' ? palette.same : palette.text;
+  const cardStyle: ViewStyle = {
+    flexBasis: '47%',
+    flexGrow: 1,
+    borderWidth: 1,
+    borderRadius: radii.md,
+    padding: space.md,
+    backgroundColor: palette.bg,
+    gap: space.xs,
+  };
   const inner = (
     <>
       <View style={titleRow}>
-        <Text style={[titleStyle, { color: tone === 'default' ? colors.textMuted : accent }]}>
+        <Text style={[titleStyle, { color: tone === 'default' ? palette.textMuted : accent }]}>
           {title}
         </Text>
-        {onPress && <Text style={chevron}>›</Text>}
+        {onPress && <Text style={[chevron, { color: palette.textMuted }]}>›</Text>}
       </View>
-      <Text style={valueStyle}>{value}</Text>
-      {subtext !== undefined && subtext !== '' && <Text style={subtextStyle}>{subtext}</Text>}
+      <Text style={[valueStyle, { color: palette.text }]}>{value}</Text>
+      {subtext !== undefined && subtext !== '' && (
+        <Text style={[subtextStyle, { color: palette.textMuted }]}>{subtext}</Text>
+      )}
     </>
   );
 
@@ -35,10 +58,11 @@ export const StatCard = ({ title, value, subtext, tone = 'default', onPress, sty
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${title} ${value}`}
+        testID={testID}
         onPress={onPress}
         style={({ pressed }) => [
-          card,
-          { borderColor: tone === 'default' ? colors.border : accent },
+          cardStyle,
+          { borderColor: tone === 'default' ? palette.border : accent },
           pressed && { opacity: 0.7 },
           style,
         ]}
@@ -49,20 +73,10 @@ export const StatCard = ({ title, value, subtext, tone = 'default', onPress, sty
   }
 
   return (
-    <View style={[card, { borderColor: tone === 'default' ? colors.border : accent }, style]}>
+    <View style={[cardStyle, { borderColor: tone === 'default' ? palette.border : accent }, style]}>
       {inner}
     </View>
   );
-};
-
-const card: ViewStyle = {
-  flexBasis: '47%',
-  flexGrow: 1,
-  borderWidth: 1,
-  borderRadius: radii.md,
-  padding: space.md,
-  backgroundColor: colors.bg,
-  gap: space.xs,
 };
 
 const titleRow: ViewStyle = {
@@ -81,17 +95,14 @@ const titleStyle = {
 
 const chevron = {
   fontSize: font.size.md,
-  color: colors.textMuted,
   fontWeight: font.weight.bold,
 } as const;
 
 const valueStyle = {
   fontSize: font.size.xxl,
   fontWeight: font.weight.bold,
-  color: colors.text,
 } as const;
 
 const subtextStyle = {
   fontSize: font.size.xs,
-  color: colors.textMuted,
 } as const;

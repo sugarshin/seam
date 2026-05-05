@@ -1,5 +1,5 @@
 import { ActivityIndicator, Pressable, Text, type StyleProp, type ViewStyle } from 'react-native';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -11,6 +11,8 @@ type Props = {
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
   fullWidth?: boolean;
+  testID?: string;
+  accessibilityLabel?: string;
 };
 
 export const Button = ({
@@ -21,11 +23,18 @@ export const Button = ({
   loading = false,
   style,
   fullWidth = false,
+  testID,
+  accessibilityLabel,
 }: Props) => {
+  const palette = useThemeColors();
+  const variantStyle = variantStyles(palette);
+  const labelColors = labelColorMap(palette);
   const isDisabled = disabled || loading;
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      testID={testID}
       onPress={onPress}
       disabled={isDisabled}
       style={({ pressed }) => [
@@ -37,9 +46,9 @@ export const Button = ({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? colors.textInverse : colors.text} />
+        <ActivityIndicator color={variant === 'primary' ? palette.textInverse : palette.text} />
       ) : (
-        <Text style={[labelBase, labelStyle[variant]]}>{label}</Text>
+        <Text style={[labelBase, { color: labelColors[variant] }]}>{label}</Text>
       )}
     </Pressable>
   );
@@ -54,27 +63,27 @@ const baseStyle: ViewStyle = {
   minHeight: 44,
 };
 
-const variantStyle: Record<ButtonVariant, ViewStyle> = {
+const variantStyles = (p: ColorPalette): Record<ButtonVariant, ViewStyle> => ({
   primary: {
-    backgroundColor: colors.bgInverse,
+    backgroundColor: p.bgInverse,
   },
   secondary: {
-    backgroundColor: colors.surface,
+    backgroundColor: p.surface,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: p.border,
   },
   ghost: {
     backgroundColor: 'transparent',
   },
-};
+});
 
 const labelBase = {
   fontSize: font.size.md,
   fontWeight: font.weight.semibold,
 } as const;
 
-const labelStyle: Record<ButtonVariant, { color: string }> = {
-  primary: { color: colors.textInverse },
-  secondary: { color: colors.text },
-  ghost: { color: colors.text },
-};
+const labelColorMap = (p: ColorPalette): Record<ButtonVariant, string> => ({
+  primary: p.textInverse,
+  secondary: p.text,
+  ghost: p.text,
+});

@@ -1,6 +1,6 @@
 import { Pressable, Text, View, type ViewStyle } from 'react-native';
 import { FAILURE_REASON_LABEL, type FailureLog } from '@seam/shared';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 type Props = {
   log: FailureLog;
@@ -13,10 +13,15 @@ const RESULT_LABEL: Record<FailureLog['result'], string> = {
   failure: '失敗',
 };
 
-const RESULT_TONE: Record<FailureLog['result'], string> = {
-  success: colors.same,
-  mixed: colors.different,
-  failure: colors.warning,
+const resultTone = (result: FailureLog['result'], p: ColorPalette): string => {
+  switch (result) {
+    case 'success':
+      return p.same;
+    case 'mixed':
+      return p.different;
+    case 'failure':
+      return p.warning;
+  }
 };
 
 const formatDate = (iso: string): string => {
@@ -26,17 +31,18 @@ const formatDate = (iso: string): string => {
 };
 
 export const FailureLogEntry = ({ log, onDelete }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
+  const tone = resultTone(log.result, palette);
   return (
-    <View style={row}>
-      <View style={[badge, { borderColor: RESULT_TONE[log.result] }]}>
-        <Text style={[badgeText, { color: RESULT_TONE[log.result] }]}>
-          {RESULT_LABEL[log.result]}
-        </Text>
+    <View style={styles.row}>
+      <View style={[badge, { borderColor: tone }]}>
+        <Text style={[badgeText, { color: tone }]}>{RESULT_LABEL[log.result]}</Text>
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={reasonStyle}>{FAILURE_REASON_LABEL[log.reason]}</Text>
-        <Text style={dateStyle}>{formatDate(log.createdAt)}</Text>
-        {log.notes && <Text style={notesStyle}>{log.notes}</Text>}
+        <Text style={styles.reason}>{FAILURE_REASON_LABEL[log.reason]}</Text>
+        <Text style={styles.date}>{formatDate(log.createdAt)}</Text>
+        {log.notes && <Text style={styles.notes}>{log.notes}</Text>}
       </View>
       {onDelete && (
         <Pressable
@@ -45,20 +51,11 @@ export const FailureLogEntry = ({ log, onDelete }: Props) => {
           hitSlop={8}
           style={({ pressed }) => [deleteBtn, pressed && { opacity: 0.5 }]}
         >
-          <Text style={deleteLabel}>削除</Text>
+          <Text style={styles.deleteLabel}>削除</Text>
         </Pressable>
       )}
     </View>
   );
-};
-
-const row: ViewStyle = {
-  flexDirection: 'row',
-  alignItems: 'flex-start',
-  paddingVertical: space.sm,
-  borderTopWidth: 1,
-  borderTopColor: colors.border,
-  gap: space.sm,
 };
 
 const badge: ViewStyle = {
@@ -77,32 +74,39 @@ const badgeText = {
   letterSpacing: 0.5,
 } as const;
 
-const reasonStyle = {
-  fontSize: font.size.sm,
-  color: colors.text,
-  fontWeight: font.weight.medium,
-} as const;
-
-const dateStyle = {
-  marginTop: 2,
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
-
-const notesStyle = {
-  marginTop: space.xs,
-  fontSize: font.size.xs,
-  color: colors.text,
-} as const;
-
 const deleteBtn: ViewStyle = {
   paddingHorizontal: space.sm,
   paddingVertical: space.xs,
   borderRadius: radii.sm,
 };
 
-const deleteLabel = {
-  fontSize: font.size.xs,
-  color: colors.warning,
-  fontWeight: font.weight.semibold,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  row: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    paddingVertical: space.sm,
+    borderTopWidth: 1,
+    borderTopColor: p.border,
+    gap: space.sm,
+  } satisfies ViewStyle,
+  reason: {
+    fontSize: font.size.sm,
+    color: p.text,
+    fontWeight: font.weight.medium,
+  } as const,
+  date: {
+    marginTop: 2,
+    fontSize: font.size.xs,
+    color: p.textMuted,
+  } as const,
+  notes: {
+    marginTop: space.xs,
+    fontSize: font.size.xs,
+    color: p.text,
+  } as const,
+  deleteLabel: {
+    fontSize: font.size.xs,
+    color: p.warning,
+    fontWeight: font.weight.semibold,
+  } as const,
+});

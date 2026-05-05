@@ -1,6 +1,6 @@
 import { Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SCORE_WEIGHTS, type CandidateEvaluation } from '@seam/shared';
-import { colors, font, radii, space } from '../theme';
+import { type ColorPalette, font, radii, space, useThemeColors } from '../theme';
 
 type Factor = {
   key: string;
@@ -25,6 +25,8 @@ type Props = {
 };
 
 export const ScoreBreakdown = ({ breakdown, style }: Props) => {
+  const palette = useThemeColors();
+  const styles = makeStyles(palette);
   const factors: Factor[] = [
     { key: 'size', label: 'サイズ', value: breakdown.sizeScore, weight: SCORE_WEIGHTS.size },
     { key: 'price', label: '価格', value: breakdown.priceScore, weight: SCORE_WEIGHTS.price },
@@ -53,17 +55,17 @@ export const ScoreBreakdown = ({ breakdown, style }: Props) => {
       {factors.map((f) => (
         <View key={f.key} style={row}>
           <View style={head}>
-            <Text style={label}>{f.label}</Text>
-            <Text style={weightHint}>×{f.weight.toFixed(2)}</Text>
-            <Text style={value}>{Math.round(f.value)}</Text>
+            <Text style={styles.label}>{f.label}</Text>
+            <Text style={styles.weightHint}>×{f.weight.toFixed(2)}</Text>
+            <Text style={styles.value}>{Math.round(f.value)}</Text>
           </View>
-          <View style={track}>
+          <View style={styles.track}>
             <View
               style={[
                 fill,
                 {
                   width: `${Math.max(0, Math.min(100, f.value))}%`,
-                  backgroundColor: barColor(f.value),
+                  backgroundColor: barColor(f.value, palette),
                 },
               ]}
             />
@@ -72,9 +74,9 @@ export const ScoreBreakdown = ({ breakdown, style }: Props) => {
       ))}
 
       {breakdown.ngPenalty > 0 && (
-        <View style={penaltyRow}>
-          <Text style={penaltyLabel}>NG ペナルティ</Text>
-          <Text style={penaltyValue}>− {breakdown.ngPenalty}</Text>
+        <View style={styles.penaltyRow}>
+          <Text style={styles.penaltyLabel}>NG ペナルティ</Text>
+          <Text style={styles.penaltyValue}>− {breakdown.ngPenalty}</Text>
         </View>
       )}
     </View>
@@ -92,11 +94,11 @@ export const breakdownFromEvaluation = (ev: CandidateEvaluation): Props['breakdo
   ngPenalty: 0,
 });
 
-const barColor = (v: number): string => {
-  if (v >= 80) return colors.same;
-  if (v >= 60) return colors.close;
-  if (v >= 40) return colors.different;
-  return colors.warning;
+const barColor = (v: number, p: ColorPalette): string => {
+  if (v >= 80) return p.same;
+  if (v >= 60) return p.close;
+  if (v >= 40) return p.different;
+  return p.warning;
 };
 
 const wrapper: ViewStyle = {
@@ -113,55 +115,51 @@ const head: ViewStyle = {
   gap: space.sm,
 };
 
-const label = {
-  flex: 1,
-  fontSize: font.size.sm,
-  color: colors.text,
-  fontWeight: font.weight.medium,
-} as const;
-
-const weightHint = {
-  fontSize: font.size.xs,
-  color: colors.textMuted,
-} as const;
-
-const value = {
-  width: 36,
-  textAlign: 'right' as const,
-  fontSize: font.size.md,
-  color: colors.text,
-  fontWeight: font.weight.semibold,
-};
-
-const track: ViewStyle = {
-  height: 8,
-  backgroundColor: colors.surface,
-  borderRadius: radii.sm,
-  overflow: 'hidden',
-};
-
 const fill: ViewStyle = {
   height: '100%',
   borderRadius: radii.sm,
 };
 
-const penaltyRow: ViewStyle = {
-  marginTop: space.sm,
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  paddingTop: space.sm,
-  borderTopWidth: 1,
-  borderTopColor: colors.border,
-};
-
-const penaltyLabel = {
-  fontSize: font.size.sm,
-  color: colors.warning,
-  fontWeight: font.weight.semibold,
-} as const;
-
-const penaltyValue = {
-  fontSize: font.size.sm,
-  color: colors.warning,
-  fontWeight: font.weight.bold,
-} as const;
+const makeStyles = (p: ColorPalette) => ({
+  label: {
+    flex: 1,
+    fontSize: font.size.sm,
+    color: p.text,
+    fontWeight: font.weight.medium,
+  } as const,
+  weightHint: {
+    fontSize: font.size.xs,
+    color: p.textMuted,
+  } as const,
+  value: {
+    width: 36,
+    textAlign: 'right' as const,
+    fontSize: font.size.md,
+    color: p.text,
+    fontWeight: font.weight.semibold,
+  },
+  track: {
+    height: 8,
+    backgroundColor: p.surface,
+    borderRadius: radii.sm,
+    overflow: 'hidden' as const,
+  } satisfies ViewStyle,
+  penaltyRow: {
+    marginTop: space.sm,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    paddingTop: space.sm,
+    borderTopWidth: 1,
+    borderTopColor: p.border,
+  } satisfies ViewStyle,
+  penaltyLabel: {
+    fontSize: font.size.sm,
+    color: p.warning,
+    fontWeight: font.weight.semibold,
+  } as const,
+  penaltyValue: {
+    fontSize: font.size.sm,
+    color: p.warning,
+    fontWeight: font.weight.bold,
+  } as const,
+});

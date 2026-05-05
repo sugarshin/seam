@@ -11,7 +11,8 @@ import { Button } from '../../../src/components/Button';
 import { Picker, type PickerOption } from '../../../src/components/Picker';
 import { TextField } from '../../../src/components/TextField';
 import { brandGuideRepository } from '../../../src/repositories';
-import { colors, font, space } from '../../../src/theme';
+import { font, space, useThemeColors } from '../../../src/theme';
+import { testIds } from '../../../src/utils/testIds';
 
 const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEGORIES.map((c) => ({
   value: c,
@@ -19,6 +20,7 @@ const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEG
 }));
 
 export default function BrandGuideEditScreen() {
+  const palette = useThemeColors();
   const { id } = useLocalSearchParams<{ id: string }>();
   const guideId = typeof id === 'string' ? id : undefined;
 
@@ -85,64 +87,88 @@ export default function BrandGuideEditScreen() {
     }
   }, [guideId, brand, title, category, notes, checklistText]);
 
+  const centerStyle: ViewStyle = {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: space.xl,
+    backgroundColor: palette.bg,
+  };
+  const mutedStyle = {
+    color: palette.textMuted,
+    fontSize: font.size.sm,
+  } as const;
+
   if (!guideId) {
     return (
-      <View style={center}>
-        <Text style={muted}>不正な ID です</Text>
+      <View style={centerStyle}>
+        <Text style={mutedStyle}>不正な ID です</Text>
       </View>
     );
   }
   if (loading) {
     return (
-      <View style={center}>
-        <ActivityIndicator />
+      <View style={centerStyle}>
+        <ActivityIndicator color={palette.text} />
       </View>
     );
   }
   if (!guide) {
     return (
-      <View style={center}>
-        <Text style={muted}>ガイドが見つかりません</Text>
+      <View style={centerStyle}>
+        <Text style={mutedStyle}>ガイドが見つかりません</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen options={{ title: 'ガイド編集', headerShown: true }} />
       <ScrollView contentContainerStyle={{ padding: space.lg, paddingBottom: space.xxl }}>
-        <TextField label="ブランド" value={brand} onChangeText={setBrand} required />
-        <TextField label="タイトル" value={title} onChangeText={setTitle} required />
+        <TextField
+          label="ブランド"
+          value={brand}
+          onChangeText={setBrand}
+          required
+          testID={testIds.field.guideBrand}
+        />
+        <TextField
+          label="タイトル"
+          value={title}
+          onChangeText={setTitle}
+          required
+          testID={testIds.field.guideTitle}
+        />
         <Picker<GarmentCategory>
           label="カテゴリ (任意)"
           value={category}
           options={CATEGORY_OPTIONS}
           onChange={setCategory}
           modalTitle="カテゴリ"
+          testID={testIds.picker.guideCategory}
         />
-        <TextField label="ノート" value={notes} onChangeText={setNotes} multiline />
+        <TextField
+          label="ノート"
+          value={notes}
+          onChangeText={setNotes}
+          multiline
+          testID={testIds.field.guideNotes}
+        />
         <TextField
           label="チェックリスト (1 行 1 項目)"
           value={checklistText}
           onChangeText={setChecklistText}
           multiline
           hint="改行で項目を区切ります。空行は無視されます。"
+          testID={testIds.field.guideChecklist}
         />
-        <Button label="保存" onPress={onSave} loading={submitting} />
+        <Button
+          label="保存"
+          onPress={onSave}
+          loading={submitting}
+          testID={testIds.btn.saveBrandGuide}
+        />
       </ScrollView>
     </View>
   );
 }
-
-const center: ViewStyle = {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: space.xl,
-  backgroundColor: colors.bg,
-};
-
-const muted = {
-  color: colors.textMuted,
-  fontSize: font.size.sm,
-} as const;
