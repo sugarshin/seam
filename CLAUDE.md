@@ -73,14 +73,15 @@ pnpm drizzle:generate     # emit src/db/migrations/*.sql + migrations.js
 pnpm drizzle:check        # validate migration history
 ```
 
-E2E (Maestro): see the **E2E (Maestro)** section below. Run from the repo root
-with `pnpm test:e2e` etc. Local only — never wired into CI.
+E2E (Maestro): see the **E2E (Maestro)** section below. ローカル
+(`pnpm test:e2e` 等) と GitHub Actions (`.github/workflows/e2e-ios.yml`,
+macos-26 runner) の両方で実行可能。
 
 CI (`.github/workflows/test.yml`) runs, in order, `pnpm format:check`,
 `pnpm -r lint`, `pnpm -r typecheck`, `pnpm -r test`, then a Metro bundle build
-(`expo export --platform ios`) on every push / PR to `main`. Maestro is
-intentionally skipped — GitHub-hosted Linux runners can't host an iOS
-simulator.
+(`expo export --platform ios`) on every push / PR to `main`. Maestro はコスト
+管理のため `e2e-ios.yml` 側に分離し、`workflow_dispatch` または PR への `e2e`
+ラベル付与でのみ実行する (PUBLIC repo なので macos runner も無料)。
 
 `.github/workflows/release.yml` is a separate workflow that triggers on `v*`
 tags (or `workflow_dispatch`). On macOS it runs `expo prebuild`, strips the
@@ -161,9 +162,19 @@ repositories ad hoc in UI code.
 
 ## E2E (Maestro)
 
-Local-only — no CI hookup (GitHub-hosted Linux runners can't host an iOS
-Simulator). **This suite is the only automated regression net for the app**, so
-treat it as a first-class part of the codebase.
+ローカル開発と GitHub Actions (`macos-26` runner) の両方で動く。**両方で回せる
+ようにすることが第一級要件** — Linux CI で simulator が動かない以上、ローカル
+or macos runner 上の Maestro が唯一の自動回帰検出経路。
+
+- ローカル: 開発中の高速フィードバック (`pnpm test:e2e[:smoke|:core|:regression]`)
+- CI: `.github/workflows/e2e-ios.yml` が `workflow_dispatch` または PR への
+  `e2e` ラベル付与でのみ起動。`macos-26` + Xcode 26.2 で `expo prebuild` →
+  `xcodebuild build` (Debug / iphonesimulator) → simulator boot → Metro 起動
+  → `maestro test --exclude-tags=reset .maestro/` を実行。失敗時は screen
+  recording (mp4)、JUnit report、Metro log、`~/.maestro` debug dir、xcodebuild
+  log を artifact として upload する。
+- PUBLIC repo のため macos runner も**完全無料**。pnpm store / CocoaPods /
+  DerivedData / `~/.maestro` をキャッシュして warm run は 13〜15 分目安。
 
 ### Prerequisites
 
