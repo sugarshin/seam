@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.8.1",
-      "versionDate": "2026-05-03",
-      "versionDescription": "- Version bump 0.8.1 (build 10)\n- Merge pull request #68 from sugarshin/renovate/zod-4.4.x-lockfile\n- Update dependency zod to v4.4.2\n- chore(release): update source.json for v0.8.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.8.1/Seam-v0.8.1.ipa",
-      "size": 12538293,
+      "version": "0.9.0",
+      "versionDate": "2026-05-05",
+      "versionDescription": "- Version bump 0.9.0 (build 11)\n- chore: allow unrs-resolver build script to silence pnpm warning\n- Merge pull request #72 from sugarshin/feat/maestro-cuj-e2e\n- feat(e2e): CUJ-based Maestro suite + scripts/CLAUDE.md infra\n- Merge pull request #71 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #69 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #73 from sugarshin/feat/dark-mode-coverage\n- feat(app): apply dark mode coverage across all screens and components\n- Update dependency react-hook-form to v7.75.0\n- Update dependency @biomejs/biome to v2.4.14 (#70)\n- Update expo monorepo\n- chore(release): update source.json for v0.8.1",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.0/Seam-v0.9.0.ipa",
+      "size": 12555268,
       "versions": [
+        {
+          "version": "0.9.0",
+          "buildVersion": "11",
+          "date": "2026-05-05",
+          "localizedDescription": "- Version bump 0.9.0 (build 11)\n- chore: allow unrs-resolver build script to silence pnpm warning\n- Merge pull request #72 from sugarshin/feat/maestro-cuj-e2e\n- feat(e2e): CUJ-based Maestro suite + scripts/CLAUDE.md infra\n- Merge pull request #71 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #69 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #73 from sugarshin/feat/dark-mode-coverage\n- feat(app): apply dark mode coverage across all screens and components\n- Update dependency react-hook-form to v7.75.0\n- Update dependency @biomejs/biome to v2.4.14 (#70)\n- Update expo monorepo\n- chore(release): update source.json for v0.8.1",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.0/Seam-v0.9.0.ipa",
+          "size": 12555268,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.8.1",
           "buildVersion": "10",
@@ -138,7 +147,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "10"
+      "buildVersion": "11"
     }
   ],
   "news": []
