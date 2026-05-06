@@ -12,7 +12,8 @@ appId: com.sugarshin.seam
 - tapOn:
     id: 'field:item-name'
 - inputText: ${candidateName}
-- hideKeyboard
+- tapOn:
+    point: '50%, 18%'
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:

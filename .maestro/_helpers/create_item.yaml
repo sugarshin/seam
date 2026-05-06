@@ -13,11 +13,12 @@ appId: com.sugarshin.seam
 - tapOn:
     id: 'field:item-name'
 - inputText: ${itemName}
-# Dismiss the keyboard so it doesn't occlude the submit button. hideKeyboard
-# is layout-independent (works regardless of Stack header presence) — unlike
-# the older `tapOn point: '50%, 18%'` blur which lands in the form area on
-# screens with a Stack header.
-- hideKeyboard
+# Tap a safe header-area spot to blur the input and dismiss the keyboard.
+# (hideKeyboard は不可: decimal-pad に Return が無い & 通常キーボードで誤って
+# Picker を tap してしまう。50%, 18% は新規アイテム画面では SectionTitle 直前
+# に着弾するので keyboardShouldPersistTaps='never' の挙動で blur できる)
+- tapOn:
+    point: '50%, 18%'
 - waitForAnimationToEnd:
     timeout: 1000
 # scrollDuration を 40 にして CI 上の accessibility tree 更新の遅さに耐え、
