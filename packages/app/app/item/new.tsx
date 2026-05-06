@@ -37,7 +37,7 @@ export default function NewItemScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
-      <Stack.Screen options={{ title: '新規アイテム', headerShown: true }} />
+      <Stack.Screen options={{ title: '新規アイテム' }} />
       <ItemForm
         tagSuggestions={tagSuggestions}
         submitting={submitting}

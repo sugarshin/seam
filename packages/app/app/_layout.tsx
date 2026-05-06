@@ -7,13 +7,21 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useDbMigrations } from '../src/db/migrate';
 import { configureNotificationHandler } from '../src/notifications';
-import { font, space, useThemeColors } from '../src/theme';
+import { ThemeProvider, font, space, useThemeColors } from '../src/theme';
 
 // Configure foreground notification presentation once on module load. Safe to
 // call multiple times — Expo replaces the handler each time.
 configureNotificationHandler();
 
 export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <RootLayoutInner />
+    </ThemeProvider>
+  );
+}
+
+function RootLayoutInner() {
   const { success, error } = useDbMigrations();
   const palette = useThemeColors();
 
@@ -73,7 +81,13 @@ export default function RootLayout() {
       <StatusBar style="auto" />
       <Stack
         screenOptions={{
-          headerShown: false,
+          // Default headerShown:true so pushed routes (item/[id], candidate/[id],
+          // settings/*) have their native header configured with the palette
+          // tint and background from the moment the push begins. Letting each
+          // screen flip headerShown:false→true via setOptions later caused the
+          // back/edit buttons to flicker between light- and dark-mode tints
+          // mid-transition.
+          headerShown: true,
           headerBackButtonDisplayMode: 'minimal',
           headerStyle: { backgroundColor: palette.bg },
           headerTintColor: palette.text,
@@ -82,7 +96,7 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: palette.bg },
         }}
       >
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </GestureHandlerRootView>
   );

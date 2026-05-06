@@ -509,9 +509,33 @@ export default function CandidateDetailScreen() {
     </View>
   );
 
+  // Compute the native-stack options for *every* render path, so the iOS
+  // header has its title / right action configured the moment the screen is
+  // pushed — not after the async refresh resolves. Registering the options
+  // late was the visible cause of the back/edit button tint flicker during
+  // push transitions.
+  const screenOptions = editing
+    ? { title: '編集', headerRight: () => null }
+    : {
+        title: loaded?.item.name ?? '',
+        headerRight: loaded
+          ? () => (
+              <Text
+                accessibilityRole="button"
+                testID={testIds.btn.edit}
+                onPress={() => setEditing(true)}
+                style={styles.editLink}
+              >
+                編集
+              </Text>
+            )
+          : () => null,
+      };
+
   if (!itemId) {
     return (
       <View style={styles.center}>
+        <Stack.Screen options={screenOptions} />
         <Text style={styles.muted}>不正な ID です</Text>
       </View>
     );
@@ -520,6 +544,7 @@ export default function CandidateDetailScreen() {
   if (!loaded) {
     return (
       <View style={styles.center}>
+        <Stack.Screen options={screenOptions} />
         <ActivityIndicator color={palette.text} />
       </View>
     );
@@ -529,7 +554,7 @@ export default function CandidateDetailScreen() {
     const c = loaded.candidate;
     return (
       <View style={{ flex: 1, backgroundColor: palette.bg }}>
-        <Stack.Screen options={{ title: '編集', headerShown: true, headerRight: () => null }} />
+        <Stack.Screen options={screenOptions} />
         <ItemForm
           itemId={itemId}
           tagSuggestions={tagSuggestions}
@@ -605,22 +630,7 @@ export default function CandidateDetailScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
-      <Stack.Screen
-        options={{
-          title: loaded.item.name,
-          headerShown: true,
-          headerRight: () => (
-            <Text
-              accessibilityRole="button"
-              testID={testIds.btn.edit}
-              onPress={() => setEditing(true)}
-              style={styles.editLink}
-            >
-              編集
-            </Text>
-          ),
-        }}
-      />
+      <Stack.Screen options={screenOptions} />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: space.xxl + insets.bottom }}

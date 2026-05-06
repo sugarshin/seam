@@ -138,7 +138,7 @@ export default function BrandGuideEditScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={insets.top + 44}
     >
-      <Stack.Screen options={{ title: 'ガイド編集', headerShown: true }} />
+      <Stack.Screen options={{ title: 'ガイド編集' }} />
       <ScrollView
         contentContainerStyle={{ padding: space.lg, paddingBottom: space.xxl }}
         keyboardDismissMode="on-drag"
