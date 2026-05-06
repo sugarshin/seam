@@ -1,5 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, Text, View, type ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+  type ViewStyle,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
   CATEGORY_LABEL,
@@ -21,6 +31,7 @@ const CATEGORY_OPTIONS: readonly PickerOption<GarmentCategory>[] = GARMENT_CATEG
 
 export default function BrandGuideEditScreen() {
   const palette = useThemeColors();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const guideId = typeof id === 'string' ? id : undefined;
 
@@ -122,7 +133,11 @@ export default function BrandGuideEditScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: palette.bg }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: palette.bg }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={insets.top + 44}
+    >
       <Stack.Screen options={{ title: 'ガイド編集', headerShown: true }} />
       <ScrollView
         contentContainerStyle={{ padding: space.lg, paddingBottom: space.xxl }}
@@ -172,6 +187,6 @@ export default function BrandGuideEditScreen() {
           testID={testIds.btn.saveBrandGuide}
         />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
