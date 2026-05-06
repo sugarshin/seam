@@ -1,11 +1,12 @@
 import { LogBox } from 'react-native';
 
-// On unsigned simulator/dev builds (e.g. the E2E build produced with
-// `CODE_SIGNING_ALLOWED=NO`), the Keychain Access Group entitlement is
-// missing. expo-notifications' DevicePushTokenAutoRegistration runs at module
-// load and calls `console.error` when keychain access fails, which surfaces as
-// a fullscreen LogBox overlay in Debug builds and blocks Maestro from reaching
-// the tab bar. The error itself is harmless for this app (no remote push
-// backend), so we silence it here. This must execute before
-// `expo-notifications` is imported anywhere.
-LogBox.ignoreLogs([/\[expo-notifications\] Error reading persisted server registration info/]);
+// LogBox の UI を全面停止する。理由:
+// 1. unsigned simulator (CODE_SIGNING_ALLOWED=NO) ビルドでは
+//    expo-notifications の DevicePushTokenAutoRegistration が keychain
+//    entitlement 欠如で `console.error` を発火し、LogBox の赤画面で UI が覆われる。
+// 2. dev mode では LogBox の **黄色 pill** (画面下の "Open debugger to view
+//    warnings.") が画面下部の要素を occlude し、Maestro flow を flake させる。
+// このアプリはローカル個人利用 (no app store / no remote backend) で、CI でも
+// LogBox UI を頼らないので無効化して問題ない。実際の console.error / console.warn
+// は metro stdout に残るので debug 時はそちらを参照する。
+LogBox.ignoreAllLogs(true);
