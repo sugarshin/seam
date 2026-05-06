@@ -111,7 +111,7 @@ export default function BrandGuidesScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
-      <Stack.Screen options={{ title: 'ブランドガイド', headerShown: true }} />
+      <Stack.Screen options={{ title: 'ブランドガイド' }} />
       <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>新規追加</Text>

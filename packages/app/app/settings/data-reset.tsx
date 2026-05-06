@@ -48,7 +48,7 @@ export default function DataResetScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
-      <Stack.Screen options={{ title: 'データを全削除', headerShown: true }} />
+      <Stack.Screen options={{ title: 'データを全削除' }} />
       <ScrollView contentContainerStyle={{ padding: space.lg, gap: space.md }}>
         <View style={styles.warningCard}>
           <Text style={styles.warningTitle}>すべてのデータが消えます</Text>

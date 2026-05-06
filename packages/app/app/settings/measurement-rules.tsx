@@ -149,7 +149,7 @@ export default function MeasurementRulesScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
-      <Stack.Screen options={{ title: '個人ルール', headerShown: true }} />
+      <Stack.Screen options={{ title: '個人ルール' }} />
       <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>新規追加</Text>

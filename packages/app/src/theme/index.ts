@@ -1,3 +1,4 @@
+import { createContext, createElement, useContext, type ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 
 /**
@@ -53,16 +54,24 @@ export const colors = lightColors;
 
 export type ColorToken = keyof typeof lightColors;
 
-/**
- * React hook returning the active color palette for the current OS-level
- * appearance setting. Use this in screens that should follow dark mode.
- * For static StyleSheet declarations the existing `colors` export still
- * resolves to the light palette — that's fine for now (Phase 9 only adapts
- * a representative subset of screens).
- */
-export const useThemeColors = (): ColorPalette => {
+// Single subscription point for the OS color scheme. Subscribing inside every
+// screen via `useColorScheme()` was causing brief light/dark mismatches across
+// screens during native-stack push transitions: a freshly-mounted detail
+// screen would briefly compute a different palette than the already-mounted
+// root layout, and the iOS native header re-styled mid-animation as the
+// per-screen subscription caught up. Funnelling the subscription through a
+// single ThemeProvider at the app root keeps every consumer in lockstep.
+const ThemeContext = createContext<ColorPalette | null>(null);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const scheme = useColorScheme();
-  return scheme === 'dark' ? darkColors : lightColors;
+  const palette = scheme === 'dark' ? darkColors : lightColors;
+  return createElement(ThemeContext.Provider, { value: palette }, children);
+};
+
+export const useThemeColors = (): ColorPalette => {
+  const ctx = useContext(ThemeContext);
+  return ctx ?? lightColors;
 };
 
 export const space = {

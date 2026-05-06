@@ -37,7 +37,7 @@ export default function NewCandidateScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
-      <Stack.Screen options={{ title: '購入候補を追加', headerShown: true }} />
+      <Stack.Screen options={{ title: '購入候補を追加' }} />
       <ItemForm
         tagSuggestions={tagSuggestions}
         submitting={submitting}
