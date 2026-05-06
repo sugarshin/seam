@@ -10,6 +10,8 @@ export default function TabsLayout() {
         headerShown: true,
         headerStyle: { backgroundColor: palette.bg },
         headerTintColor: palette.text,
+        headerTitleStyle: { color: palette.text },
+        headerShadowVisible: false,
         tabBarStyle: {
           backgroundColor: palette.bg,
           borderTopColor: palette.border,
