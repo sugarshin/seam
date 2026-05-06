@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.9.0",
-      "versionDate": "2026-05-05",
-      "versionDescription": "- Version bump 0.9.0 (build 11)\n- chore: allow unrs-resolver build script to silence pnpm warning\n- Merge pull request #72 from sugarshin/feat/maestro-cuj-e2e\n- feat(e2e): CUJ-based Maestro suite + scripts/CLAUDE.md infra\n- Merge pull request #71 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #69 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #73 from sugarshin/feat/dark-mode-coverage\n- feat(app): apply dark mode coverage across all screens and components\n- Update dependency react-hook-form to v7.75.0\n- Update dependency @biomejs/biome to v2.4.14 (#70)\n- Update expo monorepo\n- chore(release): update source.json for v0.8.1",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.0/Seam-v0.9.0.ipa",
-      "size": 12555268,
+      "version": "0.9.1",
+      "versionDate": "2026-05-06",
+      "versionDescription": "- Version bump 0.9.1 (build 12)\n- Merge pull request #77 from sugarshin/fix/dark-mode-coverage\n- fix(app): apply dark-mode palette to native stack and tabs headers\n- Merge pull request #75 from sugarshin/fix/e2e-logbox-and-bundle-warmup\n- fix(app): suppress all LogBox UI to keep E2E flows un-occluded\n- fix(e2e): force a swipe in brand-guide edit to dismiss keyboard\n- fix(app): wrap brand-guide edit in KeyboardAvoidingView\n- fix(app): dismiss keyboard on scroll in brand-guide edit\n- fix(e2e): revert hideKeyboard, keep scroll timeout bump\n- fix(e2e): replace blur-by-coords with hideKeyboard, bump scroll timeout\n- fix(e2e): unblock CI Maestro flows on unsigned Debug build\n- Merge pull request #74 from sugarshin/ci/maestro-github-actions\n- chore(release): update source.json for v0.9.0\n- ci: run Maestro iOS E2E on GitHub-hosted macos-26 runner",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.1/Seam-v0.9.1.ipa",
+      "size": 12555695,
       "versions": [
+        {
+          "version": "0.9.1",
+          "buildVersion": "12",
+          "date": "2026-05-06",
+          "localizedDescription": "- Version bump 0.9.1 (build 12)\n- Merge pull request #77 from sugarshin/fix/dark-mode-coverage\n- fix(app): apply dark-mode palette to native stack and tabs headers\n- Merge pull request #75 from sugarshin/fix/e2e-logbox-and-bundle-warmup\n- fix(app): suppress all LogBox UI to keep E2E flows un-occluded\n- fix(e2e): force a swipe in brand-guide edit to dismiss keyboard\n- fix(app): wrap brand-guide edit in KeyboardAvoidingView\n- fix(app): dismiss keyboard on scroll in brand-guide edit\n- fix(e2e): revert hideKeyboard, keep scroll timeout bump\n- fix(e2e): replace blur-by-coords with hideKeyboard, bump scroll timeout\n- fix(e2e): unblock CI Maestro flows on unsigned Debug build\n- Merge pull request #74 from sugarshin/ci/maestro-github-actions\n- chore(release): update source.json for v0.9.0\n- ci: run Maestro iOS E2E on GitHub-hosted macos-26 runner",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.1/Seam-v0.9.1.ipa",
+          "size": 12555695,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.9.0",
           "buildVersion": "11",
@@ -147,7 +156,7 @@
           "minOSVersion": "15.1"
         }
       ],
-      "buildVersion": "11"
+      "buildVersion": "12"
     }
   ],
   "news": []
