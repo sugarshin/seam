@@ -124,7 +124,10 @@ export default function BrandGuideEditScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: palette.bg }}>
       <Stack.Screen options={{ title: 'ガイド編集', headerShown: true }} />
-      <ScrollView contentContainerStyle={{ padding: space.lg, paddingBottom: space.xxl }}>
+      <ScrollView
+        contentContainerStyle={{ padding: space.lg, paddingBottom: space.xxl }}
+        keyboardDismissMode="on-drag"
+      >
         <TextField
           label="ブランド"
           value={brand}
