@@ -106,8 +106,15 @@ tags:
     id: 'field:guide-title'
 - eraseText: 32
 - inputText: 'E2E ガイド (編集後)'
-- tapOn:
-    point: '50%, 18%'
+# 編集画面ではフォームが viewport より少しだけ大きく、save button は keyboard に
+# occluded された状態で accessibility tree には載っているため、scrollUntilVisible
+# はスクロールせず即 "見える" と判定してしまう。明示的に swipe して
+# (1) keyboardDismissMode='on-drag' を発火させて keyboard を閉じる
+# (2) フォームを少し下にスクロールして save button をビューポートに引き上げる
+- swipe:
+    start: 50%, 40%
+    end: 50%, 15%
+    duration: 400
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:

@@ -1,3 +1,6 @@
+// Must come before `expo-notifications` is loaded transitively via
+// `../src/notifications`. See setupLogBox.ts for why.
+import '../src/setupLogBox';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

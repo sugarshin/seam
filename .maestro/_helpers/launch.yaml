@@ -1,9 +1,11 @@
 appId: com.sugarshin.seam
 ---
 # Cold start. DB migrations and Home tab visibility are awaited.
+# CI 上では Metro が JS bundle を再 serialize する間 30s 以上かかることがあるので、
+# 余裕を持って 90s で待つ。bundle が hot な local run では即座に return する。
 - launchApp:
     stopApp: true
 - extendedWaitUntil:
     visible:
       id: 'tab:home'
-    timeout: 30000
+    timeout: 90000
