@@ -37,7 +37,6 @@ const newVersion = {
 app.versions = [newVersion, ...(app.versions || []).filter((v) => v.version !== VERSION)];
 
 app.version = newVersion.version;
-app.buildVersion = newVersion.buildVersion;
 app.versionDate = newVersion.date;
 app.versionDescription = newVersion.localizedDescription;
 app.downloadURL = newVersion.downloadURL;
