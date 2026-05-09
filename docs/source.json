@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.9.2",
-      "versionDate": "2026-05-06",
-      "versionDescription": "- Version bump 0.9.2 (build 13)\n- Merge pull request #78 from sugarshin/fix/header-tint-flicker\n- fix(app): stop header tint flicker on detail screen push\n- chore(release): update source.json for v0.9.1",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.2/Seam-v0.9.2.ipa",
-      "size": 12556053,
+      "version": "0.9.4",
+      "versionDate": "2026-05-09",
+      "versionDescription": "- Version bump 0.9.4 (build 15)\n- Merge pull request #85 from sugarshin/fix/babel-preset-expo-explicit-dep\n- fix(app): declare babel-preset-expo as explicit devDependency\n- Version bump 0.9.3 (build 14)\n- Merge pull request #83 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #82 from sugarshin/renovate/patch-github-actions-digests\n- Merge pull request #81 from sugarshin/renovate/pnpm-11.x\n- chore(deps): approve build scripts for pnpm v11\n- chore(deps): update expo monorepo\n- Merge pull request #80 from sugarshin/renovate/zod-4.4.x-lockfile\n- Merge pull request #79 from sugarshin/fix/source-json-build-version\n- chore(deps): update pnpm to v11\n- chore(deps): update pnpm/action-setup action to v6.0.4\n- chore(deps): update dependency zod to v4.4.3\n- fix(release): drop unspec'd app-level buildVersion from source.json\n- chore(release): update source.json for v0.9.2",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.4/Seam-v0.9.4.ipa",
+      "size": 12566639,
       "versions": [
+        {
+          "version": "0.9.4",
+          "buildVersion": "15",
+          "date": "2026-05-09",
+          "localizedDescription": "- Version bump 0.9.4 (build 15)\n- Merge pull request #85 from sugarshin/fix/babel-preset-expo-explicit-dep\n- fix(app): declare babel-preset-expo as explicit devDependency\n- Version bump 0.9.3 (build 14)\n- Merge pull request #83 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #82 from sugarshin/renovate/patch-github-actions-digests\n- Merge pull request #81 from sugarshin/renovate/pnpm-11.x\n- chore(deps): approve build scripts for pnpm v11\n- chore(deps): update expo monorepo\n- Merge pull request #80 from sugarshin/renovate/zod-4.4.x-lockfile\n- Merge pull request #79 from sugarshin/fix/source-json-build-version\n- chore(deps): update pnpm to v11\n- chore(deps): update pnpm/action-setup action to v6.0.4\n- chore(deps): update dependency zod to v4.4.3\n- fix(release): drop unspec'd app-level buildVersion from source.json\n- chore(release): update source.json for v0.9.2",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.4/Seam-v0.9.4.ipa",
+          "size": 12566639,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.9.2",
           "buildVersion": "13",
