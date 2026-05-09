@@ -1,5 +1,13 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, Switch, Text, View, type ViewStyle } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Switch,
+  Text,
+  View,
+  type ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -323,574 +331,581 @@ export const ItemForm = ({
   );
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: palette.bg }}
-      contentContainerStyle={{
-        padding: space.lg,
-        paddingBottom: space.xxl + insets.bottom,
-      }}
-      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={insets.top + 44}
     >
-      <SectionTitle>基本</SectionTitle>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: palette.bg }}
+        contentContainerStyle={{
+          padding: space.lg,
+          paddingBottom: space.xxl + insets.bottom,
+        }}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
+        <SectionTitle>基本</SectionTitle>
 
-      <Controller
-        control={control}
-        name="name"
-        render={({ field }) => (
-          <TextField
-            label="名前"
-            required
-            value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            error={errors.name?.message}
-            placeholder="例: Champion Reverse Weave"
-            testID={testIds.field.itemName}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="brand"
-        render={({ field }) => (
-          <TextField
-            label="ブランド"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            testID={testIds.field.itemBrand}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="modelName"
-        render={({ field }) => (
-          <TextField
-            label="モデル名"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            testID={testIds.field.itemModel}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="category"
-        render={({ field }) => (
-          <Picker<GarmentCategory>
-            label="カテゴリ"
-            required
-            value={field.value}
-            options={CATEGORY_OPTIONS}
-            onChange={field.onChange}
-            modalTitle="カテゴリを選択"
-            error={errors.category?.message}
-            testID={testIds.picker.category}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="status"
-        render={({ field }) => (
-          <Picker<ItemStatus>
-            label="ステータス"
-            required
-            value={field.value}
-            options={STATUS_OPTIONS}
-            onChange={field.onChange}
-            modalTitle="ステータスを選択"
-            testID={testIds.picker.status}
-          />
-        )}
-      />
-
-      <View style={twoColumn}>
-        <View style={{ flex: 1 }}>
-          <Controller
-            control={control}
-            name="color"
-            render={({ field }) => (
-              <TextField
-                label="色"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                testID={testIds.field.itemColor}
-              />
-            )}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Controller
-            control={control}
-            name="sizeLabel"
-            render={({ field }) => (
-              <TextField
-                label="サイズ表記"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                placeholder="L / 32"
-                testID={testIds.field.itemSize}
-              />
-            )}
-          />
-        </View>
-      </View>
-
-      <SectionTitle>写真</SectionTitle>
-      <PhotoPicker photos={photos} onChange={setPhotos} testID="photo-picker" />
-
-      <SectionTitle>実寸</SectionTitle>
-      <MeasurementInputGroup
-        category={watchedCategory}
-        itemId={measurementItemId}
-        values={measurements}
-        onChange={setMeasurements}
-      />
-
-      <SectionTitle>状態 / 評価</SectionTitle>
-
-      <Controller
-        control={control}
-        name="conditionRank"
-        render={({ field }) => (
-          <Picker<ConditionRank>
-            label="コンディション"
-            value={field.value}
-            options={CONDITION_OPTIONS}
-            onChange={field.onChange}
-            modalTitle="コンディション"
-            testID={testIds.picker.condition}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="conditionNotes"
-        render={({ field }) => (
-          <TextField
-            label="ダメージメモ"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            multiline
-            testID={testIds.field.itemConditionNotes}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="fitRating"
-        render={({ field }) => (
-          <Picker
-            label="フィット"
-            value={field.value}
-            options={FIT_RATING_OPTIONS}
-            onChange={field.onChange}
-            modalTitle="フィット感"
-            testID={testIds.picker.fitRating}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="favoriteScore"
-        render={({ field }) => (
-          <Picker<string>
-            label="お気に入り度"
-            value={field.value !== undefined ? String(field.value) : undefined}
-            options={FAVORITE_SCORE_OPTIONS}
-            onChange={(v) => field.onChange(Number(v))}
-            modalTitle="お気に入り度"
-            testID={testIds.picker.favoriteScore}
-          />
-        )}
-      />
-
-      {isCandidate && (
-        <>
-          <SectionTitle>販売情報</SectionTitle>
-
-          <Controller
-            control={control}
-            name="sourceType"
-            render={({ field }) => (
-              <Picker<SourceType>
-                label="出品元"
-                value={field.value}
-                options={SOURCE_TYPE_OPTIONS}
-                onChange={field.onChange}
-                modalTitle="出品元を選択"
-                testID={testIds.picker.sourceType}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="productUrl"
-            render={({ field }) => (
-              <TextField
-                label="商品 URL"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                error={errors.productUrl?.message}
-                keyboardType="url"
-                autoCapitalize="none"
-                placeholder="https://jp.mercari.com/item/..."
-                testID={testIds.field.itemProductUrl}
-              />
-            )}
-          />
-
-          <View style={twoColumn}>
-            <View style={{ flex: 1 }}>
-              <Controller
-                control={control}
-                name="candidateCurrentPrice"
-                render={({ field }) => (
-                  <TextField
-                    label="現在価格 (円)"
-                    value={field.value ?? ''}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    keyboardType="number-pad"
-                    testID={testIds.field.candidateCurrentPrice}
-                  />
-                )}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Controller
-                control={control}
-                name="candidateShippingFee"
-                render={({ field }) => (
-                  <TextField
-                    label="送料 (円)"
-                    value={field.value ?? ''}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    keyboardType="number-pad"
-                    testID={testIds.field.candidateShippingFee}
-                  />
-                )}
-              />
-            </View>
-          </View>
-
-          <View style={styles.readonlyRow}>
-            <Text style={styles.readonlyLabel}>合計 (自動計算)</Text>
-            <Text style={styles.readonlyValue}>
-              {candidateTotalPreview !== undefined
-                ? `¥${candidateTotalPreview.toLocaleString()}`
-                : '—'}
-            </Text>
-          </View>
-
-          <Controller
-            control={control}
-            name="auctionEndsAt"
-            render={({ field }) => (
-              <TextField
-                label="終了日時 (YYYY-MM-DDTHH:mm)"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                placeholder="2026-04-30T22:00"
-                autoCapitalize="none"
-                hint="ISO 8601 表記。例: 2026-04-30T22:00"
-                testID={testIds.field.auctionEndsAt}
-              />
-            )}
-          />
-
-          <View style={twoColumn}>
-            <View style={{ flex: 1 }}>
-              <Controller
-                control={control}
-                name="easyBuyPrice"
-                render={({ field }) => (
-                  <TextField
-                    label="即決価格 (円)"
-                    value={field.value ?? ''}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    keyboardType="number-pad"
-                    hint="この値段ならすぐ買う"
-                    testID={testIds.field.easyBuyPrice}
-                  />
-                )}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Controller
-                control={control}
-                name="acceptablePrice"
-                render={({ field }) => (
-                  <TextField
-                    label="許容価格 (円)"
-                    value={field.value ?? ''}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    keyboardType="number-pad"
-                    hint="この値段なら検討"
-                    testID={testIds.field.acceptablePrice}
-                  />
-                )}
-              />
-            </View>
-          </View>
-
-          <Controller
-            control={control}
-            name="maxBidPrice"
-            render={({ field }) => (
-              <TextField
-                label="上限価格 (円)"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                keyboardType="number-pad"
-                hint="絶対に超えない上限"
-                testID={testIds.field.maxBidPrice}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="sellerName"
-            render={({ field }) => (
-              <TextField
-                label="出品者"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                testID={testIds.field.sellerName}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="listingDescription"
-            render={({ field }) => (
-              <TextField
-                label="出品説明"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                multiline
-                testID={testIds.field.listingDescription}
-              />
-            )}
-          />
-        </>
-      )}
-
-      {isOwned && (
-        <>
-          <SectionTitle>購入情報</SectionTitle>
-
-          <View style={twoColumn}>
-            <View style={{ flex: 1 }}>
-              <Controller
-                control={control}
-                name="purchasePrice"
-                render={({ field }) => (
-                  <TextField
-                    label="購入価格 (円)"
-                    value={field.value ?? ''}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    keyboardType="number-pad"
-                    testID={testIds.field.itemPurchasePrice}
-                  />
-                )}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Controller
-                control={control}
-                name="shippingFee"
-                render={({ field }) => (
-                  <TextField
-                    label="送料 (円)"
-                    value={field.value ?? ''}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    keyboardType="number-pad"
-                    testID={testIds.field.itemShippingFee}
-                  />
-                )}
-              />
-            </View>
-          </View>
-
-          <Controller
-            control={control}
-            name="purchaseDate"
-            render={({ field }) => (
-              <TextField
-                label="購入日 (YYYY-MM-DD)"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                placeholder="2026-04-26"
-                autoCapitalize="none"
-                testID={testIds.field.itemPurchaseDate}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="purchaseSource"
-            render={({ field }) => (
-              <TextField
-                label="購入元"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                placeholder="ヤフオク / メルカリ / etc."
-                testID={testIds.field.itemPurchaseSource}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="productUrl"
-            render={({ field }) => (
-              <TextField
-                label="商品 URL"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                error={errors.productUrl?.message}
-                keyboardType="url"
-                autoCapitalize="none"
-                testID={testIds.field.itemProductUrl}
-              />
-            )}
-          />
-        </>
-      )}
-
-      {!isOwned && !isCandidate && (
-        <>
-          <SectionTitle>参考リンク</SectionTitle>
-          <Controller
-            control={control}
-            name="productUrl"
-            render={({ field }) => (
-              <TextField
-                label="商品 URL"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                error={errors.productUrl?.message}
-                keyboardType="url"
-                autoCapitalize="none"
-                testID={testIds.field.itemProductUrl}
-              />
-            )}
-          />
-        </>
-      )}
-
-      <SectionTitle>タグ</SectionTitle>
-      <TagInput values={tags} onChange={setTags} suggestions={tagSuggestions} />
-
-      <SectionTitle>Fit Anchor</SectionTitle>
-      <Controller
-        control={control}
-        name="isFitAnchor"
-        render={({ field }) => (
-          <View style={styles.anchorRow}>
-            <Text style={styles.anchorLabel}>Fit Anchor として登録</Text>
-            <Switch value={field.value} onValueChange={field.onChange} />
-          </View>
-        )}
-      />
-      {watchedIsFitAnchor && (
-        <>
-          <Controller
-            control={control}
-            name="fitAnchorName"
-            render={({ field }) => (
-              <TextField
-                label="Anchor 名"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                placeholder="例: ベスト パーカー / 基準"
-                hint="未入力ならアイテム名が使われます"
-                testID={testIds.field.fitAnchorName}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="fitAnchorNotes"
-            render={({ field }) => (
-              <TextField
-                label="Anchor メモ"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                multiline
-                testID={testIds.field.fitAnchorNotes}
-              />
-            )}
-          />
-        </>
-      )}
-
-      <SectionTitle>メモ</SectionTitle>
-      <Controller
-        control={control}
-        name="notes"
-        render={({ field }) => (
-          <TextField
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            multiline
-            testID={testIds.field.itemNotes}
-          />
-        )}
-      />
-
-      <View style={{ marginTop: space.lg, gap: space.sm }}>
-        <Button
-          label={submitLabel}
-          onPress={() => void submit()}
-          loading={submitting}
-          testID={testIds.btn.submit}
+        <Controller
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <TextField
+              label="名前"
+              required
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              error={errors.name?.message}
+              placeholder="例: Champion Reverse Weave"
+              testID={testIds.field.itemName}
+            />
+          )}
         />
-        {onCancel && (
-          <Button
-            label="キャンセル"
-            onPress={onCancel}
-            variant="ghost"
-            testID={testIds.btn.cancel}
-          />
+
+        <Controller
+          control={control}
+          name="brand"
+          render={({ field }) => (
+            <TextField
+              label="ブランド"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              testID={testIds.field.itemBrand}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="modelName"
+          render={({ field }) => (
+            <TextField
+              label="モデル名"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              testID={testIds.field.itemModel}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="category"
+          render={({ field }) => (
+            <Picker<GarmentCategory>
+              label="カテゴリ"
+              required
+              value={field.value}
+              options={CATEGORY_OPTIONS}
+              onChange={field.onChange}
+              modalTitle="カテゴリを選択"
+              error={errors.category?.message}
+              testID={testIds.picker.category}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="status"
+          render={({ field }) => (
+            <Picker<ItemStatus>
+              label="ステータス"
+              required
+              value={field.value}
+              options={STATUS_OPTIONS}
+              onChange={field.onChange}
+              modalTitle="ステータスを選択"
+              testID={testIds.picker.status}
+            />
+          )}
+        />
+
+        <View style={twoColumn}>
+          <View style={{ flex: 1 }}>
+            <Controller
+              control={control}
+              name="color"
+              render={({ field }) => (
+                <TextField
+                  label="色"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  testID={testIds.field.itemColor}
+                />
+              )}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Controller
+              control={control}
+              name="sizeLabel"
+              render={({ field }) => (
+                <TextField
+                  label="サイズ表記"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="L / 32"
+                  testID={testIds.field.itemSize}
+                />
+              )}
+            />
+          </View>
+        </View>
+
+        <SectionTitle>写真</SectionTitle>
+        <PhotoPicker photos={photos} onChange={setPhotos} testID="photo-picker" />
+
+        <SectionTitle>実寸</SectionTitle>
+        <MeasurementInputGroup
+          category={watchedCategory}
+          itemId={measurementItemId}
+          values={measurements}
+          onChange={setMeasurements}
+        />
+
+        <SectionTitle>状態 / 評価</SectionTitle>
+
+        <Controller
+          control={control}
+          name="conditionRank"
+          render={({ field }) => (
+            <Picker<ConditionRank>
+              label="コンディション"
+              value={field.value}
+              options={CONDITION_OPTIONS}
+              onChange={field.onChange}
+              modalTitle="コンディション"
+              testID={testIds.picker.condition}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="conditionNotes"
+          render={({ field }) => (
+            <TextField
+              label="ダメージメモ"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              multiline
+              testID={testIds.field.itemConditionNotes}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="fitRating"
+          render={({ field }) => (
+            <Picker
+              label="フィット"
+              value={field.value}
+              options={FIT_RATING_OPTIONS}
+              onChange={field.onChange}
+              modalTitle="フィット感"
+              testID={testIds.picker.fitRating}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="favoriteScore"
+          render={({ field }) => (
+            <Picker<string>
+              label="お気に入り度"
+              value={field.value !== undefined ? String(field.value) : undefined}
+              options={FAVORITE_SCORE_OPTIONS}
+              onChange={(v) => field.onChange(Number(v))}
+              modalTitle="お気に入り度"
+              testID={testIds.picker.favoriteScore}
+            />
+          )}
+        />
+
+        {isCandidate && (
+          <>
+            <SectionTitle>販売情報</SectionTitle>
+
+            <Controller
+              control={control}
+              name="sourceType"
+              render={({ field }) => (
+                <Picker<SourceType>
+                  label="出品元"
+                  value={field.value}
+                  options={SOURCE_TYPE_OPTIONS}
+                  onChange={field.onChange}
+                  modalTitle="出品元を選択"
+                  testID={testIds.picker.sourceType}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="productUrl"
+              render={({ field }) => (
+                <TextField
+                  label="商品 URL"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  error={errors.productUrl?.message}
+                  keyboardType="url"
+                  autoCapitalize="none"
+                  placeholder="https://jp.mercari.com/item/..."
+                  testID={testIds.field.itemProductUrl}
+                />
+              )}
+            />
+
+            <View style={twoColumn}>
+              <View style={{ flex: 1 }}>
+                <Controller
+                  control={control}
+                  name="candidateCurrentPrice"
+                  render={({ field }) => (
+                    <TextField
+                      label="現在価格 (円)"
+                      value={field.value ?? ''}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      keyboardType="number-pad"
+                      testID={testIds.field.candidateCurrentPrice}
+                    />
+                  )}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Controller
+                  control={control}
+                  name="candidateShippingFee"
+                  render={({ field }) => (
+                    <TextField
+                      label="送料 (円)"
+                      value={field.value ?? ''}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      keyboardType="number-pad"
+                      testID={testIds.field.candidateShippingFee}
+                    />
+                  )}
+                />
+              </View>
+            </View>
+
+            <View style={styles.readonlyRow}>
+              <Text style={styles.readonlyLabel}>合計 (自動計算)</Text>
+              <Text style={styles.readonlyValue}>
+                {candidateTotalPreview !== undefined
+                  ? `¥${candidateTotalPreview.toLocaleString()}`
+                  : '—'}
+              </Text>
+            </View>
+
+            <Controller
+              control={control}
+              name="auctionEndsAt"
+              render={({ field }) => (
+                <TextField
+                  label="終了日時 (YYYY-MM-DDTHH:mm)"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="2026-04-30T22:00"
+                  autoCapitalize="none"
+                  hint="ISO 8601 表記。例: 2026-04-30T22:00"
+                  testID={testIds.field.auctionEndsAt}
+                />
+              )}
+            />
+
+            <View style={twoColumn}>
+              <View style={{ flex: 1 }}>
+                <Controller
+                  control={control}
+                  name="easyBuyPrice"
+                  render={({ field }) => (
+                    <TextField
+                      label="即決価格 (円)"
+                      value={field.value ?? ''}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      keyboardType="number-pad"
+                      hint="この値段ならすぐ買う"
+                      testID={testIds.field.easyBuyPrice}
+                    />
+                  )}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Controller
+                  control={control}
+                  name="acceptablePrice"
+                  render={({ field }) => (
+                    <TextField
+                      label="許容価格 (円)"
+                      value={field.value ?? ''}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      keyboardType="number-pad"
+                      hint="この値段なら検討"
+                      testID={testIds.field.acceptablePrice}
+                    />
+                  )}
+                />
+              </View>
+            </View>
+
+            <Controller
+              control={control}
+              name="maxBidPrice"
+              render={({ field }) => (
+                <TextField
+                  label="上限価格 (円)"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  keyboardType="number-pad"
+                  hint="絶対に超えない上限"
+                  testID={testIds.field.maxBidPrice}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="sellerName"
+              render={({ field }) => (
+                <TextField
+                  label="出品者"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  testID={testIds.field.sellerName}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="listingDescription"
+              render={({ field }) => (
+                <TextField
+                  label="出品説明"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  multiline
+                  testID={testIds.field.listingDescription}
+                />
+              )}
+            />
+          </>
         )}
-      </View>
-    </ScrollView>
+
+        {isOwned && (
+          <>
+            <SectionTitle>購入情報</SectionTitle>
+
+            <View style={twoColumn}>
+              <View style={{ flex: 1 }}>
+                <Controller
+                  control={control}
+                  name="purchasePrice"
+                  render={({ field }) => (
+                    <TextField
+                      label="購入価格 (円)"
+                      value={field.value ?? ''}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      keyboardType="number-pad"
+                      testID={testIds.field.itemPurchasePrice}
+                    />
+                  )}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Controller
+                  control={control}
+                  name="shippingFee"
+                  render={({ field }) => (
+                    <TextField
+                      label="送料 (円)"
+                      value={field.value ?? ''}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      keyboardType="number-pad"
+                      testID={testIds.field.itemShippingFee}
+                    />
+                  )}
+                />
+              </View>
+            </View>
+
+            <Controller
+              control={control}
+              name="purchaseDate"
+              render={({ field }) => (
+                <TextField
+                  label="購入日 (YYYY-MM-DD)"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="2026-04-26"
+                  autoCapitalize="none"
+                  testID={testIds.field.itemPurchaseDate}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="purchaseSource"
+              render={({ field }) => (
+                <TextField
+                  label="購入元"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="ヤフオク / メルカリ / etc."
+                  testID={testIds.field.itemPurchaseSource}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="productUrl"
+              render={({ field }) => (
+                <TextField
+                  label="商品 URL"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  error={errors.productUrl?.message}
+                  keyboardType="url"
+                  autoCapitalize="none"
+                  testID={testIds.field.itemProductUrl}
+                />
+              )}
+            />
+          </>
+        )}
+
+        {!isOwned && !isCandidate && (
+          <>
+            <SectionTitle>参考リンク</SectionTitle>
+            <Controller
+              control={control}
+              name="productUrl"
+              render={({ field }) => (
+                <TextField
+                  label="商品 URL"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  error={errors.productUrl?.message}
+                  keyboardType="url"
+                  autoCapitalize="none"
+                  testID={testIds.field.itemProductUrl}
+                />
+              )}
+            />
+          </>
+        )}
+
+        <SectionTitle>タグ</SectionTitle>
+        <TagInput values={tags} onChange={setTags} suggestions={tagSuggestions} />
+
+        <SectionTitle>Fit Anchor</SectionTitle>
+        <Controller
+          control={control}
+          name="isFitAnchor"
+          render={({ field }) => (
+            <View style={styles.anchorRow}>
+              <Text style={styles.anchorLabel}>Fit Anchor として登録</Text>
+              <Switch value={field.value} onValueChange={field.onChange} />
+            </View>
+          )}
+        />
+        {watchedIsFitAnchor && (
+          <>
+            <Controller
+              control={control}
+              name="fitAnchorName"
+              render={({ field }) => (
+                <TextField
+                  label="Anchor 名"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="例: ベスト パーカー / 基準"
+                  hint="未入力ならアイテム名が使われます"
+                  testID={testIds.field.fitAnchorName}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="fitAnchorNotes"
+              render={({ field }) => (
+                <TextField
+                  label="Anchor メモ"
+                  value={field.value ?? ''}
+                  onChangeText={field.onChange}
+                  onBlur={field.onBlur}
+                  multiline
+                  testID={testIds.field.fitAnchorNotes}
+                />
+              )}
+            />
+          </>
+        )}
+
+        <SectionTitle>メモ</SectionTitle>
+        <Controller
+          control={control}
+          name="notes"
+          render={({ field }) => (
+            <TextField
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              multiline
+              testID={testIds.field.itemNotes}
+            />
+          )}
+        />
+
+        <View style={{ marginTop: space.lg, gap: space.sm }}>
+          <Button
+            label={submitLabel}
+            onPress={() => void submit()}
+            loading={submitting}
+            testID={testIds.btn.submit}
+          />
+          {onCancel && (
+            <Button
+              label="キャンセル"
+              onPress={onCancel}
+              variant="ghost"
+              testID={testIds.btn.cancel}
+            />
+          )}
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
