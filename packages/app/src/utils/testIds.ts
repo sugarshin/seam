@@ -58,6 +58,8 @@ export const testIds = {
     guideTitle: id('field:guide-title'),
     guideNotes: id('field:guide-notes'),
     guideChecklist: id('field:guide-checklist'),
+    // URL 取り込み (Wishlist 追加画面)
+    importUrl: id('field:import-url'),
   },
   picker: {
     category: id('picker:category'),
@@ -113,6 +115,7 @@ export const testIds = {
     confirmDataReset: id('btn:confirm-data-reset'),
     addItemFromHomeEmpty: id('btn:home-empty-add-item'),
     sellCandidateToggle: id('btn:sell-candidate-toggle'),
+    importUrl: id('btn:import-url'),
   },
   modal: {
     wearLog: id('modal:wear-log'),
