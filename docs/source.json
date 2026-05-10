@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.10.0",
+      "version": "0.10.1",
       "versionDate": "2026-05-10",
-      "versionDescription": "- Version bump 0.10.0 (build 17)\n- Merge pull request #89 from sugarshin/feat/import-mercari-url\n- Merge pull request #88 from sugarshin/renovate/patch-github-actions-digests\n- feat: import Mercari item URL into Wishlist creation form\n- chore(deps): update pnpm/action-setup action to v6.0.5\n- chore(release): update source.json for v0.9.5",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.0/Seam-v0.10.0.ipa",
-      "size": 12574250,
+      "versionDescription": "- Version bump 0.10.1 (build 18)\n- Merge pull request #91 from sugarshin/fix/item-form-keyboard-dismiss-interactive\n- fix(app): switch ItemForm keyboard dismiss to interactive on iOS\n- chore(release): update source.json for v0.10.0\n- Merge pull request #90 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update pnpm to v11.0.7",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.1/Seam-v0.10.1.ipa",
+      "size": 12574338,
       "versions": [
+        {
+          "version": "0.10.1",
+          "buildVersion": "18",
+          "date": "2026-05-10",
+          "localizedDescription": "- Version bump 0.10.1 (build 18)\n- Merge pull request #91 from sugarshin/fix/item-form-keyboard-dismiss-interactive\n- fix(app): switch ItemForm keyboard dismiss to interactive on iOS\n- chore(release): update source.json for v0.10.0\n- Merge pull request #90 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update pnpm to v11.0.7",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.1/Seam-v0.10.1.ipa",
+          "size": 12574338,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.10.0",
           "buildVersion": "17",
