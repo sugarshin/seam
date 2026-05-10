@@ -7,7 +7,8 @@ export {
 
 export {
   extractMercariFromHtml,
-  parseMercariItemId,
+  parseMercariUrl,
   MercariExtractionError,
   type MercariExtraction,
+  type MercariUrlInfo,
 } from './mercari';

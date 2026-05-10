@@ -2,7 +2,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import {
   MercariExtractionError,
   extractMercariFromHtml,
-  parseMercariItemId,
+  parseMercariUrl,
 } from '@seam/domain/extraction';
 import type { ItemFormDefaults } from '../forms/ItemForm';
 import { savePhoto, type SavedPhoto } from '../photos/savePhoto';
@@ -41,7 +41,7 @@ export class ImportUrlError extends Error {
  */
 export const importMercariUrl = async (url: string): Promise<ItemFormDefaults> => {
   const trimmed = url.trim();
-  if (!parseMercariItemId(trimmed)) {
+  if (!parseMercariUrl(trimmed)) {
     throw new ImportUrlError('メルカリの商品 URL を入力してください');
   }
 
