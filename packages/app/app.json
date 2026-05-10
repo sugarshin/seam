@@ -2,7 +2,7 @@
   "expo": {
     "name": "Seam",
     "slug": "seam",
-    "version": "0.10.0",
+    "version": "0.10.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "seam",
@@ -16,7 +16,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.sugarshin.seam",
-      "buildNumber": "17"
+      "buildNumber": "18"
     },
     "plugins": [
       "expo-router",
