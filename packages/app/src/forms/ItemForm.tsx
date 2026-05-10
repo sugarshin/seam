@@ -343,7 +343,7 @@ export const ItemForm = ({
           paddingBottom: space.xxl + insets.bottom,
         }}
         keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
+        keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       >
         <SectionTitle>基本</SectionTitle>
 
