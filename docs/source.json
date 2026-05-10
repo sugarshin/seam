@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.9.5",
-      "versionDate": "2026-05-09",
-      "versionDescription": "- Version bump 0.9.5 (build 16)\n- Merge pull request #87 from sugarshin/fix/item-form-keyboard-avoid\n- Merge pull request #86 from sugarshin/renovate/pin-dependencies\n- fix(app): wrap ItemForm with KeyboardAvoidingView so notes field stays visible\n- chore(release): update source.json for v0.9.4\n- chore(deps): pin dependency babel-preset-expo to 55.0.21",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.9.5/Seam-v0.9.5.ipa",
-      "size": 12566768,
+      "version": "0.10.0",
+      "versionDate": "2026-05-10",
+      "versionDescription": "- Version bump 0.10.0 (build 17)\n- Merge pull request #89 from sugarshin/feat/import-mercari-url\n- Merge pull request #88 from sugarshin/renovate/patch-github-actions-digests\n- feat: import Mercari item URL into Wishlist creation form\n- chore(deps): update pnpm/action-setup action to v6.0.5\n- chore(release): update source.json for v0.9.5",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.0/Seam-v0.10.0.ipa",
+      "size": 12574250,
       "versions": [
+        {
+          "version": "0.10.0",
+          "buildVersion": "17",
+          "date": "2026-05-10",
+          "localizedDescription": "- Version bump 0.10.0 (build 17)\n- Merge pull request #89 from sugarshin/feat/import-mercari-url\n- Merge pull request #88 from sugarshin/renovate/patch-github-actions-digests\n- feat: import Mercari item URL into Wishlist creation form\n- chore(deps): update pnpm/action-setup action to v6.0.5\n- chore(release): update source.json for v0.9.5",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.0/Seam-v0.10.0.ipa",
+          "size": 12574250,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.9.5",
           "buildVersion": "16",
