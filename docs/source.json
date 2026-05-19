@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.10.1",
-      "versionDate": "2026-05-10",
-      "versionDescription": "- Version bump 0.10.1 (build 18)\n- Merge pull request #91 from sugarshin/fix/item-form-keyboard-dismiss-interactive\n- fix(app): switch ItemForm keyboard dismiss to interactive on iOS\n- chore(release): update source.json for v0.10.0\n- Merge pull request #90 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update pnpm to v11.0.7",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.1/Seam-v0.10.1.ipa",
-      "size": 12574338,
+      "version": "0.10.2",
+      "versionDate": "2026-05-19",
+      "versionDescription": "- Version bump 0.10.2 (build 19)\n- Merge pull request #109 from sugarshin/fix/memo-update\n- fix(app): keep focused TextInput visible when keyboard appears\n- Merge pull request #108 from sugarshin/renovate/github-actions-digests\n- Merge pull request #107 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #104 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #102 from sugarshin/renovate/patch-github-actions-digests\n- Merge pull request #101 from sugarshin/renovate/pnpm-11.1.x\n- chore(deps): update pnpm/action-setup action to v6.0.8\n- chore(deps): update ruby/setup-ruby action to v1.307.0\n- chore(deps): update dependency react-hook-form to v7.76.0\n- chore(deps): update pnpm to v11.1.2\n- chore(deps): update expo monorepo\n- chore(deps): update dependency vite to v8.0.13 (#105)\n- chore(deps): update dependency eslint-config-expo to v55.0.1 (#103)\n- Merge pull request #100 from sugarshin/renovate/pnpm-11.x\n- chore(deps): update test packages to v4.1.6 (#99)\n- chore(deps): update pnpm to v11.1.0\n- chore(deps): update dependency vite to v8.0.12 (#98)\n- Merge pull request #96 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update dependency @biomejs/biome to v2.4.15 (#97)\n- chore(deps): update pnpm to v11.0.9\n- Merge pull request #95 from sugarshin/fix/import-mercari-shops-url\n- fix(domain): support Mercari Shops URLs in URL importer\n- Merge pull request #93 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update dependency vite to v8.0.11 (#92)\n- chore(release): update source.json for v0.10.1\n- chore(deps): update pnpm to v11.0.8",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.2/Seam-v0.10.2.ipa",
+      "size": 12575760,
       "versions": [
+        {
+          "version": "0.10.2",
+          "buildVersion": "19",
+          "date": "2026-05-19",
+          "localizedDescription": "- Version bump 0.10.2 (build 19)\n- Merge pull request #109 from sugarshin/fix/memo-update\n- fix(app): keep focused TextInput visible when keyboard appears\n- Merge pull request #108 from sugarshin/renovate/github-actions-digests\n- Merge pull request #107 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #104 from sugarshin/renovate/patch-expo-monorepo\n- Merge pull request #102 from sugarshin/renovate/patch-github-actions-digests\n- Merge pull request #101 from sugarshin/renovate/pnpm-11.1.x\n- chore(deps): update pnpm/action-setup action to v6.0.8\n- chore(deps): update ruby/setup-ruby action to v1.307.0\n- chore(deps): update dependency react-hook-form to v7.76.0\n- chore(deps): update pnpm to v11.1.2\n- chore(deps): update expo monorepo\n- chore(deps): update dependency vite to v8.0.13 (#105)\n- chore(deps): update dependency eslint-config-expo to v55.0.1 (#103)\n- Merge pull request #100 from sugarshin/renovate/pnpm-11.x\n- chore(deps): update test packages to v4.1.6 (#99)\n- chore(deps): update pnpm to v11.1.0\n- chore(deps): update dependency vite to v8.0.12 (#98)\n- Merge pull request #96 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update dependency @biomejs/biome to v2.4.15 (#97)\n- chore(deps): update pnpm to v11.0.9\n- Merge pull request #95 from sugarshin/fix/import-mercari-shops-url\n- fix(domain): support Mercari Shops URLs in URL importer\n- Merge pull request #93 from sugarshin/renovate/pnpm-11.0.x\n- chore(deps): update dependency vite to v8.0.11 (#92)\n- chore(release): update source.json for v0.10.1\n- chore(deps): update pnpm to v11.0.8",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.2/Seam-v0.10.2.ipa",
+          "size": 12575760,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.10.1",
           "buildVersion": "18",
