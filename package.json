@@ -23,7 +23,7 @@
     "test:e2e:hierarchy": "pnpm _e2e hierarchy"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.15",
+    "@biomejs/biome": "2.4.16",
     "lefthook": "2.1.8",
     "typescript": "6.0.3",
     "vite": "8.0.14"
