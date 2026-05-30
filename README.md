@@ -83,6 +83,40 @@ pnpm drizzle:generate         # produces src/db/migrations/*.sql
 
 Migrations are applied automatically on app start via `useMigrations` from `drizzle-orm/expo-sqlite/migrator`.
 
+## SideStore で実機配布・復旧
+
+普段使いの iPhone へは GitHub Releases の **unsigned IPA を SideStore 経由**で入れている
+(`v*` tag で `release.yml` が IPA をビルド → `.github/scripts/update-source.mjs` が
+`docs/source.json` を更新 → GitHub Pages で AltStore 形式 source を配信)。
+SideStore 本体は Mac の **iloader** (`/Applications/iloader.app` — SideStore 公式
+インストーラ、jitterbugpair 内包) で導入している。DMG は
+`~/Downloads/P/P/iloader-darwin-universal.dmg`、最新版は
+<https://github.com/SideStore/iloader/releases>。
+
+### アプリが「このAppは利用できなくなりました」になったとき
+
+無料 Apple ID の署名は **約7日で失効**する。SideStore 本体まで開けない場合は
+SideStore 自身の署名も切れているので、Mac から入れ直す。**2026-05 に実機で
+この手順で復旧確認済み (Seam のデータも無傷)**:
+
+1. iPhone を USB で Mac に接続 →「このコンピュータを信頼」
+2. **`/Applications/iloader.app`** を起動 → Apple ID 認証
+   (⚠ 生パスワード不可。appleid.apple.com で発行した **App 用パスワード**を使う)
+3. iloader が Pairing File + SideStore.ipa を書き込み、SideStore が復活
+4. iPhone 設定 → 一般 → VPN とデバイス管理 で自分の Apple ID プロファイルを**信頼**
+5. SideStore を開く → **Seam を Update** (または My Apps → Refresh All)
+   → Seam も再署名され、**データは保持されたまま**開けるようになる
+
+> 途中で `MinimuxerError 27 (AFC invalid pairing)` で失敗する場合は、App Store の
+> **LocalDevVPN を起動して Connect** してから 2 をやり直す (iOS 26 系で必要)。
+> それでも直らないときの深掘りは
+> [`plan/20260426_sidestore-distribution/sidestore-error-27-deep-dive.md`](plan/20260426_sidestore-distribution/sidestore-error-27-deep-dive.md)
+> を参照。
+
+**予防策**: SideStore の Background Refresh + LocalDevVPN/StosVPN を常時 ON にして
+7日ごとの自動再署名を効かせ、こまめに SideStore を開く。失効前に Settings →
+JSON エクスポートでデータ退避しておくと万一でも安心。
+
 ## Backup
 
 - iOS auto Backup: `documentDirectory` is included in iCloud Backup by default
