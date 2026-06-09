@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
-    "@types/react": "19.2.16",
+    "@types/react": "19.2.17",
     "babel-plugin-inline-import": "3.0.0",
     "babel-preset-expo": "55.0.22",
     "drizzle-kit": "0.31.10",
