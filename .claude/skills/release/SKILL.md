@@ -1,6 +1,6 @@
 ---
 name: release
-description: Cut a new release of the seam iOS app — bump expo.version AND expo.ios.buildNumber in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, then push both to origin/main.
+description: Cut a new release of the seam iOS app — bump expo.version AND expo.ios.buildNumber in packages/app/app.json, create a version-bump commit and a vX.Y.Z tag, push both to origin/main, then monitor the release.yml workflow until it passes.
 user-invocable: true
 disable-model-invocation: true
 ---
@@ -8,16 +8,19 @@ disable-model-invocation: true
 # Release skill
 
 `packages/app/app.json` の `expo.version` と `expo.ios.buildNumber` を両方 bump し、
-commit / tag / push して `.github/workflows/release.yml` をトリガーするまでを
-1 コマンドで行う。
+commit / tag / push して `.github/workflows/release.yml` をトリガーし、その
+workflow が pass する (= IPA build → GitHub Release 作成 → `docs/source.json` 更新が
+完了する) まで監視する、を 1 コマンドで行う。
 
 `buildNumber` を毎回 strictly increase させるのは SideStore / AltStore の update
 検出 (`(version, buildVersion)` tuple 比較) を確実に効かせるための必須手順。
 過去 v0.4.0 で `buildNumber=1` のまま放置していたために OPEN ボタンが stuck する
 事象が発生した。
 
-CI の動作（IPA build、GitHub Release 作成、`docs/source.json` 更新）は責務外。
-tag push が成功したら完了とする。
+完了条件は **release.yml workflow が成功 (conclusion: success) すること**。
+tag push だけでは完了としない — workflow が fail したら失敗 step の原因を要約し、
+Recovery D を提示する。workflow の中身 (IPA build / Release 作成 / `source.json`
+更新) の実装は責務外だが、その **成否の監視** は責務に含める。
 
 ## 引数
 
@@ -123,18 +126,61 @@ git push origin vX.Y.Z
 
 lightweight tag（`-a` 不要、過去パターン踏襲）。失敗時: Recovery C を提示。
 
+### Step 8: release.yml workflow を監視（pass まで）
+
+tag push で `release.yml` が起動する。**この workflow が成功するまでを責務に含める**。
+
+1. **run id を解決**。tag push 直後は run が GitHub に登録されるまで数秒〜十数秒の
+   ラグがあるので、見つかるまでリトライする（見つからなければ ~20s 間隔で最大 5 回）。
+   version-bump commit の SHA で照合するのが最も確実:
+
+   ```bash
+   SHA=$(git rev-parse HEAD)   # Step 5 の commit
+   gh run list --workflow=release.yml --event=push --limit=10 \
+     --json databaseId,headSha,headBranch,status,url \
+     --jq ".[] | select(.headSha==\"$SHA\")"
+   ```
+
+   対象 run は `headBranch` が `vX.Y.Z`（tag 名）。`databaseId` が run id。
+
+2. **完了まで監視**。`build-ipa` は macos runner で 15〜25 分かかり Bash tool の
+   foreground 上限（10 分）を超えるため、`run_in_background: true` で watch を回す
+   （完了時に harness が再呼び出しする）:
+
+   ```bash
+   gh run watch <run-id> --exit-status
+   ```
+
+   exit 0 = workflow 成功 / 非 0 = 失敗。`gh run watch` が長時間で切れる環境では
+   代わりに `gh run view <run-id> --json status,conclusion` をポーリングしてもよい。
+
+3. **結果を判定**:
+   - **成功 (conclusion: success)** → Output セクションの形式で run URL と
+     GitHub Release URL を表示して完了。`release` job が `docs/source.json` 更新
+     commit を origin/main に push しているため、ローカル main は 1 commit behind に
+     なる。`git pull --ff-only origin main` を案内する。
+   - **失敗** → `gh run view <run-id> --log-failed` で失敗 step を特定して要約し、
+     Recovery D を提示する。**silent に成功扱いにしない**。
+
+`gh` が未インストール / 未認証で監視できない場合は、abort せず Actions URL
+（`https://github.com/<owner>/<repo>/actions/workflows/release.yml`）を提示して
+手動監視を依頼する（release 自体は push 済みで巻き戻し不要）。
+
 ## Output
 
-完了時に以下を一行ずつ表示:
+workflow が pass したら以下を一行ずつ表示:
 
 ```
 Released seam vX.Y.Z build N (was vA.B.C build M)
-- commit: <short-hash> "Version bump X.Y.Z (build N)"
-- tag:    vX.Y.Z (lightweight)
-- pushed: origin/main, origin/refs/tags/vX.Y.Z
+- commit:   <short-hash> "Version bump X.Y.Z (build N)"
+- tag:      vX.Y.Z (lightweight)
+- pushed:   origin/main, origin/refs/tags/vX.Y.Z
+- workflow: release.yml ✅ success — <run-url>
+- release:  <github-release-url>
 ```
 
-CI URL や release URL は表示しない（責務外）。
+workflow が fail した場合は `✅ success` の行を `❌ failed` に変え、失敗 step・原因・
+対処方針（Recovery D）を続けて表示する。
 
 ## Recovery procedures
 
@@ -167,9 +213,18 @@ git push origin main
 
 local tag は未作成なので tag 削除は不要。
 
-### D: tag push 後・CI が version mismatch で fail（誤った場合のみ）
+### D: Step 8 監視中に release.yml workflow が fail
 
-remote tag を消して再実行:
+`gh run view <run-id> --log-failed` で失敗 step を特定し、原因を分類して提示する:
+
+- **`Verify version match` step で fail** → tag の version と `app.json` の
+  `expo.version` 不一致。手元の app.json を直し忘れ／別 commit に tag を打った等。
+- **`build-ipa` 系（Expo prebuild / Pod install / Archive / Package IPA）で fail**
+  → ネイティブビルドの問題。ログの該当 step を提示して原因を切り分ける。
+- **`release` 系（Create GitHub Release / Update source.json）で fail**
+  → IPA は出来ているが公開段で失敗。`gh` 権限や `update-source.mjs` を確認。
+
+不要になった tag を巻き戻す場合（再リリースが必要なとき）:
 
 ```bash
 git push --delete origin vX.Y.Z
@@ -179,7 +234,8 @@ git tag -d vX.Y.Z
 このあと原因を修正して、可能なら**新しいバージョン番号で**切り直す
 （同番号再利用は SideStore のキャッシュ挙動を踏まえると非推奨）。
 
-GitHub Release が作成済みの場合は GitHub UI から削除する必要がある。
+GitHub Release が作成済みの場合は GitHub UI または `gh release delete vX.Y.Z`
+で削除する必要がある。
 
 ## Constraints
 
