@@ -47,12 +47,12 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
 
-      - uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
         with:
           distribution: zulu
           java-version: '17'
 
-      - uses: ruby/setup-ruby@89f90524b88a01fe6e0b732220432cc6142926af # v1.313.0
+      - uses: ruby/setup-ruby@9eb537ca036ebaed86729dcb9309076e4c5c3b74 # v1.314.0
         with:
           ruby-version: '3.4.9'
           bundler-cache: false
@@ -65,7 +65,7 @@ jobs:
         run: pnpm exec expo prebuild --platform ios --clean --no-install
 
       - name: Cache Pods
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
         with:
           path: |
             packages/app/ios/Pods
@@ -82,7 +82,7 @@ jobs:
         run: pod install --repo-update
 
       - name: Cache Maestro CLI
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
         with:
           path: ~/.maestro
           key: ${{ runner.os }}-maestro-cli-v1
@@ -90,7 +90,7 @@ jobs:
       # iphonesimulator の Debug build なので、iphoneos 向けの release.yml と DerivedData を共有しない。
       # 専用の cache key を使い、生成物を packages/app/ios/build に閉じ込める。
       - name: Cache Xcode DerivedData (e2e)
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
         with:
           path: packages/app/ios/build
           key: ${{ runner.os }}-e2e-derived-${{ hashFiles('packages/app/ios/Podfile.lock') }}
