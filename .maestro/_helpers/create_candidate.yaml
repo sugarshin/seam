@@ -12,8 +12,15 @@ appId: com.sugarshin.seam
 - tapOn:
     id: 'field:item-name'
 - inputText: ${candidateName}
+# blur してキーボードを閉じる。購入候補追加画面は最上部に「URL から取り込み」
+# セクション (field:import-url y≈150-188 / btn:import-url y≈218-262) があり、
+# 新規アイテム画面で使う 50%,18% (y≈157) だと import-url フィールドを誤って
+# focus してしまう (キーボードが閉じず submit に到達できない)。ヘッダー分
+# 下げた 50%,33% (y≈288) は ItemForm ScrollView 上部の余白 (基本セクション
+# タイトル直前) に着弾し、keyboardShouldPersistTaps='handled' で確実に blur
+# できる。CI (software renderer) では特にこの差が失敗に直結していた。
 - tapOn:
-    point: '50%, 18%'
+    point: '50%, 33%'
 - waitForAnimationToEnd:
     timeout: 1000
 - scrollUntilVisible:
