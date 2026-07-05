@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Platform, ScrollView, Switch, Text, View, type ViewStyle } from 'react-native';
+import { ScrollView, Switch, Text, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -330,7 +330,12 @@ export const ItemForm = ({
         paddingBottom: space.xxl + insets.bottom,
       }}
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+      // 'on-drag' (both platforms): スクロール開始でキーボードを即閉じる。iOS の
+      // 'interactive' は下方向ドラッグでのみ閉じるため、submit ボタンへ向かう
+      // 下スクロール (上方向スワイプ) ではキーボードが残り、submit がキーボード裏
+      // に隠れて E2E の tapOn btn:submit がキーボードを叩いてしまう (購入候補追加
+      // 画面のように名前フィールド直後に submit まで距離があると特に顕著)。
+      keyboardDismissMode="on-drag"
       automaticallyAdjustKeyboardInsets
     >
       <SectionTitle>基本</SectionTitle>

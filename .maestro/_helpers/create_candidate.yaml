@@ -12,10 +12,12 @@ appId: com.sugarshin.seam
 - tapOn:
     id: 'field:item-name'
 - inputText: ${candidateName}
-- tapOn:
-    point: '50%, 18%'
-- waitForAnimationToEnd:
-    timeout: 1000
+# キーボードは閉じず、submit へ向かう下スクロールで閉じる。購入候補追加画面は
+# 最上部に「URL から取り込み」ヘッダーがあり、座標ベースの blur タップ
+# (旧 50%,18% は import-url 欄を誤 focus / 50%,33% も CI ではレイアウトずれで
+# キーボードが残った) は信頼できない。submit は初期表示で画面外なので
+# scrollUntilVisible は必ずスワイプし、ItemForm の keyboardDismissMode='on-drag'
+# によりその drag でキーボードが確実に閉じ、submit がキーボード裏に隠れない。
 - scrollUntilVisible:
     element:
       id: 'btn:submit'
@@ -23,6 +25,10 @@ appId: com.sugarshin.seam
     timeout: 30000
     speed: 40
     visibilityPercentage: 50
+# キーボード dismiss アニメーションが終わってから tap (CI の software renderer
+# では特に遅い)。
+- waitForAnimationToEnd:
+    timeout: 1000
 - tapOn:
     id: 'btn:submit'
 - extendedWaitUntil:
