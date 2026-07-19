@@ -141,7 +141,11 @@ Troubleshooting「MinimuxerError 27」へ。
    VPN が切れていると次の Refresh が `OperationError 1006 (could not determine
    UDID)` で失敗する。⚠ **この VPN 接続が一番踏みやすい落とし穴なので必ず先に案内する**。
 2. **SideStore を開く**
-3. **My Apps** タブ → **Seam を Update**（または **Refresh All**）
+3. **My Apps** タブ → **Seam を再署名する**。
+   - 署名失効時は行のボタンが **Update / Refresh All ではなく `EXPIRED`** と表示される
+     ことが多い（2026-07 実機確認）。**その `EXPIRED` をタップ = 再署名**で、Update と
+     同じ挙動。文言に惑わされず「Seam の行のボタン（`EXPIRED` / `Update`）をタップ、
+     または `Refresh All`」と案内する。
    - これで Seam も再署名され、**ローカルデータは保持されたまま**開けるようになる。
 
 ここで `OperationError 1006 (could not determine UDID / replace your pairing
