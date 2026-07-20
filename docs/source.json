@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.11.0",
+      "version": "0.12.0",
       "versionDate": "2026-07-20",
-      "versionDescription": "- Version bump 0.11.0 (build 22)\n- Merge pull request #167 from sugarshin/chore/update-claudemd\n- Update CLAUDE.md\n- Merge pull request #166 from sugarshin/feat/subdivide-garment-categories\n- feat: subdivide garment categories for pants, jackets, and shoes\n- Merge pull request #165 from sugarshin/update-claudemd\n- Update CLAUDE.md\n- Merge pull request #163 from sugarshin/renovate/pnpm-11.x\n- chore(deps): update dependency vite to v8.1.5 (#161)\n- chore(deps): update pnpm to v11.13.1\n- Update skill\n- Merge pull request #160 from sugarshin/renovate/patch-linters\n- chore(deps): update dependency eslint to v9.39.5\n- Merge pull request #159 from sugarshin/renovate/biomejs-biome-2.5.x\n- chore(deps): update dependency @biomejs/biome to v2.5.4\n- Merge pull request #154 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #153 from sugarshin/renovate/pnpm-11.x\n- Merge pull request #152 from sugarshin/renovate/github-actions-digests\n- chore(deps): update dependency react-hook-form to v7.81.0\n- chore(deps): update pnpm to v11.11.0\n- chore(deps): update github actions digests\n- chore(deps): update dependency lefthook to v2.1.10 (#157)\n- chore(deps): update dependency @biomejs/biome to v2.5.3 (#156)\n- chore(deps): update test packages to v4.1.10 (#155)\n- chore(release): update source.json for v0.10.4",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.11.0/Seam-v0.11.0.ipa",
-      "size": 12582113,
+      "versionDescription": "- Version bump 0.12.0 (build 23)\n- Merge pull request #169 from sugarshin/feat/add-and-split-garment-categories\n- feat: add tank top / cardigan and split shirt into short/long sleeve\n- Merge pull request #168 from sugarshin/ci/release-push-source-json-via-deploy-key\n- ci(release): push source.json to main via write deploy key\n- chore(release): update source.json for v0.11.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.12.0/Seam-v0.12.0.ipa",
+      "size": 12582321,
       "versions": [
+        {
+          "version": "0.12.0",
+          "buildVersion": "23",
+          "date": "2026-07-20",
+          "localizedDescription": "- Version bump 0.12.0 (build 23)\n- Merge pull request #169 from sugarshin/feat/add-and-split-garment-categories\n- feat: add tank top / cardigan and split shirt into short/long sleeve\n- Merge pull request #168 from sugarshin/ci/release-push-source-json-via-deploy-key\n- ci(release): push source.json to main via write deploy key\n- chore(release): update source.json for v0.11.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.12.0/Seam-v0.12.0.ipa",
+          "size": 12582321,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.11.0",
           "buildVersion": "22",
