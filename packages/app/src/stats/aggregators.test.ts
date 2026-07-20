@@ -16,7 +16,7 @@ const baseItem = (overrides: Partial<GarmentItem>): GarmentItem =>
     id: 'i',
     status: 'owned',
     name: 'name',
-    category: 'shirt',
+    category: 'long_sleeve_shirt',
     isFitAnchor: false,
     isSellCandidate: false,
     createdAt: '2026-01-01T00:00:00.000Z',
@@ -70,9 +70,9 @@ describe('daysSince', () => {
 describe('findDuplicateClusters', () => {
   it('groups items sharing category+brand+color', () => {
     const items = [
-      baseItem({ id: 'a', category: 'shirt', brand: 'X', color: 'black' }),
-      baseItem({ id: 'b', category: 'shirt', brand: 'X', color: 'black' }),
-      baseItem({ id: 'c', category: 'shirt', brand: 'Y', color: 'black' }),
+      baseItem({ id: 'a', category: 'long_sleeve_shirt', brand: 'X', color: 'black' }),
+      baseItem({ id: 'b', category: 'long_sleeve_shirt', brand: 'X', color: 'black' }),
+      baseItem({ id: 'c', category: 'long_sleeve_shirt', brand: 'Y', color: 'black' }),
     ];
     const clusters = findDuplicateClusters(items);
     expect(clusters).toHaveLength(1);
@@ -81,16 +81,16 @@ describe('findDuplicateClusters', () => {
 
   it('skips items missing both brand and color', () => {
     const items = [
-      baseItem({ id: 'a', category: 'shirt' }),
-      baseItem({ id: 'b', category: 'shirt' }),
+      baseItem({ id: 'a', category: 'long_sleeve_shirt' }),
+      baseItem({ id: 'b', category: 'long_sleeve_shirt' }),
     ];
     expect(findDuplicateClusters(items)).toHaveLength(0);
   });
 
   it('groups by brand only when color is missing', () => {
     const items = [
-      baseItem({ id: 'a', category: 'shirt', brand: 'X' }),
-      baseItem({ id: 'b', category: 'shirt', brand: 'X' }),
+      baseItem({ id: 'a', category: 'long_sleeve_shirt', brand: 'X' }),
+      baseItem({ id: 'b', category: 'long_sleeve_shirt', brand: 'X' }),
     ];
     const clusters = findDuplicateClusters(items);
     expect(clusters).toHaveLength(1);
@@ -100,8 +100,8 @@ describe('findDuplicateClusters', () => {
 
   it('returns largest clusters first', () => {
     const items = [
-      baseItem({ id: 'a1', category: 'shirt', brand: 'A', color: 'red' }),
-      baseItem({ id: 'a2', category: 'shirt', brand: 'A', color: 'red' }),
+      baseItem({ id: 'a1', category: 'long_sleeve_shirt', brand: 'A', color: 'red' }),
+      baseItem({ id: 'a2', category: 'long_sleeve_shirt', brand: 'A', color: 'red' }),
       baseItem({ id: 'b1', category: 'denim_pants', brand: 'B', color: 'blue' }),
       baseItem({ id: 'b2', category: 'denim_pants', brand: 'B', color: 'blue' }),
       baseItem({ id: 'b3', category: 'denim_pants', brand: 'B', color: 'blue' }),
@@ -113,8 +113,8 @@ describe('findDuplicateClusters', () => {
 
   it('treats whitespace-only brand as missing', () => {
     const items = [
-      baseItem({ id: 'a', category: 'shirt', brand: '   ', color: 'red' }),
-      baseItem({ id: 'b', category: 'shirt', brand: '', color: 'red' }),
+      baseItem({ id: 'a', category: 'long_sleeve_shirt', brand: '   ', color: 'red' }),
+      baseItem({ id: 'b', category: 'long_sleeve_shirt', brand: '', color: 'red' }),
     ];
     const clusters = findDuplicateClusters(items);
     // brand normalized away, color shared → still clusters

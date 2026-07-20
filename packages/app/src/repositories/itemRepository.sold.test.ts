@@ -13,7 +13,7 @@ const baseSold = (overrides: Partial<SoldItem>): SoldItem => {
     id: overrides.id ?? 'i',
     status: 'sold',
     name: overrides.name ?? 'name',
-    category: overrides.category ?? 'shirt',
+    category: overrides.category ?? 'long_sleeve_shirt',
     isFitAnchor: false,
     isSellCandidate: false,
     createdAt: '2026-01-01T00:00:00.000Z',

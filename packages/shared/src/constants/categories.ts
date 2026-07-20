@@ -2,8 +2,11 @@ export const GARMENT_CATEGORIES = [
   // Tops
   'hoodie',
   'sweatshirt',
+  'cardigan',
   't_shirt',
-  'shirt',
+  'tank_top',
+  'short_sleeve_shirt',
+  'long_sleeve_shirt',
   // Jackets (measured as tops)
   'denim_jacket',
   'swing_top',
@@ -36,8 +39,11 @@ export type GarmentCategory = (typeof GARMENT_CATEGORIES)[number];
 export const TOP_CATEGORIES: readonly GarmentCategory[] = [
   'hoodie',
   'sweatshirt',
+  'cardigan',
   't_shirt',
-  'shirt',
+  'tank_top',
+  'short_sleeve_shirt',
+  'long_sleeve_shirt',
   'denim_jacket',
   'swing_top',
   'coach_jacket',
@@ -64,8 +70,11 @@ export const SHOES_CATEGORIES: readonly GarmentCategory[] = ['sneakers', 'sandal
 export const CATEGORY_LABEL: Record<GarmentCategory, string> = {
   hoodie: 'パーカー',
   sweatshirt: 'スウェット',
+  cardigan: 'カーディガン',
   t_shirt: 'Tシャツ',
-  shirt: 'シャツ',
+  tank_top: 'タンクトップ',
+  short_sleeve_shirt: '半袖シャツ',
+  long_sleeve_shirt: '長袖シャツ',
   denim_jacket: 'デニムジャケット',
   swing_top: 'スイングトップ',
   coach_jacket: 'コーチジャケット',
