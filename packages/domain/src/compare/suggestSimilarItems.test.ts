@@ -29,7 +29,10 @@ describe('suggestSimilarItems', () => {
   });
 
   it('filters by same category by default', () => {
-    const owned = [item({ id: 'a', category: 't_shirt' }), item({ id: 'b', category: 'pants' })];
+    const owned = [
+      item({ id: 'a', category: 't_shirt' }),
+      item({ id: 'b', category: 'denim_pants' }),
+    ];
     expect(suggestSimilarItems(candidate, owned).map((i) => i.id)).toEqual(['a']);
   });
 
@@ -68,7 +71,7 @@ describe('suggestSimilarItems', () => {
 
   it('returns items across categories when sameCategory=false', () => {
     const owned = [
-      item({ id: 'pants', category: 'pants' }),
+      item({ id: 'pants', category: 'denim_pants' }),
       item({ id: 'shirt', category: 't_shirt' }),
     ];
     const result = suggestSimilarItems(candidate, owned, { sameCategory: false });

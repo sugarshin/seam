@@ -51,15 +51,15 @@ describe('compareMeasurements', () => {
     const reference2: Measurement[] = [
       { id: 'r-jpSize', itemId: 'r', key: 'jpSize', value: 27, unit: 'us' },
     ];
-    expect(compareMeasurements(candidate, reference, 'shoes')).toEqual([]);
-    const diffs = compareMeasurements(candidate2, reference2, 'shoes');
+    expect(compareMeasurements(candidate, reference, 'sneakers')).toEqual([]);
+    const diffs = compareMeasurements(candidate2, reference2, 'sneakers');
     expect(diffs).toHaveLength(1);
     expect(diffs[0]?.comparable).toBe(false);
     expect(diffs[0]?.diffCm).toBe(0);
   });
 
   it('returns 0% for reference value of 0', () => {
-    const diffs = compareMeasurements([m('c', 'inseam', 5)], [m('r', 'inseam', 0)], 'pants');
+    const diffs = compareMeasurements([m('c', 'inseam', 5)], [m('r', 'inseam', 0)], 'denim_pants');
     expect(diffs).toHaveLength(1);
     expect(diffs[0]?.diffPct).toBe(0);
   });
@@ -67,7 +67,7 @@ describe('compareMeasurements', () => {
   it('only considers keys in the category group', () => {
     const candidate = [m('c', 'waist', 80), m('c', 'shoulderWidth', 50)];
     const reference = [m('r', 'waist', 78), m('r', 'shoulderWidth', 48)];
-    const diffs = compareMeasurements(candidate, reference, 'pants');
+    const diffs = compareMeasurements(candidate, reference, 'denim_pants');
     expect(diffs.map((d) => d.key)).toEqual(['waist']);
   });
 });

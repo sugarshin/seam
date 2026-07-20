@@ -13,11 +13,11 @@ describe('measurementKeysFor', () => {
   });
 
   it('returns pants keys for pants', () => {
-    expect(measurementKeysFor('pants')).toEqual(PANTS_MEASUREMENT_KEYS);
+    expect(measurementKeysFor('denim_pants')).toEqual(PANTS_MEASUREMENT_KEYS);
   });
 
   it('returns shoes keys for shoes', () => {
-    expect(measurementKeysFor('shoes')).toEqual(SHOES_MEASUREMENT_KEYS);
+    expect(measurementKeysFor('sneakers')).toEqual(SHOES_MEASUREMENT_KEYS);
   });
 
   it('returns empty for accessory/bag/other', () => {

@@ -102,9 +102,9 @@ describe('findDuplicateClusters', () => {
     const items = [
       baseItem({ id: 'a1', category: 'shirt', brand: 'A', color: 'red' }),
       baseItem({ id: 'a2', category: 'shirt', brand: 'A', color: 'red' }),
-      baseItem({ id: 'b1', category: 'pants', brand: 'B', color: 'blue' }),
-      baseItem({ id: 'b2', category: 'pants', brand: 'B', color: 'blue' }),
-      baseItem({ id: 'b3', category: 'pants', brand: 'B', color: 'blue' }),
+      baseItem({ id: 'b1', category: 'denim_pants', brand: 'B', color: 'blue' }),
+      baseItem({ id: 'b2', category: 'denim_pants', brand: 'B', color: 'blue' }),
+      baseItem({ id: 'b3', category: 'denim_pants', brand: 'B', color: 'blue' }),
     ];
     const clusters = findDuplicateClusters(items);
     expect(clusters[0]?.itemIds).toHaveLength(3);

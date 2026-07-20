@@ -1,13 +1,31 @@
 export const GARMENT_CATEGORIES = [
+  // Tops
   'hoodie',
   'sweatshirt',
   't_shirt',
   'shirt',
-  'jacket',
+  // Jackets (measured as tops)
+  'denim_jacket',
+  'swing_top',
+  'coach_jacket',
+  'boa_jacket',
+  'leather_jacket',
+  'military_jacket',
+  'mountain_parka',
+  'tailored_jacket',
+  'down_jacket',
+  'other_jacket',
   'coat',
-  'pants',
+  // Pants
+  'denim_pants',
+  'slacks',
+  'chino',
+  'work_pants',
   'shorts',
-  'shoes',
+  // Shoes
+  'sneakers',
+  'sandals',
+  // Other
   'bag',
   'accessory',
   'other',
@@ -20,24 +38,52 @@ export const TOP_CATEGORIES: readonly GarmentCategory[] = [
   'sweatshirt',
   't_shirt',
   'shirt',
-  'jacket',
+  'denim_jacket',
+  'swing_top',
+  'coach_jacket',
+  'boa_jacket',
+  'leather_jacket',
+  'military_jacket',
+  'mountain_parka',
+  'tailored_jacket',
+  'down_jacket',
+  'other_jacket',
   'coat',
 ];
 
-export const PANTS_CATEGORIES: readonly GarmentCategory[] = ['pants', 'shorts'];
+export const PANTS_CATEGORIES: readonly GarmentCategory[] = [
+  'denim_pants',
+  'slacks',
+  'chino',
+  'work_pants',
+  'shorts',
+];
 
-export const SHOES_CATEGORIES: readonly GarmentCategory[] = ['shoes'];
+export const SHOES_CATEGORIES: readonly GarmentCategory[] = ['sneakers', 'sandals'];
 
 export const CATEGORY_LABEL: Record<GarmentCategory, string> = {
   hoodie: 'パーカー',
   sweatshirt: 'スウェット',
   t_shirt: 'Tシャツ',
   shirt: 'シャツ',
-  jacket: 'ジャケット',
+  denim_jacket: 'デニムジャケット',
+  swing_top: 'スイングトップ',
+  coach_jacket: 'コーチジャケット',
+  boa_jacket: 'ボアジャケット',
+  leather_jacket: 'レザージャケット',
+  military_jacket: 'ミリタリージャケット',
+  mountain_parka: 'マウンテンパーカー',
+  tailored_jacket: 'テーラードジャケット',
+  down_jacket: 'ダウンジャケット',
+  other_jacket: 'その他ジャケット',
   coat: 'コート',
-  pants: 'パンツ',
+  denim_pants: 'デニム',
+  slacks: 'スラックス',
+  chino: 'チノ',
+  work_pants: 'ワークパンツ',
   shorts: 'ショーツ',
-  shoes: '靴',
+  sneakers: 'スニーカー',
+  sandals: 'サンダル',
   bag: 'バッグ',
   accessory: '小物',
   other: 'その他',
