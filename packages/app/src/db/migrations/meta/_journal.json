@@ -22,6 +22,13 @@
       "when": 1784522703015,
       "tag": "0002_recategorize_legacy_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1784525616817,
+      "tag": "0003_split_shirt_category",
+      "breakpoints": true
     }
   ]
 }
