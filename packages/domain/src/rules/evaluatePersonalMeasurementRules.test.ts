@@ -55,7 +55,7 @@ describe('evaluatePersonalMeasurementRules', () => {
   });
 
   it('skips rules for other categories', () => {
-    const r = rule({ category: 'pants' });
+    const r = rule({ category: 'denim_pants' });
     const violations = evaluatePersonalMeasurementRules(
       [m('i', 'shoulderWidth', 45)],
       [r],
@@ -88,12 +88,16 @@ describe('evaluatePersonalMeasurementRules', () => {
 
   it('skips shoes-size rules when units differ', () => {
     const r = rule({
-      category: 'shoes',
+      category: 'sneakers',
       measurementKey: 'jpSize',
       operator: 'gt',
       value: 28,
     });
-    const violations = evaluatePersonalMeasurementRules([m('i', 'jpSize', 9, 'us')], [r], 'shoes');
+    const violations = evaluatePersonalMeasurementRules(
+      [m('i', 'jpSize', 9, 'us')],
+      [r],
+      'sneakers',
+    );
     expect(violations).toEqual([]);
   });
 

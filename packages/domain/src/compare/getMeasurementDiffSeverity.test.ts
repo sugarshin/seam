@@ -64,7 +64,7 @@ describe('getMeasurementDiffSeverity', () => {
 
   it('returns "different" for non-comparable diffs (no signal)', () => {
     const d = diff({ comparable: false, diffCm: 0, diffPct: 0 });
-    expect(getMeasurementDiffSeverity(d, 'shoes')).toBe('different');
+    expect(getMeasurementDiffSeverity(d, 'sneakers')).toBe('different');
   });
 
   it('uses pants thresholds for pants category', () => {
@@ -78,6 +78,6 @@ describe('getMeasurementDiffSeverity', () => {
       candidateValue: 82.5,
       referenceValue: 80,
     });
-    expect(getMeasurementDiffSeverity(d, 'pants')).toBe('different');
+    expect(getMeasurementDiffSeverity(d, 'denim_pants')).toBe('different');
   });
 });

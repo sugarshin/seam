@@ -85,7 +85,7 @@ describe('extractMeasurementsFromText', () => {
 
   it('11) extracts pants-specific keys', () => {
     const text = 'ウエスト 91cm 股下 76cm ワタリ 34cm 裾幅 23cm';
-    const result = extractMeasurementsFromText(text, 'pants');
+    const result = extractMeasurementsFromText(text, 'denim_pants');
     expect(findValue(result, 'waist')).toBe(91);
     expect(findValue(result, 'inseam')).toBe(76);
     expect(findValue(result, 'thighWidth')).toBe(34);
@@ -95,7 +95,7 @@ describe('extractMeasurementsFromText', () => {
 
   it('12) maps inch (W32inch) to cm for waist', () => {
     const text = 'W32inch 股下 76cm';
-    const result = extractMeasurementsFromText(text, 'pants');
+    const result = extractMeasurementsFromText(text, 'denim_pants');
     // 32 inch ≈ 81.3 cm
     const waist = findValue(result, 'waist');
     expect(waist).toBeDefined();
@@ -105,7 +105,7 @@ describe('extractMeasurementsFromText', () => {
 
   it('13) plain inch suffix (32inch) → cm', () => {
     const text = 'ウエスト 32inch';
-    const result = extractMeasurementsFromText(text, 'pants');
+    const result = extractMeasurementsFromText(text, 'denim_pants');
     const waist = findValue(result, 'waist');
     expect(waist).toBeCloseTo(81.3, 1);
     // Stored with cm unit after conversion
@@ -215,7 +215,7 @@ USA製 90s 古着`;
 股下 76cm
 ワタリ 32cm
 裾幅 21cm`;
-    const result = extractMeasurementsFromText(text, 'pants');
+    const result = extractMeasurementsFromText(text, 'denim_pants');
     expect(findValue(result, 'waist')).toBe(81);
     expect(findValue(result, 'inseam')).toBe(76);
     expect(findValue(result, 'thighWidth')).toBe(32);
