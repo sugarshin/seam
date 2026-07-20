@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.10.4",
-      "versionDate": "2026-07-05",
-      "versionDescription": "- Version bump 0.10.4 (build 21)\n- Merge pull request #150 from sugarshin/fix-e2e-test\n- fix(e2e): ItemForm を keyboardDismissMode='on-drag' にして submit 到達を堅牢化\n- fix(e2e): candidate 追加画面の blur タップが URL 取り込み欄を誤 focus する問題を修正\n- Merge pull request #143 from sugarshin/renovate/patch-expo-monorepo\n- chore(deps): update expo monorepo\n- Merge pull request #149 from sugarshin/renovate/vite-8.1.x\n- Merge pull request #145 from sugarshin/renovate/major-6-github-actions-digests\n- chore(deps): update dependency vite to v8.1.3\n- Merge pull request #144 from sugarshin/renovate/node-24.x\n- chore(deps): update actions/cache action to v6\n- Merge pull request #142 from sugarshin/renovate/github-actions-digests\n- chore(deps): update dependency vite to v8.1.2 (#148)\n- chore(deps): update dependency @biomejs/biome to v2.5.2 (#147)\n- chore(deps): update github actions digests\n- chore(deps): update node.js to v24.18.0\n- Update release skill\n- chore(release): update source.json for v0.10.3",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.10.4/Seam-v0.10.4.ipa",
-      "size": 12580779,
+      "version": "0.11.0",
+      "versionDate": "2026-07-20",
+      "versionDescription": "- Version bump 0.11.0 (build 22)\n- Merge pull request #167 from sugarshin/chore/update-claudemd\n- Update CLAUDE.md\n- Merge pull request #166 from sugarshin/feat/subdivide-garment-categories\n- feat: subdivide garment categories for pants, jackets, and shoes\n- Merge pull request #165 from sugarshin/update-claudemd\n- Update CLAUDE.md\n- Merge pull request #163 from sugarshin/renovate/pnpm-11.x\n- chore(deps): update dependency vite to v8.1.5 (#161)\n- chore(deps): update pnpm to v11.13.1\n- Update skill\n- Merge pull request #160 from sugarshin/renovate/patch-linters\n- chore(deps): update dependency eslint to v9.39.5\n- Merge pull request #159 from sugarshin/renovate/biomejs-biome-2.5.x\n- chore(deps): update dependency @biomejs/biome to v2.5.4\n- Merge pull request #154 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #153 from sugarshin/renovate/pnpm-11.x\n- Merge pull request #152 from sugarshin/renovate/github-actions-digests\n- chore(deps): update dependency react-hook-form to v7.81.0\n- chore(deps): update pnpm to v11.11.0\n- chore(deps): update github actions digests\n- chore(deps): update dependency lefthook to v2.1.10 (#157)\n- chore(deps): update dependency @biomejs/biome to v2.5.3 (#156)\n- chore(deps): update test packages to v4.1.10 (#155)\n- chore(release): update source.json for v0.10.4",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.11.0/Seam-v0.11.0.ipa",
+      "size": 12582113,
       "versions": [
+        {
+          "version": "0.11.0",
+          "buildVersion": "22",
+          "date": "2026-07-20",
+          "localizedDescription": "- Version bump 0.11.0 (build 22)\n- Merge pull request #167 from sugarshin/chore/update-claudemd\n- Update CLAUDE.md\n- Merge pull request #166 from sugarshin/feat/subdivide-garment-categories\n- feat: subdivide garment categories for pants, jackets, and shoes\n- Merge pull request #165 from sugarshin/update-claudemd\n- Update CLAUDE.md\n- Merge pull request #163 from sugarshin/renovate/pnpm-11.x\n- chore(deps): update dependency vite to v8.1.5 (#161)\n- chore(deps): update pnpm to v11.13.1\n- Update skill\n- Merge pull request #160 from sugarshin/renovate/patch-linters\n- chore(deps): update dependency eslint to v9.39.5\n- Merge pull request #159 from sugarshin/renovate/biomejs-biome-2.5.x\n- chore(deps): update dependency @biomejs/biome to v2.5.4\n- Merge pull request #154 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #153 from sugarshin/renovate/pnpm-11.x\n- Merge pull request #152 from sugarshin/renovate/github-actions-digests\n- chore(deps): update dependency react-hook-form to v7.81.0\n- chore(deps): update pnpm to v11.11.0\n- chore(deps): update github actions digests\n- chore(deps): update dependency lefthook to v2.1.10 (#157)\n- chore(deps): update dependency @biomejs/biome to v2.5.3 (#156)\n- chore(deps): update test packages to v4.1.10 (#155)\n- chore(release): update source.json for v0.10.4",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.11.0/Seam-v0.11.0.ipa",
+          "size": 12582113,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.10.4",
           "buildVersion": "21",
