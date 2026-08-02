@@ -28,7 +28,7 @@ importers:
         version: 7.29.7
       '@hookform/resolvers':
         specifier: ^5.0.0
-        version: 5.4.0(react-hook-form@7.81.0(react@19.2.0))
+        version: 5.4.0(react-hook-form@7.83.0(react@19.2.0))
       '@paralleldrive/cuid2':
         specifier: ^3.0.0
         version: 3.3.0
@@ -91,7 +91,7 @@ importers:
         version: 19.2.0
       react-hook-form:
         specifier: ^7.54.0
-        version: 7.81.0(react@19.2.0)
+        version: 7.83.0(react@19.2.0)
       react-native:
         specifier: 0.83.6
         version: 0.83.6(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.0)
@@ -4556,8 +4556,8 @@ packages:
     peerDependencies:
       react: '>=17.0.0'
 
-  react-hook-form@7.81.0:
-    resolution: {integrity: sha512-ocbmr2p5KBMoAfj4WCUvped33lVi1Kd5DuDUvQDnB6VEAacOjPI/jMbtDdbhco4y9ct4xUuCmMY0b/C9L0QHjw==}
+  react-hook-form@7.83.0:
+    resolution: {integrity: sha512-AXt8cMCmx5a7u4uvpb2uRFVrWQhllI4pV+LSykxIac/hjt44TnQkmX9BKuQi2i+LDC62esmiLpilkav+kjVf/A==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -6902,10 +6902,10 @@ snapshots:
       chalk: 4.1.2
       js-yaml: 4.3.0
 
-  '@hookform/resolvers@5.4.0(react-hook-form@7.81.0(react@19.2.0))':
+  '@hookform/resolvers@5.4.0(react-hook-form@7.83.0(react@19.2.0))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.81.0(react@19.2.0)
+      react-hook-form: 7.83.0(react@19.2.0)
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -10394,7 +10394,7 @@ snapshots:
     dependencies:
       react: 19.2.0
 
-  react-hook-form@7.81.0(react@19.2.0):
+  react-hook-form@7.83.0(react@19.2.0):
     dependencies:
       react: 19.2.0
 
