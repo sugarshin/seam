@@ -28,7 +28,7 @@ importers:
         version: 7.29.7
       '@hookform/resolvers':
         specifier: ^5.0.0
-        version: 5.7.1(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.83.0(react@19.2.0))(zod@4.4.3)
+        version: 5.7.1(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.85.0(react@19.2.0))(zod@4.4.3)
       '@paralleldrive/cuid2':
         specifier: ^3.0.0
         version: 3.3.0
@@ -91,7 +91,7 @@ importers:
         version: 19.2.0
       react-hook-form:
         specifier: ^7.54.0
-        version: 7.83.0(react@19.2.0)
+        version: 7.85.0(react@19.2.0)
       react-native:
         specifier: 0.83.6
         version: 0.83.6(@babel/core@7.29.7(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1)
@@ -2435,10 +2435,12 @@ packages:
   '@xmldom/xmldom@0.8.13':
     resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xmldom/xmldom@0.9.10':
     resolution: {integrity: sha512-A9gOqLdi6cV4ibazAjcQufGj0B1y/vDqYrcuP6d/6x8P27gRS8643Dj9o1dEKtB6O7fwxb2FgBmJS2mX7gpvdw==}
     engines: {node: '>=14.6'}
+    deprecated: this version has critical issues, please update to the latest version
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -4714,8 +4716,8 @@ packages:
     peerDependencies:
       react: '>=17.0.0'
 
-  react-hook-form@7.83.0:
-    resolution: {integrity: sha512-AXt8cMCmx5a7u4uvpb2uRFVrWQhllI4pV+LSykxIac/hjt44TnQkmX9BKuQi2i+LDC62esmiLpilkav+kjVf/A==}
+  react-hook-form@7.85.0:
+    resolution: {integrity: sha512-U2MTriFXnclmV4rOE20p2DcRFv5WEg3FIcBFOKcOLFHDVvGIMPvLTkTWefUsonmlaVy23khVDxDWym6uJVGOzw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -7076,10 +7078,10 @@ snapshots:
       chalk: 4.1.2
       js-yaml: 4.3.0
 
-  '@hookform/resolvers@5.7.1(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.83.0(react@19.2.0))(zod@4.4.3)':
+  '@hookform/resolvers@5.7.1(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.85.0(react@19.2.0))(zod@4.4.3)':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.83.0(react@19.2.0)
+      react-hook-form: 7.85.0(react@19.2.0)
     optionalDependencies:
       '@sinclair/typebox': 0.27.10
       '@standard-schema/spec': 1.1.0
@@ -10624,7 +10626,7 @@ snapshots:
     dependencies:
       react: 19.2.0
 
-  react-hook-form@7.83.0(react@19.2.0):
+  react-hook-form@7.85.0(react@19.2.0):
     dependencies:
       react: 19.2.0
 
