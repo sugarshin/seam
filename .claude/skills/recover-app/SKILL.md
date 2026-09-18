@@ -1,6 +1,6 @@
 ---
 name: recover-app
-description: Seam が iPhone 実機で「このAppは利用できなくなりました」と表示されて開けなくなったときの復旧 runbook。無料 Apple ID 署名の約7日失効で SideStore 本体ごと開けなくなった状態を、Mac の iloader で SideStore を入れ直し → Seam を再署名して復旧する（データは保持される）。対話形式で、Claude が環境チェックを自動実行し、手作業の各ステップを案内・確認しながら進める。「Seam が開けない」「アプリが使えなくなった」「このAppは利用できなくなりました」「SideStore が開けない」等で起動。
+description: Seam が iPhone 実機で「このAppは利用できなくなりました」と表示されて開けなくなったときの復旧 runbook。無料 Apple ID 署名の約7日失効で SideStore 本体ごと開けなくなった状態を、Mac の iloader で SideStore を入れ直し → Seam を再署名して復旧する（データは保持される）。対話形式で、Claude が環境チェックを自動実行し、手作業の各ステップを案内・確認しながら進める。「Seam が開けない」「アプリが使えなくなった」「このAppは利用できなくなりました」「SideStore が開けない」「Seam が EXPIRED のまま Refresh できない」「Could not locate signing certificate」等で起動。
 user-invocable: true
 ---
 
@@ -38,6 +38,9 @@ iPhone 実機の Seam が **「このAppは利用できなくなりました」*
   本体も失効して「このAppは利用できなくなりました」になる。
 - **2026-05 に実機でこの手順での復旧・データ無傷を確認済み**。Seam のローカル
   SQLite データは再署名後も保持される（アンインストールしない限り消えない）。
+- **2026-09 にも実機で復旧**。このとき iloader が入れた SideStore は 0.7.0-alpha で、
+  Step 5 の Refresh が `Could not locate signing certificate` で失敗した。長押し →
+  Certificate → Reset Certificate で解消した（Troubleshooting 参照）。
 
 ## Procedure
 
@@ -73,6 +76,15 @@ gh release list --limit 1 2>/dev/null || echo "gh: unavailable"
 
 # 5. ローカル app.json の version（参考）
 node -p "const a=require('$PWD/packages/app/app.json').expo; 'local app.json: '+a.version+' (build '+a.ios.buildNumber+')'" 2>/dev/null || true
+
+# 6. iloader の「SideStore (Stable)」が入れる版の目安 = SideStore の GitHub Latest release
+gh release view --repo SideStore/SideStore --json tagName,publishedAt \
+  --jq '"SideStore GitHub Latest: \(.tagName) (\(.publishedAt[:10]))"' 2>/dev/null \
+  || echo "SideStore release: unavailable"
+
+# 7. iloader の最新版（手元が古いかの参考）
+gh release view --repo nab138/iloader --json tagName --jq '"iloader latest: \(.tagName)"' 2>/dev/null \
+  || echo "iloader release: unavailable"
 ```
 
 判断:
@@ -81,6 +93,13 @@ node -p "const a=require('$PWD/packages/app/app.json').expo; 'local app.json: '+
   し終えてから Step 2 へ。
 - iloader があれば version を伝えて Step 2 へ進む（DMG / source.json / Release は
   「配信側は正常」を裏取りする参考情報。これ自体が原因になることは稀）。
+  手元の iloader が latest より古くても手動更新は不要。iloader は起動時に自動更新する
+  （tauri updater。2026-09 は起動直後に 2.3.1 → 2.3.3 に上がり、その版で復旧できた）。
+- **SideStore GitHub Latest が 0.6.4 以降**なら、Step 5 の Refresh が
+  `Could not locate signing certificate` で失敗しうると把握しておく。Step 5 では
+  Troubleshooting の対処を先回りして案内する。
+  - GitHub の `Latest` は alpha のこともある（2026-09-19 時点では `0.7.0-alpha` が
+    Latest で、`0.6.4` のタイトルは「DO NOT USE」）。
 
 ### Step 2: iPhone を Mac に USB 接続（ユーザーが実行）
 
@@ -114,6 +133,9 @@ open -a /Applications/iloader.app
      選ばない（別系統の SideStore が入り、Seam の Source / 署名と噛み合わなくなる）。
    - 画面上の正確な文言は version で多少ブレることがあるが、**「stable の SideStore」を
      選ぶ**という判断で固定。
+   - iloader の「Stable」で入るのは SideStore の **GitHub Latest release**。2026-09 の
+     実機では `0.7.0-20260911.328+6032424a`（= tag `0.7.0-alpha`）が入った。末尾の
+     `+<commit>` が tag の commit と一致する。
 3. iloader が **Pairing File + SideStore.ipa を iPhone に書き込む**のを待つ
    （= SideStore 本体の再署名・再インストール）。`Installing: 100%` まで進めば成功。
 4. 完了したら iPhone のホーム画面に **SideStore が復活**しているはず。
@@ -143,13 +165,21 @@ Troubleshooting「MinimuxerError 27」へ。
 2. **SideStore を開く**
 3. **My Apps** タブ → **Seam を再署名する**。
    - 署名失効時は行のボタンが **Update / Refresh All ではなく `EXPIRED`** と表示される
-     ことが多い（2026-07 実機確認）。**その `EXPIRED` をタップ = 再署名**で、Update と
-     同じ挙動。文言に惑わされず「Seam の行のボタン（`EXPIRED` / `Update`）をタップ、
-     または `Refresh All`」と案内する。
-   - これで Seam も再署名され、**ローカルデータは保持されたまま**開けるようになる。
+     ことが多い（2026-07 実機確認）。まず Seam の行のボタン（`EXPIRED` / `Update`）
+     または `Refresh All` をタップしてもらう。
+   - ⚠ SideStore **0.6.4 以降**では、`EXPIRED` / Refresh All は再署名をせず、**前回の
+     署名証明書を検証するだけ**になった。iloader で SideStore を入れ直した直後は
+     `Could not locate signing certificate for 'Seam'` で失敗しやすい（2026-09 実機で
+     発生）。Step 1 で 0.6.4 以降と分かっているなら、「失敗したら長押し → Certificate →
+     Reset Certificate」を最初から一緒に伝える。
+   - 再署名されれば、**ローカルデータは保持されたまま**開けるようになる。
 
-ここで `OperationError 1006 (could not determine UDID / replace your pairing
-using iloader)` が出たら → Troubleshooting「OperationError 1006」へ。
+ここで出たエラーに応じて Troubleshooting へ:
+
+- `OperationError 1006 (could not determine UDID / replace your pairing using
+  iloader)` → 「OperationError 1006」
+- `Invalid parameters: Could not locate signing certificate for 'Seam'.` →
+  「Could not locate signing certificate」
 
 ### Step 6: 起動確認（ユーザーが実行）
 
@@ -184,6 +214,40 @@ SideStore 用ループバック VPN（LocalDevVPN / StosVPN）が起動・接続
 5. なお深掘りは `MinimuxerError 27` と同根（AFC / pairing 系）。下記
    deep-dive 参照。
 
+### Could not locate signing certificate
+
+Step 5 で `EXPIRED` / Refresh All をタップすると、次のトーストが出て Seam が
+`EXPIRED` のまま残るケース（`SideStore.OperationError 3`）。
+
+> Failed to Refresh Seam
+> Invalid parameters: Could not locate signing certificate for 'Seam'.
+
+SideStore 本体は `7 DAYS` で正常。iloader 側も成功していて、ログに
+`Found matching certificate` → `Injecting certificate for SideStore` → `App signed!`
+が並ぶ。
+
+**原因**: SideStore 0.6.4 以降、Refresh（`EXPIRED` ボタン / Refresh All）は
+**再署名しない検証専用モード**で動く（`PipelineExecutor.swift` で `.refresh` のときは
+`VerifyCertificateOperation(willResign: false)`）。このモードでは Seam を前回署名した
+証明書を取り出して検証するが、取り出せないとこの invalidParameters で止まる。
+0.6.4 / 0.7.0-alpha は app bundle の Mach-O から、main 以降は App Group の
+キャッシュから取り出す。2026-09 は、iloader で SideStore を入れ直した直後
+（Seam は入れ直し前の SideStore が署名したまま）に発生した。
+
+**対処**（2026-09 実機でこれで解消。SideStore issue
+[#1510](https://github.com/SideStore/SideStore/issues/1510) のメンテナ回答と同じ）:
+
+1. **LocalDevVPN を Connect したまま**にする。
+2. SideStore の **My Apps で Seam の行を長押し** → **Certificate → Reset Certificate**。
+   - `Reset Certificate` は記録済みの証明書 serial があるときだけ表示される。無ければ
+     同じ長押しメニューの **`Resign`** をタップする（同じ再署名処理を通る）。
+3. Seam の行が `EXPIRED` から **`7 DAYS` などの残り日数**に変われば成功。Step 6 へ。
+
+`Reset Certificate` は serial をクリアしてから **Resign** を実行する
+（`MyAppsViewController.resetCertificate`）。Resign は iloader が SideStore に注入した
+現在の証明書で署名し直して上書きインストールする。同じ bundle ID への上書きなので
+**データは保持される**。
+
 ### MinimuxerError 27 (AFC invalid pairing)
 
 iOS 26 系で起きやすい pairing の問題。
@@ -197,7 +261,8 @@ iOS 26 系で起きやすい pairing の問題。
 
 ### iloader が無い / 古い
 
-- 最新版: <https://github.com/SideStore/iloader/releases>
+- 最新版: <https://github.com/nab138/iloader/releases>（`SideStore/iloader` という
+  リポジトリは存在しない）
 - 手元の DMG（あれば）: `~/Downloads/P/P/iloader-darwin-universal.dmg`
 - インストール後 `/Applications/iloader.app` に配置されたら Step 2 へ戻る。
 - ログ確認先: `~/Library/Application Support/me.nabdev.iloader/logs/`
@@ -217,6 +282,38 @@ SideStore は開けるが、最新 version を認識しているのに **OPEN �
    Uninstall → Browse から再 install → JSON インポートで復元。
 
 詳細は [[sidestore_open_button_stuck]]。
+
+### runbook に無いエラーが出たとき（調査手順）
+
+SideStore はリリースが速く、エラーや挙動が version ごとに変わる。推測で手順を
+足さず、次の順で事実を集める（2026-09 の証明書エラーはこの手順で特定できた）。
+
+1. iloader のログから、**実際に入った SideStore の version と iloader の処理結果**を
+   確認する:
+
+   ```bash
+   LOG=$(ls -t ~/Library/Application\ Support/me.nabdev.iloader/logs/*.log | head -1)
+   awk '/CFBundleDisplayName: "SideStore"/{f=1} f&&/CFBundleShortVersionString/{print "installed SideStore: " $2; f=0}' "$LOG" | tail -1
+   grep -E "^[0-9T:.-]+Z +(INFO|WARN|ERROR)" "$LOG" | grep -v "Installing: " | tail -30
+   ```
+
+2. **SideStore の issue をエラー文言で検索**する（メンテナの回答に回避策があることが多い）:
+
+   ```bash
+   gh search issues "<エラー文言>" --repo SideStore/SideStore --limit 10
+   ```
+
+3. **1 で分かった version の tag でエラー文言を grep** し、発生条件を読む。clone 先は
+   scratchpad にする。zsh では `$T:A...` のような書き方が修飾子として展開されるので、
+   変数は `"${T}:path"` と書く。
+
+   ```bash
+   git clone --depth 1 https://github.com/SideStore/SideStore.git <scratchpad>/sidestore-src
+   cd <scratchpad>/sidestore-src && git fetch --depth 1 origin tag <tag>
+   git grep -n "<エラー文言>" <tag> -- '*.swift'
+   ```
+
+解決したら、その対処をこの Troubleshooting に項目として追記する。
 
 ### 入れ直しても Seam のデータが消えていた
 
@@ -238,6 +335,8 @@ iCloud Backup に `documentDirectory` が含まれるため、端末バックア
 - メモリ [[sidestore_install_tool_and_recovery]]（iloader / 復旧手順、2026-05 実機確認）
 - メモリ [[sidestore_open_button_stuck]]（OPEN ボタン stuck の別症状）
 - `plan/20260426_sidestore-distribution/sidestore-error-27-deep-dive.md`
+- SideStore issue [#1510](https://github.com/SideStore/SideStore/issues/1510)
+  （`Could not locate signing certificate` → Reset Certificate）
 
 ## Constraints
 

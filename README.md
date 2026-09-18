@@ -91,7 +91,7 @@ Migrations are applied automatically on app start via `useMigrations` from `driz
 SideStore 本体は Mac の **iloader** (`/Applications/iloader.app` — SideStore 公式
 インストーラ、jitterbugpair 内包) で導入している。DMG は
 `~/Downloads/P/P/iloader-darwin-universal.dmg`、最新版は
-<https://github.com/SideStore/iloader/releases>。
+<https://github.com/nab138/iloader/releases>。
 
 ### アプリが「このAppは利用できなくなりました」になったとき
 
@@ -112,6 +112,10 @@ SideStore 自身の署名も切れているので、Mac から入れ直す。**2
 > それでも直らないときの深掘りは
 > [`plan/20260426_sidestore-distribution/sidestore-error-27-deep-dive.md`](plan/20260426_sidestore-distribution/sidestore-error-27-deep-dive.md)
 > を参照。
+
+> 5 で `Could not locate signing certificate for 'Seam'` が出る場合 (SideStore 0.6.4
+> 以降は Refresh が再署名しないため)、My Apps で Seam を**長押し → Certificate →
+> Reset Certificate** (無ければ **Resign**) で再署名する。詳細は `/recover-app` skill。
 
 **予防策**: SideStore の Background Refresh + LocalDevVPN/StosVPN を常時 ON にして
 7日ごとの自動再署名を効かせ、こまめに SideStore を開く。失効前に Settings →
