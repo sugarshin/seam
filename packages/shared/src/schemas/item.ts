@@ -29,6 +29,7 @@ export const GarmentItemSchema = z.object({
   modelName: z.string().optional(),
   category: z.enum(GARMENT_CATEGORIES),
   color: z.string().optional(),
+  material: z.string().optional(),
   sizeLabel: z.string().optional(),
   purchasePrice: z.number().int().nonnegative().optional(),
   shippingFee: z.number().int().nonnegative().optional(),

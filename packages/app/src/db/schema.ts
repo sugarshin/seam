@@ -13,6 +13,7 @@ export const items = sqliteTable(
     modelName: text('model_name'),
     category: text('category').notNull(),
     color: text('color'),
+    material: text('material'),
     sizeLabel: text('size_label'),
     purchasePrice: integer('purchase_price'),
     shippingFee: integer('shipping_fee'),

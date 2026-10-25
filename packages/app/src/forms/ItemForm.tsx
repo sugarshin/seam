@@ -58,6 +58,7 @@ const FormSchema = z.object({
   category: z.enum(GARMENT_CATEGORIES),
   status: z.enum(ITEM_STATUSES),
   color: z.string().trim().optional(),
+  material: z.string().trim().optional(),
   sizeLabel: z.string().trim().optional(),
   conditionRank: z.enum(CONDITION_RANKS as readonly [ConditionRank, ...ConditionRank[]]).optional(),
   conditionNotes: z.string().trim().optional(),
@@ -191,6 +192,7 @@ export const ItemForm = ({
       category: defaults?.values?.category ?? 't_shirt',
       status: defaults?.values?.status ?? 'owned',
       color: defaults?.values?.color ?? '',
+      material: defaults?.values?.material ?? '',
       sizeLabel: defaults?.values?.sizeLabel ?? '',
       conditionRank: defaults?.values?.conditionRank,
       conditionNotes: defaults?.values?.conditionNotes ?? '',
@@ -269,6 +271,7 @@ export const ItemForm = ({
       modelName: empty(values.modelName),
       category: values.category,
       color: empty(values.color),
+      material: empty(values.material),
       sizeLabel: empty(values.sizeLabel),
       purchasePrice,
       shippingFee,
@@ -451,6 +454,21 @@ export const ItemForm = ({
           />
         </View>
       </View>
+
+      <Controller
+        control={control}
+        name="material"
+        render={({ field }) => (
+          <TextField
+            label="素材"
+            value={field.value ?? ''}
+            onChangeText={field.onChange}
+            onBlur={field.onBlur}
+            placeholder="例: コットン 100%"
+            testID={testIds.field.itemMaterial}
+          />
+        )}
+      />
 
       <SectionTitle>写真</SectionTitle>
       <PhotoPicker photos={photos} onChange={setPhotos} testID="photo-picker" />
