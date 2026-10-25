@@ -1,0 +1,51 @@
+appId: com.sugarshin.seam
+name: analytics_scopes
+tags:
+  - regression
+# CUJ-027: Analytics の大分類スコープ切替 (チップ / 構成行タップ) と
+# 大分類ビュー固有セクション (内訳 / 実寸) の表示。
+# create_item は category default 't_shirt' (= インナー) なので、インナーに
+# 最低 1 点ある状態を自前で作る。固定名 "E_Analytics_Inner" (再実行で重複 OK)。
+---
+- runFlow:
+    file: '_helpers/create_item.yaml'
+    env:
+      itemName: 'E_Analytics_Inner'
+
+- tapOn:
+    id: 'tab:analytics'
+- assertVisible: 'Analytics'
+- assertVisible:
+    id: 'section:analytics-composition'
+
+# チップでインナーへ切替 → 大分類ビュー
+- tapOn:
+    id: 'seg:analytics-scope:inner'
+- assertVisible: 'インナーの概要'
+- assertVisible:
+    id: 'section:analytics-subcategory'
+- scrollUntilVisible:
+    element:
+      id: 'section:analytics-measurements'
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 30
+
+# 別の大分類 (データの有無どちらでも crash しない)
+- tapOn:
+    id: 'seg:analytics-scope:outer'
+- assertVisible: 'アウターの概要|アウターのアイテムはまだありません'
+
+# 全体に戻り、構成の行タップでドリルダウン
+- tapOn:
+    id: 'seg:analytics-scope:all'
+- assertVisible: 'ワードローブ概要'
+- scrollUntilVisible:
+    element:
+      id: 'row:analytics-major:inner'
+    direction: DOWN
+    timeout: 15000
+    visibilityPercentage: 100
+- tapOn:
+    id: 'row:analytics-major:inner'
+- assertVisible: 'インナーの概要'

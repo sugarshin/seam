@@ -31,6 +31,8 @@ export { StatCard } from './StatCard';
 export { BarList } from './BarList';
 export type { BarListItem } from './BarList';
 export { RankingList } from './RankingList';
+export { RangeBar, RangeBarLegend } from './RangeBar';
+export { HeatmapGrid } from './HeatmapGrid';
 export type { RankingListItem } from './RankingList';
 export { BrandChecklist } from './BrandChecklist';
 export { MeasurementExtractionReviewModal } from './MeasurementExtractionReviewModal';

@@ -13,7 +13,8 @@
     "./pricing": "./src/pricing/index.ts",
     "./wear": "./src/wear/index.ts",
     "./units": "./src/units/index.ts",
-    "./rules": "./src/rules/index.ts"
+    "./rules": "./src/rules/index.ts",
+    "./analytics": "./src/analytics/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

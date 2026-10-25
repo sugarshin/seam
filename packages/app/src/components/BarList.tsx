@@ -6,6 +6,11 @@ export type BarListItem = {
   value: number;
   /** Optional formatted value override (e.g. "¥12,300"). Defaults to value.toLocaleString(). */
   valueLabel?: string;
+  /**
+   * Optional color dot before the label (e.g. the garment color itself).
+   * `null` renders a hollow dot for entries without a single color.
+   */
+  swatch?: string | null;
 };
 
 type Props = {
@@ -16,7 +21,7 @@ type Props = {
   emptyMessage?: string;
 };
 
-const MIN_BAR_PCT = 2; // so even tiny values are visible
+const MIN_BAR_PCT = 2; // so even tiny (non-zero) values are visible
 
 export const BarList = ({ items, maxOverride, emptyMessage = 'データがありません' }: Props) => {
   const palette = useThemeColors();
@@ -28,18 +33,27 @@ export const BarList = ({ items, maxOverride, emptyMessage = 'データがあり
   return (
     <View style={list}>
       {items.map((it) => {
-        const pct = Math.max(MIN_BAR_PCT, Math.round((it.value / max) * 100));
+        // Zero stays empty so a 0 bucket never reads as "a little".
+        const pct = it.value <= 0 ? 0 : Math.max(MIN_BAR_PCT, Math.round((it.value / max) * 100));
         const valueText = it.valueLabel ?? it.value.toLocaleString();
         return (
           <View key={it.label} style={row}>
-            <View style={labelCol}>
-              <Text style={styles.label} numberOfLines={1}>
+            <View style={[labelCol, swatchRow]}>
+              {it.swatch !== undefined && (
+                <View
+                  style={[
+                    styles.swatch,
+                    it.swatch === null ? { borderStyle: 'dashed' } : { backgroundColor: it.swatch },
+                  ]}
+                />
+              )}
+              <Text style={[styles.label, { flexShrink: 1 }]} numberOfLines={1}>
                 {it.label}
               </Text>
             </View>
             <View style={barCol}>
               <View style={styles.track}>
-                <View style={[styles.fill, { width: `${pct}%` }]} />
+                {pct > 0 && <View style={[styles.fill, { width: `${pct}%` }]} />}
               </View>
             </View>
             <View style={valueCol}>
@@ -66,6 +80,12 @@ const labelCol: ViewStyle = {
   width: 96,
 };
 
+const swatchRow: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: space.xs,
+};
+
 const barCol: ViewStyle = {
   flex: 1,
 };
@@ -80,6 +100,13 @@ const makeStyles = (p: ColorPalette) => ({
     fontSize: font.size.xs,
     color: p.text,
   } as const,
+  swatch: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: p.border,
+  } satisfies ViewStyle,
   track: {
     height: 10,
     backgroundColor: p.surface,

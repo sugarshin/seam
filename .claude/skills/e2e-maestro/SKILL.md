@@ -54,7 +54,7 @@ pnpm test:e2e:hierarchy    # 現在の Simulator UI ツリーを stdout に dump
 - `15_*` — Item 売却フロー
 - `20_*` — Candidate ライフサイクル (CRUD)
 - `25_*` / `26_*` — 決定 (Buy / Watch / Skip / Lost)
-- `30_*` — 横断的 read-only 画面 (Compare / Stats)
+- `30_*` — 横断的 read-only 画面 (Compare / Analytics)
 - `40_*` — Settings サブ画面 (個人ルール / ブランドガイド)
 - `50_*` — Closet フィルタ (P2、視覚確認補足、regression 外)
 
