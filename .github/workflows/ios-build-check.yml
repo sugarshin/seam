@@ -1,14 +1,11 @@
 name: ios-build-check
 
+# `iOS build (unsigned, no archive)` は main の ruleset で必須チェック。
+# workflow 単位の `paths:` で絞ると対象外の PR ではチェック自体が報告されず
+# PR が BLOCKED のまま止まるため、workflow は毎回起動し、native に影響する
+# ファイルが無ければ job を skip する (skip は必須チェック上 success 扱い)。
 on:
   pull_request:
-    paths:
-      - 'packages/app/package.json'
-      - 'packages/app/app.json'
-      - 'packages/app/scripts/stripPushEntitlement.mjs'
-      - 'pnpm-lock.yaml'
-      - '.npmrc'
-      - '.github/workflows/ios-build-check.yml'
 
 permissions:
   contents: read
@@ -18,8 +15,49 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect native-affecting changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      native: ${{ steps.filter.outputs.native }}
+
+    steps:
+      - name: Filter changed files
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          cat > native-paths.txt <<'EOF'
+          packages/app/package.json
+          packages/app/app.json
+          packages/app/scripts/stripPushEntitlement.mjs
+          pnpm-lock.yaml
+          .npmrc
+          .github/workflows/ios-build-check.yml
+          EOF
+          gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" \
+            --jq '.[] | .filename, (.previous_filename // empty)' > changed-files.txt
+          if grep -qxF -f native-paths.txt changed-files.txt; then
+            native=true
+          else
+            native=false
+          fi
+          echo "native=$native" >> "$GITHUB_OUTPUT"
+          echo "native=$native"
+          grep -xF -f native-paths.txt changed-files.txt || true
+
   ios-build:
     name: iOS build (unsigned, no archive)
+    needs: changes
+    # 判定 job 自体が失敗した場合もビルドを走らせる (skip させると必須チェックを素通りしてしまう)。
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.native == 'true') }}
     runs-on: macos-26
     timeout-minutes: 30
 

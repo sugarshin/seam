@@ -79,7 +79,9 @@ simulator が動かないため、ローカル or macos runner の Maestro が�
 - `.github/workflows/e2e-ios.yml` — `workflow_dispatch` または PR への `e2e`
   ラベル付与でのみ起動 (macos runner のコスト管理)。
 - `.github/workflows/ios-build-check.yml` — `packages/app/package.json` /
-  `app.json` / `pnpm-lock.yaml` 等の変更時のみ native ビルドを検証。
+  `app.json` / `pnpm-lock.yaml` 等の変更時のみ native ビルドを検証。必須チェック
+  なので workflow 自体は全 PR で起動し、対象外なら job を skip する
+  (**`on.pull_request.paths` で絞らないこと** — チェック未報告で PR が BLOCKED になる)。
 - リリース (`v*` タグ → 未署名 IPA → GitHub Release → `docs/source.json` 更新)
   は `.claude/skills/release/` の手順で行う。**タグのバージョンは
   `packages/app/app.json` の `expo.version` と一致必須**、不一致なら workflow が
