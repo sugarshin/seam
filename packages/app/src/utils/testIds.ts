@@ -32,6 +32,7 @@ export const testIds = {
     itemBrand: id('field:item-brand'),
     itemModel: id('field:item-model'),
     itemColor: id('field:item-color'),
+    itemMaterial: id('field:item-material'),
     itemSize: id('field:item-size'),
     itemConditionNotes: id('field:item-condition-notes'),
     itemPurchasePrice: id('field:item-purchase-price'),

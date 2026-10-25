@@ -570,6 +570,7 @@ export default function CandidateDetailScreen() {
               category: loaded.item.category,
               status: loaded.item.status,
               color: loaded.item.color,
+              material: loaded.item.material,
               sizeLabel: loaded.item.sizeLabel,
               conditionRank: (loaded.item.conditionRank ?? undefined) as
                 | 'S'
@@ -778,12 +779,14 @@ export default function CandidateDetailScreen() {
         )}
 
         {(loaded.item.color ||
+          loaded.item.material ||
           loaded.item.sizeLabel ||
           loaded.item.conditionNotes ||
           loaded.item.notes) && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>詳細</Text>
             {loaded.item.color && <Kv k="色" v={loaded.item.color} />}
+            {loaded.item.material && <Kv k="素材" v={loaded.item.material} />}
             {loaded.item.sizeLabel && <Kv k="サイズ表記" v={loaded.item.sizeLabel} />}
             {loaded.item.conditionNotes && <Kv k="ダメージ" v={loaded.item.conditionNotes} />}
             {loaded.item.notes && <Kv k="メモ" v={loaded.item.notes} />}

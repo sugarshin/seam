@@ -21,7 +21,7 @@ tags:
 - assertVisible: '.*E_Item_Lifecycle.*'
 - assertVisible: '詳細'
 
-# CUJ-004: Item 編集 (名前変更)
+# CUJ-004: Item 編集 (名前変更 + 素材入力)
 - scrollUntilVisible:
     element:
       id: 'btn:edit'
@@ -41,6 +41,16 @@ tags:
     timeout: 1000
 - scrollUntilVisible:
     element:
+      id: 'field:item-material'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 100
+- tapOn:
+    id: 'field:item-material'
+- inputText: 'E2E_Cotton100'
+# keyboardDismissMode='on-drag' なので、次の scroll 開始でキーボードは閉じる。
+- scrollUntilVisible:
+    element:
       id: 'btn:submit'
     direction: DOWN
     timeout: 30000
@@ -49,6 +59,13 @@ tags:
 - tapOn:
     id: 'btn:submit'
 - assertVisible: '.*E_Item_Lifecycle_Edited.*'
+# 詳細セクション (着用情報より上) に素材が表示される
+- scrollUntilVisible:
+    element:
+      text: 'E2E_Cotton100'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
 
 # CUJ-005: 着用記録 追加
 - tapOn:

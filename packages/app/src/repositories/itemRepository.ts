@@ -22,6 +22,7 @@ const toGarmentItem = (row: ItemRow): GarmentItem =>
     brand: row.brand ?? undefined,
     modelName: row.modelName ?? undefined,
     color: row.color ?? undefined,
+    material: row.material ?? undefined,
     sizeLabel: row.sizeLabel ?? undefined,
     purchasePrice: row.purchasePrice ?? undefined,
     shippingFee: row.shippingFee ?? undefined,
@@ -122,6 +123,7 @@ export const itemRepository = {
         like(schema.items.modelName, q),
         like(schema.items.notes, q),
         like(schema.items.color, q),
+        like(schema.items.material, q),
       );
       if (searchOr) conditions.push(searchOr);
     }
@@ -159,6 +161,7 @@ export const itemRepository = {
         like(schema.items.modelName, q),
         like(schema.items.notes, q),
         like(schema.items.color, q),
+        like(schema.items.material, q),
         like(schema.saleInfos.notes, q),
       );
       if (searchOr) conditions.push(searchOr);
@@ -255,6 +258,7 @@ export const itemRepository = {
       modelName: input.modelName ?? null,
       category: input.category,
       color: input.color ?? null,
+      material: input.material ?? null,
       sizeLabel: input.sizeLabel ?? null,
       purchasePrice: input.purchasePrice ?? null,
       shippingFee: input.shippingFee ?? null,
@@ -284,6 +288,7 @@ export const itemRepository = {
     if (patch.modelName !== undefined) update.modelName = patch.modelName ?? null;
     if (patch.category !== undefined) update.category = patch.category;
     if (patch.color !== undefined) update.color = patch.color ?? null;
+    if (patch.material !== undefined) update.material = patch.material ?? null;
     if (patch.sizeLabel !== undefined) update.sizeLabel = patch.sizeLabel ?? null;
     if (patch.purchasePrice !== undefined) update.purchasePrice = patch.purchasePrice ?? null;
     if (patch.shippingFee !== undefined) update.shippingFee = patch.shippingFee ?? null;
