@@ -34,7 +34,11 @@ const MONTHS_WINDOW = 12;
 const TOP_N = 10;
 const UNRECOGNIZED_SAMPLES = 5;
 
-/** Distinct raw values that were entered but could not be classified. */
+/**
+ * Distinct raw values that were entered but could not be classified.
+ * Whitespace (incl. newlines from multi-line fields) is flattened so each
+ * sample stays on one line in the note.
+ */
 const unrecognized = (
   items: readonly AnalyticsItem[],
   raw: (it: AnalyticsItem) => string | undefined,
@@ -42,7 +46,7 @@ const unrecognized = (
 ): string[] => {
   const out = new Set<string>();
   for (const it of items) {
-    const value = raw(it)?.trim();
+    const value = raw(it)?.replace(/\s+/g, ' ').trim();
     if (value && classify(value) === null) out.add(value);
   }
   return Array.from(out).slice(0, UNRECOGNIZED_SAMPLES);

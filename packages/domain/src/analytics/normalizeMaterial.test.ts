@@ -40,4 +40,9 @@ describe('normalizeMaterial', () => {
     expect(normalizeMaterial('表地: ナイロン100% 中綿: ダウン90% フェザー10%')).toBe('nylon');
     expect(normalizeMaterial('起毛ポリエステル')).toBe('polyester');
   });
+
+  it('reads multi-line labels', () => {
+    expect(normalizeMaterial('表地: ナイロン100%\n裏地: ポリエステル100%')).toBe('nylon');
+    expect(normalizeMaterial('ポリエステル 30%\r\nコットン 70%')).toBe('cotton');
+  });
 });
