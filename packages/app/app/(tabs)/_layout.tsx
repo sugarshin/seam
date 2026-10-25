@@ -34,8 +34,8 @@ export default function TabsLayout() {
         options={{ title: 'Compare', tabBarButtonTestID: testIds.tab.compare }}
       />
       <Tabs.Screen
-        name="stats"
-        options={{ title: 'Stats', tabBarButtonTestID: testIds.tab.stats }}
+        name="analytics"
+        options={{ title: 'Analytics', tabBarButtonTestID: testIds.tab.analytics }}
       />
       <Tabs.Screen
         name="settings"

@@ -5,3 +5,4 @@ export * from './severityRules';
 export * from './scoreWeights';
 export * from './sourceTypes';
 export * from './fitRating';
+export * from './analytics';

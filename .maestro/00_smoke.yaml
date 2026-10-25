@@ -20,8 +20,8 @@ tags:
 - assertVisible: 'Compare'
 
 - tapOn:
-    id: 'tab:stats'
-- assertVisible: 'Stats'
+    id: 'tab:analytics'
+- assertVisible: 'Analytics'
 
 - tapOn:
     id: 'tab:settings'

@@ -5,3 +5,4 @@ export * from './pricing';
 export * from './wear';
 export * from './units';
 export * from './rules';
+export * from './analytics';

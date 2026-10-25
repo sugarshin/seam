@@ -10,7 +10,7 @@ export const testIds = {
     closet: id('tab:closet'),
     wishlist: id('tab:wishlist'),
     compare: id('tab:compare'),
-    stats: id('tab:stats'),
+    analytics: id('tab:analytics'),
     settings: id('tab:settings'),
   },
   fab: {
@@ -19,6 +19,7 @@ export const testIds = {
   },
   seg: {
     closetMode: id('seg:closet-mode'),
+    analyticsScope: id('seg:analytics-scope'),
   },
   chip: {
     anchor: id('chip:anchor'),

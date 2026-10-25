@@ -96,7 +96,7 @@ export default function HomeScreen() {
     setThumbnails(thumbMap);
 
     // Month spend / count are sourced from the shared stats helper to keep
-    // Home and Stats consistent when one changes.
+    // Home and Analytics consistent when one changes.
     const monthly = await getMonthlyPurchaseSummary(now);
     setMonthSpend(monthly.amount);
     setMonthCount(monthly.count);

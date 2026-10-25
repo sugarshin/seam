@@ -1,8 +1,8 @@
 appId: com.sugarshin.seam
-name: compare_stats
+name: compare_analytics
 tags:
   - regression
-# CUJ-020,021,022: Compare 表示 / Stats 表示 / Stats→Closet 売却モード遷移。
+# CUJ-020,021,022: Compare 表示 / Analytics 表示 / Analytics→Closet 売却モード遷移。
 # 前提: 別 flow で item / candidate が作られていること。
 # (10_item_lifecycle / 20_candidate_lifecycle / 15_item_sale を先に走らせる前提)
 ---
@@ -23,13 +23,13 @@ tags:
       - tapOn:
           text: 'キャンセル'
 
-# CUJ-021: Stats タブが crash せず表示
+# CUJ-021: Analytics タブが crash せず表示 (全体スコープ)
 - tapOn:
-    id: 'tab:stats'
-- assertVisible: 'Stats'
-- assertVisible: 'ワードローブ概要|所有数'
+    id: 'tab:analytics'
+- assertVisible: 'Analytics'
+- assertVisible: 'ワードローブ概要'
 
-# CUJ-022: Stats → 売却済み StatCard → Closet (sold mode)
+# CUJ-022: Analytics → 売却済み StatCard → Closet (sold mode)
 - runFlow:
     when:
       visible:

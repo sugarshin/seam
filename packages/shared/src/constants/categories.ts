@@ -98,6 +98,64 @@ export const CATEGORY_LABEL: Record<GarmentCategory, string> = {
   other: 'その他',
 };
 
+/**
+ * Wardrobe-level grouping used by the Analytics screen. Unlike
+ * `MeasurementCategoryGroup` (which lumps jackets into `top` because they are
+ * measured the same way), this follows how the wardrobe is worn: outer
+ * layers, tops, inner layers, bottoms and shoes. Bags / accessories fall
+ * into `other`.
+ */
+export const MAJOR_CATEGORIES = ['outer', 'tops', 'inner', 'bottoms', 'shoes', 'other'] as const;
+
+export type MajorCategory = (typeof MAJOR_CATEGORIES)[number];
+
+export const MAJOR_CATEGORY_LABEL: Record<MajorCategory, string> = {
+  outer: 'アウター',
+  tops: 'トップス',
+  inner: 'インナー',
+  bottoms: 'ボトムス',
+  shoes: 'シューズ',
+  other: 'その他',
+};
+
+const MAJOR_CATEGORY_OF: Record<GarmentCategory, MajorCategory> = {
+  hoodie: 'tops',
+  sweatshirt: 'tops',
+  cardigan: 'tops',
+  t_shirt: 'inner',
+  tank_top: 'inner',
+  short_sleeve_shirt: 'tops',
+  long_sleeve_shirt: 'tops',
+  denim_jacket: 'outer',
+  swing_top: 'outer',
+  coach_jacket: 'outer',
+  boa_jacket: 'outer',
+  leather_jacket: 'outer',
+  military_jacket: 'outer',
+  mountain_parka: 'outer',
+  tailored_jacket: 'outer',
+  down_jacket: 'outer',
+  other_jacket: 'outer',
+  coat: 'outer',
+  denim_pants: 'bottoms',
+  slacks: 'bottoms',
+  chino: 'bottoms',
+  work_pants: 'bottoms',
+  shorts: 'bottoms',
+  sneakers: 'shoes',
+  sandals: 'shoes',
+  bag: 'other',
+  accessory: 'other',
+  other: 'other',
+};
+
+export const majorCategoryOf = (category: GarmentCategory): MajorCategory =>
+  MAJOR_CATEGORY_OF[category];
+
+/** Garment categories belonging to `major`, in `GARMENT_CATEGORIES` order. */
+export const categoriesOfMajor = (major: MajorCategory): GarmentCategory[] =>
+  GARMENT_CATEGORIES.filter((c) => MAJOR_CATEGORY_OF[c] === major);
+
 export type MeasurementCategoryGroup = 'top' | 'pants' | 'shoes' | 'none';
 
 export const measurementGroupOf = (category: GarmentCategory): MeasurementCategoryGroup => {

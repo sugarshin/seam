@@ -16,7 +16,7 @@ pnpm workspaces、3 パッケージすべて `private`。
 | パッケージ | 中身 |
 |---|---|
 | `packages/app` | Expo SDK 55 の iOS アプリ。Expo Router / expo-sqlite / Drizzle ORM / react-hook-form |
-| `packages/domain` | 純 TS のドメインロジック (`type: "module"`)。subpath exports: `compare` `scoring` `extraction` `pricing` `wear` `units` `rules` |
+| `packages/domain` | 純 TS のドメインロジック (`type: "module"`)。subpath exports: `compare` `scoring` `extraction` `pricing` `wear` `units` `rules` `analytics` |
 | `packages/shared` | Zod スキーマ・型・定数 (`schemas` / `types` / `constants`)。`app` と `domain` の両方から参照される |
 
 パスエイリアス (tsconfig paths と Metro の両方で解決): `@seam/shared`,
