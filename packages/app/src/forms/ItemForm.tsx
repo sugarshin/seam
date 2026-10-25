@@ -465,6 +465,7 @@ export const ItemForm = ({
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             placeholder="例: コットン 100%"
+            multiline
             testID={testIds.field.itemMaterial}
           />
         )}

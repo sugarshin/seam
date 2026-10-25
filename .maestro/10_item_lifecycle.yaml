@@ -21,7 +21,7 @@ tags:
 - assertVisible: '.*E_Item_Lifecycle.*'
 - assertVisible: '詳細'
 
-# CUJ-004: Item 編集 (名前変更 + 素材入力)
+# CUJ-004: Item 編集 (名前変更 + 素材を複数行入力)
 - scrollUntilVisible:
     element:
       id: 'btn:edit'
@@ -48,6 +48,9 @@ tags:
 - tapOn:
     id: 'field:item-material'
 - inputText: 'E2E_Cotton100'
+# 素材は multiline。Enter で改行して 2 行目を入力する。
+- pressKey: Enter
+- inputText: 'E2E_Poly100'
 # keyboardDismissMode='on-drag' なので、次の scroll 開始でキーボードは閉じる。
 - scrollUntilVisible:
     element:
@@ -59,10 +62,10 @@ tags:
 - tapOn:
     id: 'btn:submit'
 - assertVisible: '.*E_Item_Lifecycle_Edited.*'
-# 詳細セクション (着用情報より上) に素材が表示される
+# 詳細セクション (着用情報より上) に素材が改行込みで表示される
 - scrollUntilVisible:
     element:
-      text: 'E2E_Cotton100'
+      text: '.*E2E_Cotton100\sE2E_Poly100.*'
     direction: DOWN
     timeout: 10000
     visibilityPercentage: 50
