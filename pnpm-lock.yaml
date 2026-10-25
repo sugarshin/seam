@@ -176,8 +176,8 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
       vite:
-        specifier: 8.2.2
-        version: 8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+        specifier: 8.2.4
+        version: 8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
 
   packages/app:
     dependencies:
@@ -298,7 +298,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: 5.0.5
-        version: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
+        version: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/domain:
     dependencies:
@@ -314,7 +314,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: 5.0.5
-        version: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
+        version: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
 
   packages/shared:
     dependencies:
@@ -327,7 +327,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: 5.0.5
-        version: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
+        version: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
 
 packages:
 
@@ -5483,8 +5483,8 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
 
-  vite@8.2.2:
-    resolution: {integrity: sha512-cFKLV/PRgAUlIRm5WjMjJ86jrftzpqcgH+Us+DS8mI3CDNiH30Whrz8uHL3+MOLPAgqbMBAqWdAHAphOAM+z/Q==}
+  vite@8.2.4:
+    resolution: {integrity: sha512-lfauXnrf2x0p+UoA+wXh0dgFWnUjCyG6Js95KBkgaCwUU9k0DAHI4W6Q0WCx+h+5g+Alce1y4Zi2QjjK0UvGBw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -7057,7 +7057,7 @@ snapshots:
       metro-resolver: 0.83.7
       metro-runtime: 0.83.7
       metro-source-map: 0.83.7(supports-color@8.1.1)
-      metro-symbolicate: 0.83.7(supports-color@8.1.1)
+      metro-symbolicate: 0.83.7
       metro-transform-plugins: 0.83.7(supports-color@8.1.1)
       metro-transform-worker: 0.83.7(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -7971,7 +7971,7 @@ snapshots:
       obug: 3.0.0
       std-env: 4.3.0
       tinyrainbow: 3.2.0
-      vitest: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
+      vitest: 5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
 
   '@vitest/istanbul-lib-coverage@1.0.2': {}
 
@@ -7979,14 +7979,14 @@ snapshots:
     dependencies:
       '@vitest/istanbul-lib-coverage': 1.0.2
 
-  '@vitest/mocker@5.0.5(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))':
+  '@vitest/mocker@5.0.5(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.5
       estree-walker: 3.0.3
       magic-string: 1.4.3
     optionalDependencies:
-      vite: 8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+      vite: 8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
 
   '@vitest/spy@5.0.5': {}
 
@@ -9254,9 +9254,9 @@ snapshots:
     dependencies:
       bser: 2.1.1
 
-  fdir@6.5.0(picomatch@4.0.5):
+  fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
-      picomatch: 4.0.5
+      picomatch: 4.0.7
 
   fetch-nodeshim@0.4.10: {}
 
@@ -10130,7 +10130,7 @@ snapshots:
       '@babel/types': 7.29.7
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
-      metro-symbolicate: 0.83.6(supports-color@8.1.1)
+      metro-symbolicate: 0.83.6
       nullthrows: 1.1.1
       ob1: 0.83.6
       source-map: 0.5.7
@@ -10144,7 +10144,7 @@ snapshots:
       '@babel/types': 7.29.7
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
-      metro-symbolicate: 0.83.7(supports-color@8.1.1)
+      metro-symbolicate: 0.83.7
       nullthrows: 1.1.1
       ob1: 0.83.7
       source-map: 0.5.7
@@ -10152,7 +10152,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  metro-symbolicate@0.83.6(supports-color@8.1.1):
+  metro-symbolicate@0.83.6:
     dependencies:
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
@@ -10160,10 +10160,8 @@ snapshots:
       nullthrows: 1.1.1
       source-map: 0.5.7
       vlq: 1.0.1
-    transitivePeerDependencies:
-      - supports-color
 
-  metro-symbolicate@0.83.7(supports-color@8.1.1):
+  metro-symbolicate@0.83.7:
     dependencies:
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
@@ -10171,8 +10169,6 @@ snapshots:
       nullthrows: 1.1.1
       source-map: 0.5.7
       vlq: 1.0.1
-    transitivePeerDependencies:
-      - supports-color
 
   metro-transform-plugins@0.83.6(supports-color@8.1.1):
     dependencies:
@@ -10268,7 +10264,7 @@ snapshots:
       metro-resolver: 0.83.6
       metro-runtime: 0.83.6
       metro-source-map: 0.83.6(supports-color@8.1.1)
-      metro-symbolicate: 0.83.6(supports-color@8.1.1)
+      metro-symbolicate: 0.83.6
       metro-transform-plugins: 0.83.6(supports-color@8.1.1)
       metro-transform-worker: 0.83.6(supports-color@8.1.1)
       mime-types: 3.0.2
@@ -10314,7 +10310,7 @@ snapshots:
       metro-resolver: 0.83.7
       metro-runtime: 0.83.7
       metro-source-map: 0.83.7(supports-color@8.1.1)
-      metro-symbolicate: 0.83.7(supports-color@8.1.1)
+      metro-symbolicate: 0.83.7
       metro-transform-plugins: 0.83.7(supports-color@8.1.1)
       metro-transform-worker: 0.83.7(supports-color@8.1.1)
       mime-types: 3.0.2
@@ -11207,8 +11203,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.5)
-      picomatch: 4.0.5
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
 
   tinyrainbow@3.2.0: {}
 
@@ -11391,10 +11387,10 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0):
+  vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       postcss: 8.5.26
       rolldown: 1.2.5
       tinyglobby: 0.2.17
@@ -11406,10 +11402,10 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.9.0
 
-  vitest@5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)):
+  vitest@5.0.5(@types/node@26.1.0)(@vitest/coverage-v8@5.0.5)(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.5(vite@8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
+      '@vitest/mocker': 5.0.5(vite@8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0))
       chai: 6.3.0
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -11420,7 +11416,7 @@ snapshots:
       tinybench: 6.2.2
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
-      vite: 8.2.2(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
+      vite: 8.2.4(@types/node@26.1.0)(esbuild@0.27.7)(terser@5.48.0)(tsx@4.21.0)(yaml@2.9.0)
       why-is-node-running: 3.2.1
     optionalDependencies:
       '@types/node': 26.1.0
