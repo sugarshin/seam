@@ -1,0 +1,156 @@
+appId: com.sugarshin.seam
+name: compare_refresh
+tags:
+  - regression
+# CUJ-028: Compare タブを開いたまま所有アイテムに実寸を追加しても、タブに戻ると
+# 所有アイテムとの差分が最新の実寸で表示される (以前は候補の切替時にしか再読込
+# せず「共通する実寸がありません。」のままだった)。
+# 使い捨てのフィクスチャは flow 末尾で削除する。
+---
+- runFlow: '_helpers/launch.yaml'
+
+# 実寸なしの所有アイテム
+- runFlow:
+    file: '_helpers/create_item.yaml'
+    env:
+      itemName: 'E_Compare_Owned'
+
+# 身幅付きの候補 (create_candidate.yaml は実寸を入れないのでインラインで作る)
+- runFlow: '_helpers/launch.yaml'
+- runFlow: '_helpers/goto_wishlist.yaml'
+- tapOn:
+    id: 'fab:add-candidate'
+- assertVisible: '購入候補を追加'
+- tapOn:
+    id: 'field:item-name'
+- inputText: 'E_Compare_Candidate'
+# 下スクロールの drag でキーボードが閉じる (ItemForm の keyboardDismissMode='on-drag')
+- scrollUntilVisible:
+    element:
+      id: 'field:measurement:chestWidth'
+    direction: DOWN
+    timeout: 30000
+    speed: 40
+    visibilityPercentage: 100
+- tapOn:
+    id: 'field:measurement:chestWidth'
+- inputText: '56'
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 30000
+    speed: 40
+    visibilityPercentage: 50
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: 'btn:submit'
+- extendedWaitUntil:
+    visible:
+      id: 'card:candidate:.*'
+    timeout: 5000
+
+# Compare タブで候補を選び、所有アイテムを展開 → 所有側に実寸が無い旨を表示
+- tapOn:
+    id: 'tab:compare'
+- tapOn:
+    id: 'picker:compare-candidate'
+- tapOn:
+    id: 'option:compare-candidate:.*'
+    text: '.*E_Compare_Candidate.*'
+- scrollUntilVisible:
+    element:
+      id: 'row:compare-owned:.*'
+      text: '.*E_Compare_Owned.*'
+    direction: DOWN
+    timeout: 30000
+    visibilityPercentage: 100
+- tapOn:
+    id: 'row:compare-owned:.*'
+    text: '.*E_Compare_Owned.*'
+- assertVisible: 'このアイテムの実寸が登録されていません。'
+
+# Compare タブを開いたまま、Closet で所有アイテムに身幅を追加
+- tapOn:
+    id: 'tab:closet'
+- tapOn:
+    text: '.*E_Compare_Owned.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:edit'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:edit'
+- scrollUntilVisible:
+    element:
+      id: 'field:measurement:chestWidth'
+    direction: DOWN
+    timeout: 30000
+    speed: 40
+    visibilityPercentage: 100
+- tapOn:
+    id: 'field:measurement:chestWidth'
+- inputText: '55'
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 30000
+    speed: 40
+    visibilityPercentage: 50
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: 'btn:submit'
+- assertVisible: '55 cm'
+
+# Compare タブに戻ると再読込され、身幅の差分 (56 - 55 = +1 cm) が出る。
+# 展開状態は画面 state として保持されている。
+- tapOn:
+    id: 'BackButton'
+- tapOn:
+    id: 'tab:compare'
+- scrollUntilVisible:
+    element:
+      text: '.*\+1 cm.*'
+    direction: DOWN
+    timeout: 30000
+    visibilityPercentage: 100
+- assertNotVisible: 'このアイテムの実寸が登録されていません。'
+
+# 後片付け: 所有アイテムと候補を削除
+- tapOn:
+    id: 'tab:closet'
+- tapOn:
+    text: '.*E_Compare_Owned.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: 'Closet'
+- tapOn:
+    id: 'tab:wishlist'
+- tapOn:
+    text: '.*E_Compare_Candidate.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: 'Wishlist'

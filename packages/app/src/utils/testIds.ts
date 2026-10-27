@@ -135,6 +135,8 @@ export const testIds = {
   cardFailureLog: (logId: string) => `card:failure-log:${logId}` as const,
   cardRule: (ruleId: string) => `card:rule:${ruleId}` as const,
   cardBrandGuide: (guideId: string) => `card:brand-guide:${guideId}` as const,
+  rowCompareOwned: (itemId: string) => `row:compare-owned:${itemId}` as const,
+  fieldMeasurement: (key: string) => `field:measurement:${key}` as const,
   chipCategory: (categoryValue: string) => `chip:category:${categoryValue}` as const,
   segOption: (segId: string, value: string) => `${segId}:${value}` as const,
   // Picker / Modal の派生 (Picker.tsx 内で自動派生される。flow からは

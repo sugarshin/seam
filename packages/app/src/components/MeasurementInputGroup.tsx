@@ -13,6 +13,7 @@ import {
 } from '@seam/shared';
 import { TextField } from './TextField';
 import { font, space, useThemeColors } from '../theme';
+import { testIds } from '../utils/testIds';
 
 type Props = {
   category: GarmentCategory;
@@ -116,6 +117,7 @@ export const MeasurementInputGroup = ({ category, itemId, values, onChange }: Pr
             value={draft}
             onChangeText={(text: string) => handleChange(key, text)}
             placeholder="0"
+            testID={testIds.fieldMeasurement(key)}
           />
         );
       })}

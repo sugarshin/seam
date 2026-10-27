@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, View, type ViewStyle } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import {
@@ -84,11 +84,17 @@ export default function CompareScreen() {
     if (initialCandidateId) setSelectedCandidateId(initialCandidateId);
   }, [initialCandidateId]);
 
+  // Bumped on every load so a slower, superseded load (e.g. the focus reload
+  // racing a candidate switch) can't overwrite the newer one's state.
+  const loadSeq = useRef(0);
+
   const loadAll = useCallback(async (candidateId: string) => {
+    const seq = ++loadSeq.current;
     setLoading(true);
     try {
       const item = await itemRepository.getById(candidateId);
       if (!item) {
+        if (seq !== loadSeq.current) return;
         setCandidate(null);
         setAnchors([]);
         setOwnedSameCategory([]);
@@ -96,7 +102,6 @@ export default function CompareScreen() {
         return;
       }
       const candidateMeasurements = await measurementRepository.listByItem(item.id);
-      setCandidate({ item, measurements: candidateMeasurements });
 
       const anchorRows = await fitAnchorRepository.listByCategory(item.category);
       const anchorEnriched = await Promise.all(
@@ -108,7 +113,6 @@ export default function CompareScreen() {
           return it ? { anchor: a, item: it, measurements: ms } : null;
         }),
       );
-      setAnchors(anchorEnriched.filter((x): x is AnchorLite => x !== null));
 
       const ownedAll = await itemRepository.listOwned();
       const ownedSameCat = ownedAll.filter((o) => o.category === item.category && o.id !== item.id);
@@ -118,21 +122,32 @@ export default function CompareScreen() {
           measurements: await measurementRepository.listByItem(o.id),
         })),
       );
-      setOwnedSameCategory(ownedEnriched);
 
       // Composite score across all 5 factors. The orchestrator pulls rules /
       // owned items / anchors from the repositories, so we don't need to fetch
       // them separately for the score calc.
       const computed = await computeCandidateScore(item.id);
+
+      // Commit everything at once so the candidate and the lists it is diffed
+      // against always come from the same load.
+      if (seq !== loadSeq.current) return;
+      setCandidate({ item, measurements: candidateMeasurements });
+      setAnchors(anchorEnriched.filter((x): x is AnchorLite => x !== null));
+      setOwnedSameCategory(ownedEnriched);
       setScore(computed);
     } finally {
-      setLoading(false);
+      if (seq === loadSeq.current) setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    if (selectedCandidateId) void loadAll(selectedCandidateId);
-  }, [selectedCandidateId, loadAll]);
+  // Reload on every focus, not only when the selection changes: the tab stays
+  // mounted, so measurements edited on the item / candidate screens would
+  // otherwise keep showing the stale "no common measurements" state.
+  useFocusEffect(
+    useCallback(() => {
+      if (selectedCandidateId) void loadAll(selectedCandidateId);
+    }, [selectedCandidateId, loadAll]),
+  );
 
   // ─── derived ────────────────────────────────────────────────────────────
   const violations = score?.ruleViolations ?? [];
@@ -281,6 +296,7 @@ export default function CompareScreen() {
                     a.measurements,
                     candidate.item.category,
                   )}
+                  emptyMessage={emptyDiffMessage(candidate.measurements, a.measurements)}
                   category={candidate.item.category}
                   palette={palette}
                 />
@@ -306,6 +322,7 @@ export default function CompareScreen() {
                       accessibilityRole="button"
                       onPress={() => setExpandedOwnedId(expanded ? null : o.item.id)}
                       style={({ pressed }) => [styles.ownedHeader, pressed && { opacity: 0.7 }]}
+                      testID={testIds.rowCompareOwned(o.item.id)}
                     >
                       <View style={{ flex: 1 }}>
                         <Text style={styles.ownedName}>{o.item.name}</Text>
@@ -316,7 +333,9 @@ export default function CompareScreen() {
                     {expanded && (
                       <View style={ownedBody}>
                         {diffs.length === 0 ? (
-                          <Text style={styles.muted}>共通する実寸がありません。</Text>
+                          <Text style={styles.muted}>
+                            {emptyDiffMessage(candidate.measurements, o.measurements)}
+                          </Text>
                         ) : (
                           diffs.map((d) => (
                             <DiffRow
@@ -387,16 +406,28 @@ export default function CompareScreen() {
 const unitFor = (measurements: readonly Measurement[], diff: MeasurementDiff): string | undefined =>
   measurements.find((m) => m.key === diff.key)?.unit;
 
+/** Why a diff list is empty — tells apart "one side has no measurements" from "no shared keys". */
+const emptyDiffMessage = (
+  candidate: readonly Measurement[],
+  reference: readonly Measurement[],
+): string => {
+  if (candidate.length === 0) return '候補の実寸が登録されていません。';
+  if (reference.length === 0) return 'このアイテムの実寸が登録されていません。';
+  return '共通する実寸がありません。';
+};
+
 const DiffsBlock = ({
   title,
   subtitle,
   diffs,
+  emptyMessage,
   category,
   palette,
 }: {
   title: string;
   subtitle?: string;
   diffs: MeasurementDiff[];
+  emptyMessage: string;
   category: GarmentItem['category'];
   palette: ColorPalette;
 }) => {
@@ -408,7 +439,7 @@ const DiffsBlock = ({
         {subtitle && <Text style={styles.diffsSubtitle}>{subtitle}</Text>}
       </View>
       {diffs.length === 0 ? (
-        <Text style={styles.muted}>共通する実寸がありません。</Text>
+        <Text style={styles.muted}>{emptyMessage}</Text>
       ) : (
         diffs.map((d) => (
           <DiffRow
