@@ -186,7 +186,7 @@ importers:
         version: 7.29.10
       '@hookform/resolvers':
         specifier: ^6.0.0
-        version: 6.0.0(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.90.0(@types/react@19.2.18)(react@19.2.0))(zod@4.6.7)
+        version: 6.0.0(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.91.0(@types/react@19.2.18)(react@19.2.0))(zod@4.6.7)
       '@paralleldrive/cuid2':
         specifier: ^3.0.0
         version: 3.3.0
@@ -249,7 +249,7 @@ importers:
         version: 19.2.0
       react-hook-form:
         specifier: ^7.54.0
-        version: 7.90.0(@types/react@19.2.18)(react@19.2.0)
+        version: 7.91.0(@types/react@19.2.18)(react@19.2.0)
       react-native:
         specifier: 0.83.6
         version: 0.83.6(@babel/core@7.29.7(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1)
@@ -4854,8 +4854,8 @@ packages:
     peerDependencies:
       react: '>=17.0.0'
 
-  react-hook-form@7.90.0:
-    resolution: {integrity: sha512-+NdG0FLzCPhFOp2NNxaUYLF9fyZhNjx9FTBBSYWF71/l6BBlmIc/j6xlp3DbaHWLJbIG7Zd8oznA19xJClU97w==}
+  react-hook-form@7.91.0:
+    resolution: {integrity: sha512-5BEBUnCBwa28AFXYTYmOaB/+CSpJ/+CWVASHEvIGUzFdHyUiPHeRhG7r5hOZ8nZi0yP7pbHdFNXO/p31EKTJFQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@types/react': '*'
@@ -7174,10 +7174,10 @@ snapshots:
       chalk: 4.1.2
       js-yaml: 4.3.0
 
-  '@hookform/resolvers@6.0.0(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.90.0(@types/react@19.2.18)(react@19.2.0))(zod@4.6.7)':
+  '@hookform/resolvers@6.0.0(@sinclair/typebox@0.27.10)(@standard-schema/spec@1.1.0)(react-hook-form@7.91.0(@types/react@19.2.18)(react@19.2.0))(zod@4.6.7)':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.90.0(@types/react@19.2.18)(react@19.2.0)
+      react-hook-form: 7.91.0(@types/react@19.2.18)(react@19.2.0)
     optionalDependencies:
       '@sinclair/typebox': 0.27.10
       '@standard-schema/spec': 1.1.0
@@ -10673,7 +10673,7 @@ snapshots:
     dependencies:
       react: 19.2.0
 
-  react-hook-form@7.90.0(@types/react@19.2.18)(react@19.2.0):
+  react-hook-form@7.91.0(@types/react@19.2.18)(react@19.2.0):
     dependencies:
       react: 19.2.0
     optionalDependencies:
