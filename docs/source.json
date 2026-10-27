@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.14.0",
-      "versionDate": "2026-10-25",
-      "versionDescription": "- Version bump 0.14.0 (build 26)\n- Merge pull request #222 from sugarshin/analytics\n- fix(analytics): handle multi-line material text\n- feat(app): replace Stats tab with Analytics screen\n- Merge pull request #221 from sugarshin/tweak-material\n- feat(app): allow multi-line input for item material\n- chore(release): update source.json for v0.13.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.14.0/Seam-v0.14.0.ipa",
-      "size": 12609092,
+      "version": "0.14.1",
+      "versionDate": "2026-10-27",
+      "versionDescription": "- Version bump 0.14.1 (build 27)\n- Merge pull request #229 from sugarshin/renovate/github-actions-digests\n- Merge pull request #228 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #227 from sugarshin/renovate/node-24.22.x\n- chore(deps): update ruby/setup-ruby action to v1.331.0\n- Merge pull request #226 from sugarshin/fix-compare\n- chore(deps): update dependency react-hook-form to v7.91.0\n- chore(deps): update node.js to v24.22.1\n- fix(compare): reload compare data on focus to avoid stale measurements\n- chore(release): update source.json for v0.14.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.14.1/Seam-v0.14.1.ipa",
+      "size": 12614656,
       "versions": [
+        {
+          "version": "0.14.1",
+          "buildVersion": "27",
+          "date": "2026-10-27",
+          "localizedDescription": "- Version bump 0.14.1 (build 27)\n- Merge pull request #229 from sugarshin/renovate/github-actions-digests\n- Merge pull request #228 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #227 from sugarshin/renovate/node-24.22.x\n- chore(deps): update ruby/setup-ruby action to v1.331.0\n- Merge pull request #226 from sugarshin/fix-compare\n- chore(deps): update dependency react-hook-form to v7.91.0\n- chore(deps): update node.js to v24.22.1\n- fix(compare): reload compare data on focus to avoid stale measurements\n- chore(release): update source.json for v0.14.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.14.1/Seam-v0.14.1.ipa",
+          "size": 12614656,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.14.0",
           "buildVersion": "26",
