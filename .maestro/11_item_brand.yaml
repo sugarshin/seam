@@ -1,0 +1,118 @@
+appId: com.sugarshin.seam
+name: item_brand
+tags:
+  - regression
+# CUJ-029: ブランドのラベル選択。未登録ブランドを入力して新規追加 → 次のアイテムでは
+# 表記揺れ (小文字) で検索しても既存ラベルが候補に出て、新規追加は出ないことを確認する。
+# ブランド名は実行ごとに一意にする (累積 DB でも「未登録」から始めるため)。
+# 最後に 2 アイテムとも削除して、ラベルを残さない。
+---
+- evalScript: ${output.brand = 'E2EBrand' + Date.now()}
+- runFlow: '_helpers/launch.yaml'
+- runFlow: '_helpers/goto_closet.yaml'
+
+# 1 件目: 未登録ブランドを入力して新規追加
+- tapOn:
+    id: 'fab:add-item'
+- assertVisible: '新規アイテム'
+- tapOn:
+    id: 'field:item-name'
+- inputText: 'E_Brand_First'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: 'picker:item-brand'
+- tapOn:
+    id: 'picker:item-brand:search'
+- inputText: ${output.brand}
+- tapOn:
+    id: 'picker:item-brand:create'
+- extendedWaitUntil:
+    notVisible:
+      id: 'picker:item-brand:search'
+    timeout: 5000
+- assertVisible: '.*${output.brand}.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 30000
+    speed: 40
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:submit'
+- extendedWaitUntil:
+    visible: '.*E_Brand_First.*'
+    timeout: 5000
+
+# 2 件目: 小文字で検索 → 既存ラベルだけが出て、新規追加は出ない
+- tapOn:
+    id: 'fab:add-item'
+- assertVisible: '新規アイテム'
+- tapOn:
+    id: 'field:item-name'
+- inputText: 'E_Brand_Second'
+- tapOn:
+    point: '50%, 18%'
+- waitForAnimationToEnd:
+    timeout: 1000
+- tapOn:
+    id: 'picker:item-brand'
+- tapOn:
+    id: 'picker:item-brand:search'
+- inputText: ${output.brand.toLowerCase()}
+- assertVisible:
+    id: 'option:item-brand:${output.brand}'
+- assertNotVisible:
+    id: 'picker:item-brand:create'
+- tapOn:
+    id: 'option:item-brand:${output.brand}'
+- extendedWaitUntil:
+    notVisible:
+      id: 'picker:item-brand:search'
+    timeout: 5000
+- assertVisible: '.*${output.brand}.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:submit'
+    direction: DOWN
+    timeout: 30000
+    speed: 40
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:submit'
+- extendedWaitUntil:
+    visible: '.*E_Brand_Second.*'
+    timeout: 5000
+
+# 後片付け: 2 件とも削除
+- tapOn:
+    text: '.*E_Brand_Second.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: 'Closet'
+- tapOn:
+    text: '.*E_Brand_First.*'
+- scrollUntilVisible:
+    element:
+      id: 'btn:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: 'Closet'

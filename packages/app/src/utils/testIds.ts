@@ -30,7 +30,6 @@ export const testIds = {
   field: {
     closetSearch: id('field:closet-search'),
     itemName: id('field:item-name'),
-    itemBrand: id('field:item-brand'),
     itemModel: id('field:item-model'),
     itemColor: id('field:item-color'),
     itemMaterial: id('field:item-material'),
@@ -56,7 +55,6 @@ export const testIds = {
     ruleValue: id('field:rule-value'),
     ruleMessage: id('field:rule-message'),
     // brand-guides
-    guideBrand: id('field:guide-brand'),
     guideTitle: id('field:guide-title'),
     guideNotes: id('field:guide-notes'),
     guideChecklist: id('field:guide-checklist'),
@@ -69,6 +67,7 @@ export const testIds = {
     condition: id('picker:condition'),
     fitRating: id('picker:fit-rating'),
     favoriteScore: id('picker:favorite-score'),
+    itemBrand: id('picker:item-brand'),
     sourceType: id('picker:source-type'),
     closetSort: id('picker:closet-sort'),
     closetSoldYear: id('picker:closet-sold-year'),
@@ -83,6 +82,7 @@ export const testIds = {
     ruleOperator: id('picker:rule-operator'),
     ruleSeverity: id('picker:rule-severity'),
     // brand-guides
+    guideBrand: id('picker:guide-brand'),
     guideCategory: id('picker:guide-category'),
   },
   btn: {

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { ItemForm, type ItemFormDefaults, type ItemFormSubmit } from '../../src/forms/ItemForm';
+import { useBrandOptions } from '../../src/forms/useBrandOptions';
 import { Button, TextField } from '../../src/components';
 import { createItemWithDetails, tagRepository } from '../../src/repositories';
 import { font, space, useThemeColors } from '../../src/theme';
@@ -14,6 +15,7 @@ export default function NewCandidateScreen() {
   const palette = useThemeColors();
   const [submitting, setSubmitting] = useState(false);
   const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+  const { options: brandOptions } = useBrandOptions();
   const [importing, setImporting] = useState(false);
   const [importUrl, setImportUrl] = useState('');
   const [defaults, setDefaults] = useState<ItemFormDefaults>(INITIAL_DEFAULTS);
@@ -111,6 +113,7 @@ export default function NewCandidateScreen() {
       <ItemForm
         key={formKey}
         tagSuggestions={tagSuggestions}
+        brandOptions={brandOptions}
         submitting={submitting}
         submitLabel="登録"
         onSubmit={handleSubmit}

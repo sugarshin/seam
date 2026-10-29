@@ -23,6 +23,7 @@ import {
   type SourceType,
 } from '@seam/shared';
 import { calculateTotalPrice } from '@seam/domain/pricing';
+import { BrandPicker } from '../components/BrandPicker';
 import { Button } from '../components/Button';
 import { MeasurementInputGroup } from '../components/MeasurementInputGroup';
 import { PhotoPicker } from '../components/PhotoPicker';
@@ -117,6 +118,8 @@ type Props = {
   defaults?: ItemFormDefaults;
   itemId?: string;
   tagSuggestions?: readonly string[];
+  /** Existing brand labels for the brand picker (see `useBrandOptions`). */
+  brandOptions?: readonly string[];
   submitLabel?: string;
   onSubmit: (input: ItemFormSubmit) => Promise<void> | void;
   onCancel?: () => void;
@@ -170,6 +173,7 @@ export const ItemForm = ({
   defaults,
   itemId,
   tagSuggestions,
+  brandOptions = [],
   submitLabel = '保存',
   onSubmit,
   onCancel,
@@ -364,12 +368,12 @@ export const ItemForm = ({
         control={control}
         name="brand"
         render={({ field }) => (
-          <TextField
+          <BrandPicker
             label="ブランド"
             value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            testID={testIds.field.itemBrand}
+            options={brandOptions}
+            onChange={field.onChange}
+            testID={testIds.picker.itemBrand}
           />
         )}
       />

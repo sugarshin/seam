@@ -7,9 +7,11 @@ import {
   type BrandGuide,
   type GarmentCategory,
 } from '@seam/shared';
+import { BrandPicker } from '../../../src/components/BrandPicker';
 import { Button } from '../../../src/components/Button';
 import { Picker, type PickerOption } from '../../../src/components/Picker';
 import { TextField } from '../../../src/components/TextField';
+import { useBrandOptions } from '../../../src/forms/useBrandOptions';
 import { brandGuideRepository } from '../../../src/repositories';
 import { font, space, useThemeColors } from '../../../src/theme';
 import { testIds } from '../../../src/utils/testIds';
@@ -28,6 +30,7 @@ export default function BrandGuideEditScreen() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  const { options: brandOptions } = useBrandOptions();
   const [brand, setBrand] = useState('');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<GarmentCategory | undefined>(undefined);
@@ -131,12 +134,13 @@ export default function BrandGuideEditScreen() {
         keyboardDismissMode="interactive"
         automaticallyAdjustKeyboardInsets
       >
-        <TextField
+        <BrandPicker
           label="ブランド"
           value={brand}
-          onChangeText={setBrand}
+          options={brandOptions}
+          onChange={setBrand}
           required
-          testID={testIds.field.guideBrand}
+          testID={testIds.picker.guideBrand}
         />
         <TextField
           label="タイトル"

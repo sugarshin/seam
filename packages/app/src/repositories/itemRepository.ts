@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, like, or, sql, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNotNull, like, or, sql, type SQL } from 'drizzle-orm';
 import { db, schema } from '../db/client';
 import { newId } from '../utils/ids';
 import { nowIso } from '../utils/dates';
@@ -239,6 +239,15 @@ export const itemRepository = {
     }
 
     return filtered;
+  },
+
+  /** Raw brand spellings, one per item (duplicates kept for spelling frequency). */
+  async listBrandNames(): Promise<string[]> {
+    const rows = await db
+      .select({ brand: schema.items.brand })
+      .from(schema.items)
+      .where(isNotNull(schema.items.brand));
+    return rows.flatMap((r) => (r.brand === null ? [] : [r.brand]));
   },
 
   async getById(id: string): Promise<GarmentItem | null> {

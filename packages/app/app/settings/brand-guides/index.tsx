@@ -7,9 +7,11 @@ import {
   type BrandGuide,
   type GarmentCategory,
 } from '@seam/shared';
+import { BrandPicker } from '../../../src/components/BrandPicker';
 import { Button } from '../../../src/components/Button';
 import { Picker, type PickerOption } from '../../../src/components/Picker';
 import { TextField } from '../../../src/components/TextField';
+import { useBrandOptions } from '../../../src/forms/useBrandOptions';
 import { brandGuideRepository } from '../../../src/repositories';
 import { type ColorPalette, font, radii, space, useThemeColors } from '../../../src/theme';
 import { testIds } from '../../../src/utils/testIds';
@@ -25,6 +27,7 @@ export default function BrandGuidesScreen() {
   const [guides, setGuides] = useState<BrandGuide[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { options: brandOptions, reload: reloadBrandOptions } = useBrandOptions();
   const [brand, setBrand] = useState('');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<GarmentCategory | undefined>(undefined);
@@ -57,7 +60,7 @@ export default function BrandGuidesScreen() {
 
   const onSubmit = useCallback(async () => {
     if (brand.trim().length === 0) {
-      Alert.alert('入力エラー', 'ブランド名を入力してください。');
+      Alert.alert('入力エラー', 'ブランドを選択してください。');
       return;
     }
     if (title.trim().length === 0) {
@@ -78,13 +81,13 @@ export default function BrandGuidesScreen() {
         checklistItems,
       });
       reset();
-      await load();
+      await Promise.all([load(), reloadBrandOptions()]);
     } catch (err) {
       Alert.alert('保存失敗', err instanceof Error ? err.message : String(err));
     } finally {
       setSubmitting(false);
     }
-  }, [brand, title, category, notes, checklistText, load]);
+  }, [brand, title, category, notes, checklistText, load, reloadBrandOptions]);
 
   const onDelete = useCallback(
     (g: BrandGuide) => {
@@ -115,13 +118,13 @@ export default function BrandGuidesScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>新規追加</Text>
-          <TextField
+          <BrandPicker
             label="ブランド"
             value={brand}
-            onChangeText={setBrand}
-            placeholder="例: Champion"
+            options={brandOptions}
+            onChange={setBrand}
             required
-            testID={testIds.field.guideBrand}
+            testID={testIds.picker.guideBrand}
           />
           <TextField
             label="タイトル"

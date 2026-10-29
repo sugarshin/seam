@@ -3,6 +3,7 @@ export type { ButtonVariant } from './Button';
 export { TextField } from './TextField';
 export { Picker } from './Picker';
 export type { PickerOption } from './Picker';
+export { BrandPicker } from './BrandPicker';
 export { Chip } from './Chip';
 export type { ChipTone } from './Chip';
 export { LinkText } from './LinkText';

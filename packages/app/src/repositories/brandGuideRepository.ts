@@ -48,6 +48,12 @@ export const brandGuideRepository = {
     return rows.map(toGuide);
   },
 
+  /** Raw brand spellings, one per guide (duplicates kept for spelling frequency). */
+  async listBrandNames(): Promise<string[]> {
+    const rows = await db.select({ brand: schema.brandGuides.brand }).from(schema.brandGuides);
+    return rows.map((r) => r.brand);
+  },
+
   async getById(id: string): Promise<BrandGuide | null> {
     const rows = await db
       .select()
