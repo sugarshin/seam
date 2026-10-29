@@ -17,9 +17,9 @@ describe('majorCategoryOf', () => {
   it('treats t-shirts and tank tops as inner, cardigans as tops', () => {
     expect(majorCategoryOf('t_shirt')).toBe('inner');
     expect(majorCategoryOf('long_sleeve_t_shirt')).toBe('inner');
-    expect(majorCategoryOf('thermal_long_sleeve_t_shirt')).toBe('inner');
     expect(majorCategoryOf('tank_top')).toBe('inner');
     expect(majorCategoryOf('cardigan')).toBe('tops');
+    expect(majorCategoryOf('thermal_long_sleeve_t_shirt')).toBe('tops');
     expect(majorCategoryOf('knit')).toBe('tops');
     expect(majorCategoryOf('zip_hoodie')).toBe('tops');
     expect(majorCategoryOf('long_sleeve_shirt')).toBe('tops');

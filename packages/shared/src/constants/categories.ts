@@ -141,7 +141,7 @@ const MAJOR_CATEGORY_OF: Record<GarmentCategory, MajorCategory> = {
   cardigan: 'tops',
   t_shirt: 'inner',
   long_sleeve_t_shirt: 'inner',
-  thermal_long_sleeve_t_shirt: 'inner',
+  thermal_long_sleeve_t_shirt: 'tops',
   tank_top: 'inner',
   short_sleeve_shirt: 'tops',
   long_sleeve_shirt: 'tops',
