@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.14.1",
-      "versionDate": "2026-10-27",
-      "versionDescription": "- Version bump 0.14.1 (build 27)\n- Merge pull request #229 from sugarshin/renovate/github-actions-digests\n- Merge pull request #228 from sugarshin/renovate/react-hook-form-7.x-lockfile\n- Merge pull request #227 from sugarshin/renovate/node-24.22.x\n- chore(deps): update ruby/setup-ruby action to v1.331.0\n- Merge pull request #226 from sugarshin/fix-compare\n- chore(deps): update dependency react-hook-form to v7.91.0\n- chore(deps): update node.js to v24.22.1\n- fix(compare): reload compare data on focus to avoid stale measurements\n- chore(release): update source.json for v0.14.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.14.1/Seam-v0.14.1.ipa",
-      "size": 12614656,
+      "version": "0.15.0",
+      "versionDate": "2026-10-29",
+      "versionDescription": "- Version bump 0.15.0 (build 28)\n- Merge pull request #235 from sugarshin/brand-select\n- Merge pull request #233 from sugarshin/renovate/github-actions-digests\n- feat: select brand from existing labels instead of free text\n- Merge pull request #234 from sugarshin/add-category\n- fix: classify thermal L/S tee as tops instead of inner\n- feat: add knit, nylon jacket, L/S tee, thermal L/S tee, and zip hoodie categories\n- Merge pull request #232 from sugarshin/chore/node-26\n- chore(deps): update ruby/setup-ruby action to v1.333.0\n- chore(deps): update node.js to v26.13.0\n- Merge pull request #231 from sugarshin/renovate/github-actions-digests\n- chore(deps): update ruby/setup-ruby action to v1.332.0\n- chore(deps): update dependency @biomejs/biome to v2.6.3 (#230)\n- chore(release): update source.json for v0.14.1",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.15.0/Seam-v0.15.0.ipa",
+      "size": 12620345,
       "versions": [
+        {
+          "version": "0.15.0",
+          "buildVersion": "28",
+          "date": "2026-10-29",
+          "localizedDescription": "- Version bump 0.15.0 (build 28)\n- Merge pull request #235 from sugarshin/brand-select\n- Merge pull request #233 from sugarshin/renovate/github-actions-digests\n- feat: select brand from existing labels instead of free text\n- Merge pull request #234 from sugarshin/add-category\n- fix: classify thermal L/S tee as tops instead of inner\n- feat: add knit, nylon jacket, L/S tee, thermal L/S tee, and zip hoodie categories\n- Merge pull request #232 from sugarshin/chore/node-26\n- chore(deps): update ruby/setup-ruby action to v1.333.0\n- chore(deps): update node.js to v26.13.0\n- Merge pull request #231 from sugarshin/renovate/github-actions-digests\n- chore(deps): update ruby/setup-ruby action to v1.332.0\n- chore(deps): update dependency @biomejs/biome to v2.6.3 (#230)\n- chore(release): update source.json for v0.14.1",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.15.0/Seam-v0.15.0.ipa",
+          "size": 12620345,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.14.1",
           "buildVersion": "27",
