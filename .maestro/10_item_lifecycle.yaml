@@ -21,7 +21,7 @@ tags:
 - assertVisible: '.*E_Item_Lifecycle.*'
 - assertVisible: '詳細'
 
-# CUJ-004: Item 編集 (名前変更 + 素材を複数行入力)
+# CUJ-004: Item 編集 (名前変更 + カテゴリ変更 + 素材を複数行入力)
 - scrollUntilVisible:
     element:
       id: 'btn:edit'
@@ -39,6 +39,20 @@ tags:
     point: '50%, 18%'
 - waitForAnimationToEnd:
     timeout: 1000
+# カテゴリを t_shirt → zip_hoodie に変更 (どちらも上衣採寸なので実寸欄は不変)
+- scrollUntilVisible:
+    element:
+      id: 'picker:category'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 100
+- tapOn:
+    id: 'picker:category'
+- assertVisible: 'カテゴリを選択'
+- tapOn:
+    id: 'option:category:zip_hoodie'
+# Picker trigger の accessibilityText は "<label>, ›" 形式なので regex で部分一致
+- assertVisible: '.*ジップアップパーカー.*'
 - scrollUntilVisible:
     element:
       id: 'field:item-material'
@@ -62,6 +76,8 @@ tags:
 - tapOn:
     id: 'btn:submit'
 - assertVisible: '.*E_Item_Lifecycle_Edited.*'
+# 詳細の subtitle に新カテゴリのラベルが出る
+- assertVisible: '.*ジップアップパーカー.*'
 # 詳細セクション (着用情報より上) に素材が改行込みで表示される
 - scrollUntilVisible:
     element:
