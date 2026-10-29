@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { ItemForm, type ItemFormSubmit } from '../../src/forms/ItemForm';
+import { useBrandOptions } from '../../src/forms/useBrandOptions';
 import { createItemWithDetails, tagRepository } from '../../src/repositories';
 import { useThemeColors } from '../../src/theme';
 
@@ -9,6 +10,7 @@ export default function NewItemScreen() {
   const palette = useThemeColors();
   const [submitting, setSubmitting] = useState(false);
   const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+  const { options: brandOptions } = useBrandOptions();
 
   useEffect(() => {
     void tagRepository.listAll().then((tags) => setTagSuggestions(tags.map((t) => t.name)));
@@ -40,6 +42,7 @@ export default function NewItemScreen() {
       <Stack.Screen options={{ title: '新規アイテム' }} />
       <ItemForm
         tagSuggestions={tagSuggestions}
+        brandOptions={brandOptions}
         submitting={submitting}
         submitLabel="登録"
         onSubmit={handleSubmit}

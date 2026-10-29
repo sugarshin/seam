@@ -54,6 +54,7 @@ import {
   type ReminderLeadTime,
 } from '../../src/notifications';
 import { ItemForm, type ItemFormSubmit } from '../../src/forms/ItemForm';
+import { useBrandOptions } from '../../src/forms/useBrandOptions';
 import { absolutePathFor } from '../../src/photos/savePhoto';
 import {
   brandChecklistStateRepository,
@@ -163,6 +164,7 @@ export default function CandidateDetailScreen() {
   const [editing, setEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+  const { options: brandOptions } = useBrandOptions();
   const [decisionDraft, setDecisionDraft] = useState<ScoreDecision | null>(null);
   const [decisionSubmitting, setDecisionSubmitting] = useState(false);
   const [pendingScore, setPendingScore] = useState<ComputeCandidateScoreResult | null>(null);
@@ -558,6 +560,7 @@ export default function CandidateDetailScreen() {
         <ItemForm
           itemId={itemId}
           tagSuggestions={tagSuggestions}
+          brandOptions={brandOptions}
           submitting={submitting}
           submitLabel="保存"
           onCancel={() => setEditing(false)}

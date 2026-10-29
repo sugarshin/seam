@@ -9,6 +9,8 @@ export { crossTabulate, distributionBy } from './distribution';
 export type { CrossTab, Distribution, DistributionEntry } from './distribution';
 export { brandStats } from './brandStats';
 export type { BrandStat } from './brandStats';
+export { brandOptions, searchBrandOptions } from './brandOptions';
+export type { BrandSearchResult } from './brandOptions';
 export {
   collectMeasurement,
   measurementKeysForMajor,

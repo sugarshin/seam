@@ -38,6 +38,7 @@ import { SaleInfoModal, type SaleInfoDraft } from '../../src/components/SaleInfo
 import { WearLogEntry } from '../../src/components/WearLogEntry';
 import { WearLogModal, type WearLogDraft } from '../../src/components/WearLogModal';
 import { ItemForm, type ItemFormSubmit } from '../../src/forms/ItemForm';
+import { useBrandOptions } from '../../src/forms/useBrandOptions';
 import { absolutePathFor } from '../../src/photos/savePhoto';
 import {
   deleteItemWithDetails,
@@ -95,6 +96,7 @@ export default function ItemDetailScreen() {
   const [editing, setEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+  const { options: brandOptions } = useBrandOptions();
 
   const [wearModalOpen, setWearModalOpen] = useState(false);
   const [wearSubmitting, setWearSubmitting] = useState(false);
@@ -422,6 +424,7 @@ export default function ItemDetailScreen() {
         <ItemForm
           itemId={itemId}
           tagSuggestions={tagSuggestions}
+          brandOptions={brandOptions}
           submitting={submitting}
           submitLabel="保存"
           onCancel={() => setEditing(false)}

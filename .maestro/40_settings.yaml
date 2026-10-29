@@ -74,10 +74,19 @@ tags:
     id: 'btn:open-brand-guides'
 - assertVisible: 'ブランドガイド'
 
-# brand guide 追加
+# brand guide 追加。ブランドは BrandPicker で入力し Enter で確定する
+# (未登録なら新規追加、累積 DB で既存ならそのラベルを選択 — どちらでも同じ結果)。
 - tapOn:
-    id: 'field:guide-brand'
+    id: 'picker:guide-brand'
+- tapOn:
+    id: 'picker:guide-brand:search'
 - inputText: 'E2E_Brand'
+- pressKey: Enter
+- extendedWaitUntil:
+    notVisible:
+      id: 'picker:guide-brand:search'
+    timeout: 5000
+- assertVisible: '.*E2E_Brand.*'
 - tapOn:
     id: 'field:guide-title'
 - inputText: 'E2E ガイド'
