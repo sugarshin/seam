@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.15.0",
-      "versionDate": "2026-10-29",
-      "versionDescription": "- Version bump 0.15.0 (build 28)\n- Merge pull request #235 from sugarshin/brand-select\n- Merge pull request #233 from sugarshin/renovate/github-actions-digests\n- feat: select brand from existing labels instead of free text\n- Merge pull request #234 from sugarshin/add-category\n- fix: classify thermal L/S tee as tops instead of inner\n- feat: add knit, nylon jacket, L/S tee, thermal L/S tee, and zip hoodie categories\n- Merge pull request #232 from sugarshin/chore/node-26\n- chore(deps): update ruby/setup-ruby action to v1.333.0\n- chore(deps): update node.js to v26.13.0\n- Merge pull request #231 from sugarshin/renovate/github-actions-digests\n- chore(deps): update ruby/setup-ruby action to v1.332.0\n- chore(deps): update dependency @biomejs/biome to v2.6.3 (#230)\n- chore(release): update source.json for v0.14.1",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.15.0/Seam-v0.15.0.ipa",
-      "size": 12620345,
+      "version": "0.16.0",
+      "versionDate": "2026-11-01",
+      "versionDescription": "- Version bump 0.16.0 (build 29)\n- Merge pull request #236 from sugarshin/renovate/ruby-3.4.x\n- Merge pull request #241 from sugarshin/fitting-count\n- feat(app): record wears by swiping closet list rows\n- chore(deps): update dependency ruby to v3.4.12\n- Merge pull request #239 from sugarshin/renovate/github-actions-digests\n- Merge pull request #238 from sugarshin/renovate/hookform-resolvers-6.0.x-lockfile\n- Merge pull request #237 from sugarshin/renovate/pnpm-12.x\n- chore(deps): update dependency @biomejs/biome to v2.6.4 (#240)\n- chore(deps): update ruby/setup-ruby action to v1.335.0\n- chore(deps): update dependency @hookform/resolvers to v6.0.2\n- chore(deps): update pnpm to v12.16.1\n- chore(release): update source.json for v0.15.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.16.0/Seam-v0.16.0.ipa",
+      "size": 12637884,
       "versions": [
+        {
+          "version": "0.16.0",
+          "buildVersion": "29",
+          "date": "2026-11-01",
+          "localizedDescription": "- Version bump 0.16.0 (build 29)\n- Merge pull request #236 from sugarshin/renovate/ruby-3.4.x\n- Merge pull request #241 from sugarshin/fitting-count\n- feat(app): record wears by swiping closet list rows\n- chore(deps): update dependency ruby to v3.4.12\n- Merge pull request #239 from sugarshin/renovate/github-actions-digests\n- Merge pull request #238 from sugarshin/renovate/hookform-resolvers-6.0.x-lockfile\n- Merge pull request #237 from sugarshin/renovate/pnpm-12.x\n- chore(deps): update dependency @biomejs/biome to v2.6.4 (#240)\n- chore(deps): update ruby/setup-ruby action to v1.335.0\n- chore(deps): update dependency @hookform/resolvers to v6.0.2\n- chore(deps): update pnpm to v12.16.1\n- chore(release): update source.json for v0.15.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.16.0/Seam-v0.16.0.ipa",
+          "size": 12637884,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.15.0",
           "buildVersion": "28",
