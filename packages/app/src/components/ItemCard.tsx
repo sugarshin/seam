@@ -9,6 +9,8 @@ type Props = {
   thumbnailRelativePath?: string;
   /** Optional wear count to display as a chip; pass when known to highlight unworn items. */
   wearCount?: number;
+  /** 今日の着用記録があるときにチップを表示する。 */
+  wornToday?: boolean;
   /** Sold-context info. When item.status === 'sold' and this is provided, sold metrics are shown. */
   saleInfo?: SaleInfo;
   /** soldPrice / totalPrice. Pass alongside `saleInfo` to render a recovery-rate chip. */
@@ -45,6 +47,7 @@ export const ItemCard = ({
   item,
   thumbnailRelativePath,
   wearCount,
+  wornToday,
   saleInfo,
   recoveryRate,
   priceLabel,
@@ -106,6 +109,7 @@ export const ItemCard = ({
               tone={isUnworn ? 'warning' : 'default'}
             />
           )}
+          {!isSold && wornToday && <Chip label="✓ 今日" tone="inverse" />}
           {isSold && saleInfo?.soldPrice !== undefined && (
             <Chip label={`売却 ${formatYen(saleInfo.soldPrice)}`} tone="default" />
           )}

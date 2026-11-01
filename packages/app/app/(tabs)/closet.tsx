@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Alert,
+  AppState,
   FlatList,
   Pressable,
   Text,
@@ -16,12 +18,15 @@ import {
   type GarmentItem,
   type ItemPhoto,
   type SaleInfo,
+  type WearLog,
 } from '@seam/shared';
 import { Chip } from '../../src/components/Chip';
 import { EmptyState } from '../../src/components/EmptyState';
 import { ItemCard } from '../../src/components/ItemCard';
 import { Picker, type PickerOption } from '../../src/components/Picker';
 import { SegmentedControl } from '../../src/components/SegmentedControl';
+import { WearLogModal, type WearLogDraft } from '../../src/components/WearLogModal';
+import { WearSwipeRow } from '../../src/components/WearSwipeRow';
 import { itemRepository, photoRepository, wearLogRepository } from '../../src/repositories';
 import type { ItemSort, SoldItem } from '../../src/repositories';
 import { type ColorPalette, font, radii, space, useThemeColors } from '../../src/theme';
@@ -104,6 +109,11 @@ export default function ClosetScreen() {
   const [soldItems, setSoldItems] = useState<SoldItem[]>([]);
   const [thumbnails, setThumbnails] = useState<Record<string, string | undefined>>({});
   const [wearCounts, setWearCounts] = useState<Record<string, number>>({});
+  const [todayWearLogs, setTodayWearLogs] = useState<Record<string, WearLog[]>>({});
+  const [wearLogTarget, setWearLogTarget] = useState<GarmentItem | null>(null);
+  const [wearSubmitting, setWearSubmitting] = useState(false);
+  const loadedDayRef = useRef(new Date().toDateString());
+  const togglingWearRef = useRef(new Set<string>());
   const [counts, setCounts] = useState<{ owned: number; sold: number }>({ owned: 0, sold: 0 });
   const [yearOptions, setYearOptions] = useState<readonly PickerOption<string>[]>([
     { value: '', label: 'すべて' },
@@ -117,6 +127,8 @@ export default function ClosetScreen() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    const now = new Date();
+    loadedDayRef.current = now.toDateString();
     try {
       const trimmedSearch = search.trim() === '' ? undefined : search.trim();
       const categories = categoryFilters.size > 0 ? [...categoryFilters] : undefined;
@@ -140,8 +152,13 @@ export default function ClosetScreen() {
           }),
         );
         setThumbnails(map);
-        const c = await wearLogRepository.countsByItems(list.map((it) => it.id));
+        const ids = list.map((it) => it.id);
+        const [c, todayLogs] = await Promise.all([
+          wearLogRepository.countsByItems(ids),
+          wearLogRepository.listByItemsOnDay(ids, now),
+        ]);
         setWearCounts(c);
+        setTodayWearLogs(todayLogs);
       } else {
         const range = recoveryRangeBounds(recoveryRange);
         const yearWindow = soldYear !== undefined ? yearBounds(soldYear) : undefined;
@@ -182,6 +199,16 @@ export default function ClosetScreen() {
 
   useEffect(() => {
     void load();
+  }, [load]);
+
+  // アプリを開いたまま日付が変わると「✓ 今日」が前日の表示のまま残るので読み直す。
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active' && loadedDayRef.current !== new Date().toDateString()) {
+        void load();
+      }
+    });
+    return () => subscription.remove();
   }, [load]);
 
   // Build the sold-year picker options from existing sale dates whenever we
@@ -229,13 +256,91 @@ export default function ClosetScreen() {
     });
   };
 
+  // load() は全アイテムの写真を取り直すので、着用の変更後は該当アイテムの値だけ更新する。
+  const refreshWearState = useCallback(async (itemId: string) => {
+    const [count, todayLogs] = await Promise.all([
+      wearLogRepository.countByItem(itemId),
+      wearLogRepository.listByItemsOnDay([itemId], new Date()),
+    ]);
+    setWearCounts((prev) => ({ ...prev, [itemId]: count }));
+    setTodayWearLogs((prev) => ({ ...prev, [itemId]: todayLogs[itemId] ?? [] }));
+  }, []);
+
+  const deleteWearLogAndRefresh = useCallback(
+    async (logId: string, itemId: string) => {
+      await wearLogRepository.delete(logId);
+      await refreshWearState(itemId);
+    },
+    [refreshWearState],
+  );
+
+  const toggleWornToday = useCallback(
+    async (itemId: string) => {
+      if (togglingWearRef.current.has(itemId)) return;
+      togglingWearRef.current.add(itemId);
+      try {
+        // 画面の state ではなく DB を見る。日付をまたいだ古い表示のまま前日の記録を消さないため。
+        const now = new Date();
+        const todayLogs = await wearLogRepository.listByItemsOnDay([itemId], now);
+        const logs = todayLogs[itemId] ?? [];
+        const target = logs.find((log) => !log.notes) ?? logs[0];
+        if (target === undefined) {
+          await wearLogRepository.create({ itemId, wornAt: now.toISOString() });
+          await refreshWearState(itemId);
+        } else if (target.notes) {
+          Alert.alert('着用記録を削除', 'メモ付きの記録です。削除しますか？', [
+            { text: 'キャンセル', style: 'cancel' },
+            {
+              text: '削除する',
+              style: 'destructive',
+              onPress: () => {
+                deleteWearLogAndRefresh(target.id, itemId).catch((err: unknown) => {
+                  Alert.alert('削除失敗', err instanceof Error ? err.message : String(err));
+                });
+              },
+            },
+          ]);
+        } else {
+          await deleteWearLogAndRefresh(target.id, itemId);
+        }
+      } catch (err) {
+        Alert.alert('保存失敗', err instanceof Error ? err.message : String(err));
+      } finally {
+        togglingWearRef.current.delete(itemId);
+      }
+    },
+    [deleteWearLogAndRefresh, refreshWearState],
+  );
+
+  const submitWearLog = useCallback(
+    async (draft: WearLogDraft) => {
+      if (wearLogTarget === null) return;
+      setWearSubmitting(true);
+      try {
+        await wearLogRepository.create({
+          itemId: wearLogTarget.id,
+          wornAt: draft.wornAt,
+          notes: draft.notes,
+        });
+        setWearLogTarget(null);
+        await refreshWearState(wearLogTarget.id);
+      } catch (err) {
+        Alert.alert('保存失敗', err instanceof Error ? err.message : String(err));
+      } finally {
+        setWearSubmitting(false);
+      }
+    },
+    [refreshWearState, wearLogTarget],
+  );
+
   const renderOwned = ({ item }: ListRenderItemInfo<GarmentItem>) => (
-    <ItemCard
+    <OwnedRow
       item={item}
       thumbnailRelativePath={thumbnails[item.id]}
       wearCount={wearCounts[item.id]}
-      testID={testIds.cardItem(item.id)}
-      onPress={() => router.push({ pathname: '/item/[id]', params: { id: item.id } })}
+      wornToday={(todayWearLogs[item.id]?.length ?? 0) > 0}
+      onToggleWornToday={toggleWornToday}
+      onRecordWithDetails={setWearLogTarget}
     />
   );
 
@@ -400,9 +505,53 @@ export default function ClosetScreen() {
           <Text style={styles.fabText}>＋</Text>
         </Pressable>
       )}
+
+      <WearLogModal
+        visible={wearLogTarget !== null}
+        submitting={wearSubmitting}
+        itemName={wearLogTarget?.name}
+        onCancel={() => setWearLogTarget(null)}
+        onSubmit={(draft) => void submitWearLog(draft)}
+      />
     </View>
   );
 }
+
+type OwnedRowProps = {
+  item: GarmentItem;
+  thumbnailRelativePath?: string;
+  wearCount?: number;
+  wornToday: boolean;
+  onToggleWornToday: (itemId: string) => Promise<void>;
+  onRecordWithDetails: (item: GarmentItem) => void;
+};
+
+// 全行を描き直すとスワイプのジェスチャも作り直されて遅いので、値が変わった行だけ描き直す。
+const OwnedRow = memo(function OwnedRow({
+  item,
+  thumbnailRelativePath,
+  wearCount,
+  wornToday,
+  onToggleWornToday,
+  onRecordWithDetails,
+}: OwnedRowProps) {
+  return (
+    <WearSwipeRow
+      wornToday={wornToday}
+      onToggleWornToday={() => void onToggleWornToday(item.id)}
+      onRecordWithDetails={() => onRecordWithDetails(item)}
+    >
+      <ItemCard
+        item={item}
+        thumbnailRelativePath={thumbnailRelativePath}
+        wearCount={wearCount}
+        wornToday={wornToday}
+        testID={testIds.cardItem(item.id)}
+        onPress={() => router.push({ pathname: '/item/[id]', params: { id: item.id } })}
+      />
+    </WearSwipeRow>
+  );
+});
 
 const segmentWrap: ViewStyle = {
   paddingHorizontal: space.lg,
