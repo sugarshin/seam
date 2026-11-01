@@ -23,6 +23,7 @@ export { DecisionReasonModal } from './DecisionReasonModal';
 export { WearLogEntry } from './WearLogEntry';
 export { WearLogModal } from './WearLogModal';
 export type { WearLogDraft } from './WearLogModal';
+export { WearSwipeRow } from './WearSwipeRow';
 export { FailureLogEntry } from './FailureLogEntry';
 export { FailureLogModal } from './FailureLogModal';
 export type { FailureLogDraft } from './FailureLogModal';

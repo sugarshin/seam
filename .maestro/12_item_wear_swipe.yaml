@@ -1,0 +1,119 @@
+appId: com.sugarshin.seam
+name: item_wear_swipe
+tags:
+  - regression
+# Closet の所有中リストのスワイプで着用を記録する。
+# 右スワイプ: 今日の記録をトグル / 左スワイプ: 日付・メモ入力のモーダルを開く。
+# カードは Pressable に子の Text がまとまるので、assert は card の accessibilityText
+# に対する regex で行う。
+---
+- runFlow:
+    file: '_helpers/create_item.yaml'
+    env:
+      itemName: 'E_Wear_Swipe'
+- assertVisible: '.*E_Wear_Swipe.*未着用.*'
+
+# 右スワイプ: 詳細に遷移せず今日の記録が付く
+- swipe:
+    from:
+      text: '.*E_Wear_Swipe.*'
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: '.*E_Wear_Swipe.*着用 1回.*✓ 今日.*'
+    timeout: 5000
+- assertVisible: 'Closet'
+
+# もう一度右スワイプ: 今日の記録を取り消す
+- swipe:
+    from:
+      text: '.*E_Wear_Swipe.*'
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: '.*E_Wear_Swipe.*未着用.*'
+    timeout: 5000
+- assertNotVisible: '.*E_Wear_Swipe.*✓ 今日.*'
+
+# 左スワイプ: 過去日で記録すると回数だけ増え、今日の表示は付かない
+- swipe:
+    from:
+      text: '.*E_Wear_Swipe.*'
+    direction: LEFT
+- extendedWaitUntil:
+    visible:
+      id: 'modal:wear-log'
+    timeout: 5000
+- assertVisible: 'E_Wear_Swipe'
+- tapOn:
+    id: 'modal:wear-log:field:date'
+- eraseText: 10
+- inputText: '2026-01-15'
+- tapOn: '着用記録'
+- tapOn:
+    id: 'modal:wear-log:submit'
+- extendedWaitUntil:
+    notVisible:
+      id: 'modal:wear-log'
+    timeout: 5000
+- assertVisible: '.*E_Wear_Swipe.*着用 1回.*'
+- assertNotVisible: '.*E_Wear_Swipe.*✓ 今日.*'
+
+# 左スワイプ: 今日の日付 + メモで記録する
+- swipe:
+    from:
+      text: '.*E_Wear_Swipe.*'
+    direction: LEFT
+- extendedWaitUntil:
+    visible:
+      id: 'modal:wear-log'
+    timeout: 5000
+- tapOn:
+    id: 'modal:wear-log:field:notes'
+- inputText: 'E2E_Note'
+- tapOn: '着用記録'
+- tapOn:
+    id: 'modal:wear-log:submit'
+- extendedWaitUntil:
+    visible: '.*E_Wear_Swipe.*着用 2回.*✓ 今日.*'
+    timeout: 5000
+
+# メモ付きの今日の記録は確認してから消す。キャンセルすれば残る
+- swipe:
+    from:
+      text: '.*E_Wear_Swipe.*'
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: 'メモ付きの記録です。削除しますか？'
+    timeout: 5000
+- tapOn:
+    text: 'キャンセル'
+- assertVisible: '.*E_Wear_Swipe.*着用 2回.*✓ 今日.*'
+- swipe:
+    from:
+      text: '.*E_Wear_Swipe.*'
+    direction: RIGHT
+- extendedWaitUntil:
+    visible: 'メモ付きの記録です。削除しますか？'
+    timeout: 5000
+- tapOn:
+    text: '削除する'
+- extendedWaitUntil:
+    visible: '.*E_Wear_Swipe.*着用 1回.*'
+    timeout: 5000
+- assertNotVisible: '.*E_Wear_Swipe.*✓ 今日.*'
+
+# タップは従来どおり詳細へ。後片付けでアイテムを削除する
+- tapOn:
+    text: '.*E_Wear_Swipe.*'
+- assertVisible: '詳細'
+- scrollUntilVisible:
+    element:
+      id: 'btn:delete'
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 50
+- tapOn:
+    id: 'btn:delete'
+- assertVisible: '削除しますか？'
+- tapOn:
+    text: '削除する'
+- assertVisible: 'Closet'

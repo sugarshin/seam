@@ -1,4 +1,5 @@
-import { desc, eq, inArray, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, lt, sql } from 'drizzle-orm';
+import { localDayRange } from '@seam/domain/wear';
 import { db, schema } from '../db/client';
 import { newId } from '../utils/ids';
 import type { WearLog } from '@seam/shared';
@@ -92,6 +93,35 @@ export const wearLogRepository = {
       .groupBy(schema.wearLogs.itemId);
     for (const r of rows) {
       out[r.itemId] = Number(r.count);
+    }
+    return out;
+  },
+
+  /**
+   * `day` (ローカル日付) の着用記録を item ごとに新しい順で返す。
+   * countsByItems と同じく、記録のない item も空配列で結果に含む。
+   */
+  async listByItemsOnDay(
+    itemIds: readonly string[],
+    day: Date,
+  ): Promise<Record<string, WearLog[]>> {
+    const out: Record<string, WearLog[]> = {};
+    for (const id of itemIds) out[id] = [];
+    if (itemIds.length === 0) return out;
+    const { from, to } = localDayRange(day);
+    const rows = await db
+      .select()
+      .from(schema.wearLogs)
+      .where(
+        and(
+          inArray(schema.wearLogs.itemId, itemIds as string[]),
+          gte(schema.wearLogs.wornAt, from),
+          lt(schema.wearLogs.wornAt, to),
+        ),
+      )
+      .orderBy(desc(schema.wearLogs.wornAt));
+    for (const row of rows) {
+      out[row.itemId]?.push(toLog(row));
     }
     return out;
   },

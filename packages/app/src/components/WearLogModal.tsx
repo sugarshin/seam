@@ -21,6 +21,8 @@ export type WearLogDraft = {
 type Props = {
   visible: boolean;
   submitting?: boolean;
+  /** リストから開くときに、どのアイテムの記録かを示す。 */
+  itemName?: string;
   onCancel: () => void;
   onSubmit: (draft: WearLogDraft) => void;
 };
@@ -40,7 +42,7 @@ const isValidDate = (s: string): boolean => {
   return !Number.isNaN(d.getTime());
 };
 
-export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props) => {
+export const WearLogModal = ({ visible, submitting, itemName, onCancel, onSubmit }: Props) => {
   const palette = useThemeColors();
   const [wornAt, setWornAt] = useState(todayIsoDate());
   const [notes, setNotes] = useState('');
@@ -63,6 +65,11 @@ export const WearLogModal = ({ visible, submitting, onCancel, onSubmit }: Props)
         <Pressable style={backdrop} onPress={onCancel} />
         <View style={[card, { backgroundColor: palette.bg }]} testID={testIds.modal.wearLog}>
           <Text style={[title, { color: palette.text }]}>着用記録</Text>
+          {itemName !== undefined && (
+            <Text style={[subtitle, { color: palette.textMuted }]} numberOfLines={1}>
+              {itemName}
+            </Text>
+          )}
           <TextField
             label="着用日"
             placeholder="2026-04-26"
@@ -132,6 +139,11 @@ const card: ViewStyle = {
 const title = {
   fontSize: font.size.lg,
   fontWeight: font.weight.bold,
+  marginBottom: space.sm,
+} as const;
+
+const subtitle = {
+  fontSize: font.size.sm,
   marginBottom: space.sm,
 } as const;
 
