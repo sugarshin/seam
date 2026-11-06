@@ -34,6 +34,14 @@ name: filters
 - assertVisible: 'Closet'
 
 # カテゴリ chip フィルタ on/off (リスト挙動の簡易確認)
+# chip 行は横スクロールで、t_shirt は初期表示だと画面外。
+# 一覧の行は右スワイプで着用記録が付くので、chip 行を起点に左スワイプする。
+# 既定の速さだと慣性で t_shirt を通り過ぎかねないため、ゆっくり動かす。
+- swipe:
+    from:
+      id: 'chip:category:sweatshirt'
+    direction: LEFT
+    duration: 1000
 - tapOn:
     id: 'chip:category:t_shirt'
 - assertVisible:
