@@ -19,12 +19,21 @@
       "tintColor": "#000000",
       "category": "lifestyle",
       "screenshotURLs": [],
-      "version": "0.16.0",
-      "versionDate": "2026-11-01",
-      "versionDescription": "- Version bump 0.16.0 (build 29)\n- Merge pull request #236 from sugarshin/renovate/ruby-3.4.x\n- Merge pull request #241 from sugarshin/fitting-count\n- feat(app): record wears by swiping closet list rows\n- chore(deps): update dependency ruby to v3.4.12\n- Merge pull request #239 from sugarshin/renovate/github-actions-digests\n- Merge pull request #238 from sugarshin/renovate/hookform-resolvers-6.0.x-lockfile\n- Merge pull request #237 from sugarshin/renovate/pnpm-12.x\n- chore(deps): update dependency @biomejs/biome to v2.6.4 (#240)\n- chore(deps): update ruby/setup-ruby action to v1.335.0\n- chore(deps): update dependency @hookform/resolvers to v6.0.2\n- chore(deps): update pnpm to v12.16.1\n- chore(release): update source.json for v0.15.0",
-      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.16.0/Seam-v0.16.0.ipa",
-      "size": 12637884,
+      "version": "0.16.1",
+      "versionDate": "2026-11-06",
+      "versionDescription": "- Version bump 0.16.1 (build 30)\n- chore(deps): update test packages to v5.1.0 (#243)\n- Merge pull request #244 from sugarshin/fix-e2e-filters-chip-scroll\n- fix(e2e): scroll category chip row before tapping t_shirt in filters flow\n- chore(release): update source.json for v0.16.0",
+      "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.16.1/Seam-v0.16.1.ipa",
+      "size": 12637888,
       "versions": [
+        {
+          "version": "0.16.1",
+          "buildVersion": "30",
+          "date": "2026-11-06",
+          "localizedDescription": "- Version bump 0.16.1 (build 30)\n- chore(deps): update test packages to v5.1.0 (#243)\n- Merge pull request #244 from sugarshin/fix-e2e-filters-chip-scroll\n- fix(e2e): scroll category chip row before tapping t_shirt in filters flow\n- chore(release): update source.json for v0.16.0",
+          "downloadURL": "https://github.com/sugarshin/seam/releases/download/v0.16.1/Seam-v0.16.1.ipa",
+          "size": 12637888,
+          "minOSVersion": "15.1"
+        },
         {
           "version": "0.16.0",
           "buildVersion": "29",
