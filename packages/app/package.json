@@ -48,7 +48,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.29.7",
+    "@babel/core": "7.29.13",
     "@types/react": "19.2.18",
     "babel-plugin-inline-import": "3.0.0",
     "babel-preset-expo": "55.0.23",
